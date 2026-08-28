@@ -88,6 +88,27 @@
 
 @stack('styles')
 ```
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>@yield('title', 'Málaga Emplea') - {{ config('app.name', 'Málaga Emplea') }}</title>
+
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js" defer></script>
+
+    <style>
+        [x-cloak] {
+            display: none !important;
+        }
+
+        body {
+            font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+        }
+    </style>
 
 </head>
 
@@ -136,6 +157,31 @@
         {{-- Footer --}}
         @include('layouts.partials.footer')
 
+        <div class="flex-1 flex flex-col min-w-0 lg:pl-64">
+
+            @include('layouts.partials.navbar')
+
+            <main class="flex-1 p-4 sm:p-6 lg:p-8">
+
+                @if (session('success'))
+                    <x-alert type="success" class="mb-6">
+                        {{ session('success') }}
+                    </x-alert>
+                @endif
+
+                @if (session('error'))
+                    <x-alert type="error" class="mb-6">
+                        {{ session('error') }}
+                    </x-alert>
+                @endif
+
+                @yield('content')
+
+            </main>
+
+            @include('layouts.partials.footer')
+
+        </div>
     </div>
 
 </div>
@@ -150,4 +196,8 @@
 
 </body>
 
+</html>
+    @stack('scripts')
+
+</body>
 </html>
