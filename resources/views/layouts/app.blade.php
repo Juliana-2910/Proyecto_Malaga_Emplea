@@ -1,42 +1,76 @@
 <!DOCTYPE html>
-
-<html lang="es">
-
+<html lang="es" class="h-full bg-slate-50">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-```
-<meta charset="UTF-8">
+    <title>@yield('title', 'Málaga Emplea') - {{ config('app.name', 'Málaga Emplea') }}</title>
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-<title>@yield('title', 'Málaga Emplea')</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-@vite(['resources/css/app.css', 'resources/js/app.js'])
-```
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js" defer></script>
 
+    <style>
+        [x-cloak] {
+            display: none !important;
+        }
+
+        body {
+            font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+        }
+    </style>
+
+    @stack('styles')
 </head>
 
-<body class="min-h-screen bg-gray-100 text-gray-800">
+<body class="h-full text-slate-800 antialiased">
 
-```
-{{-- Encabezado principal --}}
-<header class="bg-[#333333] px-6 py-4 shadow">
+    <div x-data="{ sidebarOpen: false }" class="min-h-screen flex">
 
-    <div class="mx-auto max-w-6xl">
+        {{-- Overlay móvil --}}
+        <div
+            x-show="sidebarOpen"
+            x-cloak
+            @click="sidebarOpen = false"
+            class="fixed inset-0 z-30 bg-slate-900/50 lg:hidden"
+            aria-hidden="true"
+        ></div>
 
-        <h1 class="text-2xl font-bold text-white">
-            Málaga Emplea
-        </h1>
+        @include('layouts.partials.sidebar')
 
+        <div class="flex-1 flex flex-col min-w-0 lg:pl-64">
+
+            @include('layouts.partials.navbar')
+
+            <main class="flex-1 p-4 sm:p-6 lg:p-8">
+
+                @if (session('success'))
+                    <x-alert type="success" class="mb-6">
+                        {{ session('success') }}
+                    </x-alert>
+                @endif
+
+                @if (session('error'))
+                    <x-alert type="error" class="mb-6">
+                        {{ session('error') }}
+                    </x-alert>
+                @endif
+
+                @yield('content')
+
+            </main>
+
+            @include('layouts.partials.footer')
+
+        </div>
     </div>
 
-</header>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js" defer></script>
 
-
-{{-- Contenido de cada vista --}}
-@yield('content')
-```
+    @stack('scripts')
 
 </body>
-
 </html>
