@@ -34,7 +34,8 @@ class EmpresaController extends Controller
     {
         $this->empresasServices->guardar($request->all());
 
-        return redirect()->route('roles.index')->with('success', 'Empresa creada exitosamente.');
+        return redirect()->route('empresas.index')
+        ->with('success', 'Empresa creada exitosamente.');
     }
 
 
@@ -46,11 +47,12 @@ class EmpresaController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(int $id)
-    {
-        $empresas = $this->empresasServices->buscarporid($id);
-        return view('Empresa.editar', compact('empresas'));
-    }
+  public function edit(int $id)
+{
+    $empresa = $this->empresasServices->buscarporid($id);
+
+    return view('Empresa.editar', compact('empresa'));
+}
 
     
     public function update(int $id, EmpresaUpdateRequest $request)

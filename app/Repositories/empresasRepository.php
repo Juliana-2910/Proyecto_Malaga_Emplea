@@ -3,17 +3,21 @@
 namespace App\Repositories;
 
 use App\Models\Empresa;
+use Illuminate\Support\Facades\Hash;
 
 class empresasRepository{
 
    public function listarTodos()
    {
         $empresas = Empresa::all();
+
         return $empresas;
     }
 
     public function guardar(array $datos)
     {
+        $datos['password'] = Hash::make($datos['password']);
+
         Empresa::create($datos);
     }
 
@@ -24,14 +28,22 @@ class empresasRepository{
 
     public function buscarporid(int $id)
     {
-        $empresas = Empresa::findOrFail($id);
-        return $empresas;
+        $empresa = Empresa::findOrFail($id);
+
+        return $empresa;
     }
 
     public function actualizar(int $id, array $datos)
     {
-        $empresas = Empresa::findOrFail($id);
-        $empresas->update($datos);
+    $empresa = Empresa::findOrFail($id);
+
+        if (empty($datos['password'])) {
+            unset($datos['password']);
+        } else {
+            $datos['password'] = Hash::make($datos['password']);
+        }
+
+        $empresa->update($datos);
     }
 
 

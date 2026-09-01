@@ -24,11 +24,11 @@ class EmpresaUpdateRequest extends FormRequest
 {
     return [
         'nombreEmpresa' => 'required|string|max:100',
-        'nit' => 'required|string|unique:empresas,nit,' . $this->empresa->id,
+        'nit' => 'required|string|unique:empresas,nit,' . $this->route('empresa'),
         'direccion' => 'required|string|max:255',
         'estado' => 'required|in:activo,inactivo',
         'correoElectronico' => 'required|email|max:255',
-        'password' => 'required|string|min:8',
+        'password' => 'nullable|string|min:8',
     ];
 }
 
