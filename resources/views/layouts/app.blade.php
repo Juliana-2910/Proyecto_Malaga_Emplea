@@ -87,7 +87,7 @@
 </style>
 
 @stack('styles')
-```
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -114,7 +114,7 @@
 
 <body class="h-full text-slate-800 antialiased">
 
-```
+
 <div x-data="{ sidebarOpen: false }" class="min-h-screen flex">
 
     {{-- Overlay móvil --}}

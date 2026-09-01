@@ -1,3 +1,4 @@
+
 @extends('layouts.app')
 
 @section('title')
@@ -6,7 +7,7 @@ Editar Categoría
 
 @section('content')
 
-```
+
 <div class="container mx-auto mt-10">
 
     <div class="max-w-2xl mx-auto">
@@ -114,6 +115,6 @@ Editar Categoría
     </div>
 
 </div>
-```
+
 
 @endsection
