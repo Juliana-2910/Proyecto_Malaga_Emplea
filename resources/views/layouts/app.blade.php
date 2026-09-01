@@ -157,31 +157,6 @@
         {{-- Footer --}}
         @include('layouts.partials.footer')
 
-        <div class="flex-1 flex flex-col min-w-0 lg:pl-64">
-
-            @include('layouts.partials.navbar')
-
-            <main class="flex-1 p-4 sm:p-6 lg:p-8">
-
-                @if (session('success'))
-                    <x-alert type="success" class="mb-6">
-                        {{ session('success') }}
-                    </x-alert>
-                @endif
-
-                @if (session('error'))
-                    <x-alert type="error" class="mb-6">
-                        {{ session('error') }}
-                    </x-alert>
-                @endif
-
-                @yield('content')
-
-            </main>
-
-            @include('layouts.partials.footer')
-
-        </div>
     </div>
 
 </div>
@@ -196,8 +171,4 @@
 
 </body>
 
-</html>
-    @stack('scripts')
-
-</body>
 </html>
