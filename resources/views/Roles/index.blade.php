@@ -124,7 +124,7 @@
 
                                     {{-- Editar --}}
                                     <a href="{{ route('roles.edit', $rol->id) }}"
-                                       class="rounded-lg bg-yellow-500 px-4 py-2 text-xs font-semibold text-white transition hover:bg-yellow-600">
+                                       class="rounded-lg bg-[#4DB6E8] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#333333]">
                                         Editar
                                     </a>
 
@@ -138,7 +138,7 @@
                                         @method('DELETE')
 
                                         <button type="submit"
-                                                class="rounded-lg bg-red-500 px-4 py-2 text-xs font-semibold text-white transition hover:bg-red-600"
+                                                class="rounded-lg bg-red-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#333333]"
                                                 onclick="return confirm('¿Está seguro de eliminar este rol?')">
                                             Eliminar
                                         </button>
