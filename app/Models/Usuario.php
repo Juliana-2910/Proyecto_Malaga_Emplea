@@ -17,3 +17,5 @@ class Usuario extends Model
         return $this->belongsTo(Roles::class, 'idRol');
     }
 }
+
+/*Tabla Hija*/

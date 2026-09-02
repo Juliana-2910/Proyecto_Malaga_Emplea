@@ -11,4 +11,12 @@ class Roles extends Model
     protected $fillable = [
         'rol',
     ];
+
+    public function usuarios()
+    {
+        return $this->hasMany(Usuario::class);
+
 }
+}
+
+/*Tabla Padre*/
