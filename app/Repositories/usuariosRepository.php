@@ -8,8 +8,7 @@ class usuariosRepository{
 
     public function listarTodos()
     {
-        $usuarios = Usuario::all();
-        return $usuarios;
+        return Usuario::with('rol')->get();
     }
 
     public function guardar(array $datos)
