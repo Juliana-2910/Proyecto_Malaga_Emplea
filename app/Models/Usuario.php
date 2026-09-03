@@ -14,8 +14,11 @@ class Usuario extends Model
 
     public function rol()
     {
-        return $this->belongsTo(Roles::class, 'idRol');
+        return $this->belongsTo(Roles::class, 'idRol'); /*Tabla Hija con roles*/
+    }
+
+    public function hojaDeVida()
+    {
+        return $this->hasMany(HojaDeVida::class, 'idUsuario'); /*Tabla padre con hoja de vida*/
     }
 }
-
-/*Tabla Hija*/
