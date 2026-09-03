@@ -10,4 +10,10 @@ class Empresa extends Model
 
     protected $fillable = [ 'nombreEmpresa','nit','direccion','estado','correoElectronico','password',
     ];
+
+    public function ofertas()
+  {
+    return $this->hasMany(Oferta::class, 'idEmpresa');
+  }
+
 }
