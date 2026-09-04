@@ -1,4 +1,4 @@
-<header class="sticky top-0 z-20 bg-white border-b border-slate-200">
+<header class="sticky top-0 z-20 bg-white border-b border-[#E5E5E5]">
     <div class="h-16 px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
 
         <div class="flex items-center gap-4 min-w-0">
@@ -12,7 +12,7 @@
                 <span class="w-6 h-6 block">@include('layouts.partials.icons', ['icon' => 'menu'])</span>
             </button>
 
-            <h1 class="text-lg sm:text-xl font-semibold text-slate-800 truncate">
+            <h1 class="text-lg sm:text-xl font-semibold text-[#333333] truncate">
                 @yield('page-title', 'Dashboard')
             </h1>
         </div>
@@ -31,7 +31,7 @@
                     name="q"
                     value="{{ request('q') }}"
                     placeholder="Buscar..."
-                    class="w-56 lg:w-72 pl-9 pr-3 py-2 text-sm rounded-lg border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition"
+                    class="w-56 lg:w-72 pl-9 pr-3 py-2 text-sm rounded-lg border border-[#E5E5E5] bg-[#F4F4F4] focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition"
                 >
             </form>
 
@@ -41,7 +41,7 @@
                     @click="open = !open"
                     @click.outside="open = false"
                     type="button"
-                    class="relative p-2 rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    class="relative p-2 rounded-lg text-[#333333] hover:bg-[#4DB6E8]/20 hover:text-[#333333] focus:outline-none focus:ring-2 focus:ring-[#4DB6E8]"
                     aria-label="Ver notificaciones"
                 >
                     <span class="w-5 h-5 block">@include('layouts.partials.icons', ['icon' => 'bell'])</span>
@@ -75,7 +75,7 @@
                     @click="open = !open"
                     @click.outside="open = false"
                     type="button"
-                    class="flex items-center gap-2 pl-1 pr-2 py-1 rounded-lg hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    class="flex items-center gap-2 pl-1 pr-2 py-1 rounded-lg hover:bg-[#4DB6E8]/20 focus:outline-none focus:ring-2 focus:ring-[#4DB6E8]"
                     aria-haspopup="true"
                     :aria-expanded="open.toString()"
                 >
@@ -93,11 +93,11 @@
                 <div
                     x-show="open" x-cloak
                     x-transition
-                    class="absolute right-0 mt-2 w-52 bg-white rounded-xl shadow-lg border border-slate-100 overflow-hidden py-1"
+                    class="absolute right-0 mt-2 w-52 bg-white rounded-xl shadow-lg border border-[#E5E5E5] overflow-hidden py-1"
                 >
-                    <a href="{{ Route::has('profile.edit') ? route('profile.edit') : '#' }}" class="block px-4 py-2 text-sm text-slate-600 hover:bg-slate-50">Mi perfil</a>
-                    <a href="{{ Route::has('settings.index') ? route('settings.index') : '#' }}" class="block px-4 py-2 text-sm text-slate-600 hover:bg-slate-50">Configuración</a>
-                    <hr class="my-1 border-slate-100">
+                    <a href="{{ Route::has('profile.edit') ? route('profile.edit') : '#' }}" class="block px-4 py-2 text-sm text-[#333333] hover:bg-[#F4F4F4]">Mi perfil</a>
+                    <a href="{{ Route::has('settings.index') ? route('settings.index') : '#' }}" class="block px-4 py-2 text-sm text-[#333333] hover:bg-[#F4F4F4]">Configuración</a>
+                    <hr class="my-1 border-[#E5E5E5]">
                     <form method="POST" action="{{ Route::has('logout') ? route('logout') : '#' }}">
                         @csrf
                         <button type="submit" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50">

@@ -132,8 +132,8 @@
                 datasets: [{
                     label: 'Ventas',
                     data: @json($chartData['sales']),
-                    borderColor: '#4f46e5',
-                    backgroundColor: 'rgba(79,70,229,0.08)',
+                    borderColor: '#4DB6E8',
+                    backgroundColor: 'rgba(77,182,232,0.08)',
                     tension: 0.35,
                     fill: true,
                     pointRadius: 3,
@@ -153,7 +153,7 @@
                 datasets: [{
                     label: 'Usuarios registrados',
                     data: @json($chartData['users']),
-                    backgroundColor: '#818cf8',
+                    backgroundColor: '#4DB6E8',
                     borderRadius: 6,
                     maxBarThickness: 36,
                 }]
@@ -171,7 +171,7 @@
                 labels: @json($chartData['categoryLabels']),
                 datasets: [{
                     data: @json($chartData['categoryValues']),
-                    backgroundColor: ['#4f46e5', '#818cf8', '#c7d2fe', '#a5b4fc', '#312e81'],
+                    backgroundColor: ['#4DB6E8', '#818cf8', '#c7d2fe', '#a5b4fc', '#312e81'],
                     borderWidth: 0,
                 }]
             },

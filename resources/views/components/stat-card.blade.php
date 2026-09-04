@@ -11,13 +11,13 @@
 --}}
 @props(['label', 'value', 'change' => null, 'trend' => 'up', 'icon' => 'chart'])
 
-<div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 sm:p-6">
+<div class="bg-white rounded-xl border border-[#E5E5E5] shadow-sm p-5 sm:p-6">
     <div class="flex items-start justify-between">
         <div>
-            <p class="text-sm font-medium text-slate-400">{{ $label }}</p>
-            <p class="mt-2 text-2xl font-bold text-slate-800">{{ $value }}</p>
+            <p class="text-sm font-medium text-[#333333]">{{ $label }}</p>
+            <p class="mt-2 text-2xl font-bold text-[#333333]">{{ $value }}</p>
         </div>
-        <div class="w-11 h-11 rounded-lg bg-primary-50 text-primary-600 flex items-center justify-center flex-shrink-0">
+        <div class="w-11 h-11 rounded-lg bg-[#4DB6E8]/15 text-[#4DB6E8] flex items-center justify-center flex-shrink-0">
             <span class="w-5 h-5 block">@include('layouts.partials.icons', ['icon' => $icon])</span>
         </div>
     </div>
@@ -32,7 +32,7 @@
                 @endif
                 {{ $change }}
             </span>
-            <span class="text-slate-400">vs. mes anterior</span>
+            <span class="text-[#333333]">vs. mes anterior</span>
         </div>
     @endif
 </div>
