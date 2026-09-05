@@ -6,14 +6,14 @@
 <aside
     x-cloak
     :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'"
-    class="fixed inset-y-0 left-0 z-40 w-64 bg-slate-900 text-slate-300 transform transition-transform duration-200 ease-in-out lg:translate-x-0"
+    class="fixed inset-y-0 left-0 z-40 w-64 bg-[#333333] text-slate-300 transform transition-transform duration-200 ease-in-out lg:translate-x-0"
     aria-label="Menú principal"
 >
     <div class="h-full flex flex-col">
 
         {{-- Logo --}}
-        <div class="flex items-center gap-3 h-16 px-6 border-b border-slate-800">
-            <div class="w-9 h-9 rounded-lg bg-primary-600 flex items-center justify-center text-white font-bold">
+        <div class="flex items-center gap-3 h-16 px-6 border-b border-[#444444]">
+            <div class="w-9 h-9 rounded-lg bg-[#4DB6E8] flex items-center justify-center text-white font-bold">
                 A
             </div>
             <span class="text-white font-semibold text-lg tracking-tight">{{ config('app.name', 'AdminPanel') }}</span>
@@ -22,17 +22,16 @@
         {{-- Navegación --}}
         <nav class="flex-1 overflow-y-auto px-3 py-6 space-y-1" aria-label="Navegación lateral">
 
-            @php
-                $links = [
-                    ['label' => 'Dashboard',   'route' => 'dashboard.index',  'icon' => 'home'],
-                    ['label' => 'Usuarios',    'route' => 'users.index',      'icon' => 'users'],
-                    ['label' => 'Perfiles/Roles', 'route' => 'roles.index',   'icon' => 'shield'],
-                    ['label' => 'Categorías',  'route' => 'categories.index', 'icon' => 'tag'],
-                    ['label' => 'Productos',   'route' => 'producto.index',   'icon' => 'box'],
-                    ['label' => 'Reportes',    'route' => 'reports.index',    'icon' => 'chart'],
-                    ['label' => 'Configuración', 'route' => 'settings.index', 'icon' => 'cog'],
-                ];
-            @endphp
+      @php
+      $links = [
+          ['label' => 'Dashboard',   'route' => 'dashboard.index',  'icon' => 'home'],
+          ['label' => 'Roles',       'route' => 'roles.index',      'icon' => 'shield'],
+          ['label' => 'Usuarios',    'route' => 'usuarios.index',      'icon' => 'users'],
+          ['label' => 'Categorías',  'route' => 'categorias.index', 'icon' => 'tag'],
+          ['label' => 'Empresas',    'route' => 'empresas.index',   'icon' => 'box'],
+          ['label' => 'Ofertas',     'route' => 'ofertas.index',    'icon' => 'chart'],
+      ];
+         @endphp
 
             @foreach ($links as $link)
                 @php
@@ -43,8 +42,8 @@
                     @if($active) aria-current="page" @endif
                     class="group flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors
                         {{ $active
-                            ? 'bg-primary-600 text-white shadow-sm'
-                            : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}"
+                            ? 'bg-[#4DB6E8] text-white shadow-sm'
+                            : 'text-slate-300 hover:hover:bg-[#4DB6E8]/20 hover:text-white' }}"
                 >
                     <span class="w-5 h-5 flex-shrink-0" aria-hidden="true">
                         @include('layouts.partials.icons', ['icon' => $link['icon']])
