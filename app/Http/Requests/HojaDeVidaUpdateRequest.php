@@ -27,8 +27,7 @@ class HojaDeVidaUpdateRequest extends FormRequest
             'nivelEducativo' => 'required|string|max:255',
             'perfilProfesional' => 'required|string|max:255',
             'experienciaLaboral' => 'required|string|max:255',
-            'fechaActualizacion' => 'required|date',
-            'archivoCV' => 'required|file|mimes:pdf|max:2048',
+            'archivoCV' => 'nullable|string|max:255',
             'idUsuario' => 'required|exists:usuarios,id',
         ];
     }
@@ -52,13 +51,8 @@ class HojaDeVidaUpdateRequest extends FormRequest
             'experienciaLaboral.string' => 'El campo experiencia laboral debe ser una cadena de texto.',
             'experienciaLaboral.max' => 'El campo experiencia laboral no debe exceder los 255 caracteres.',
 
-            'fechaActualizacion.required' => 'El campo fecha de actualización es obligatorio.',
-            'fechaActualizacion.date' => 'El campo fecha de actualización debe ser una fecha válida.',
-
-            'archivoCV.required' => 'El archivo del CV es obligatorio.',
-            'archivoCV.file' => 'Debe subir un archivo válido para el CV.',
-            'archivoCV.mimes' => 'El archivo del CV debe ser un archivo PDF.',
-            'archivoCV.max' => 'El archivo del CV no debe exceder los 2 MB.',
+            'archivoCV.string' => 'El archivo del CV debe ser una cadena de texto.',
+            'archivoCV.max' => 'El archivo del CV no debe exceder los 255 caracteres.',
 
             'idUsuario.required' => 'El campo ID de usuario es obligatorio.',
             'idUsuario.exists' => 'El ID de usuario proporcionado no existe en la base de datos.',

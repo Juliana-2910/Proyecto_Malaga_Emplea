@@ -34,9 +34,12 @@ class HojaDeVidaController extends Controller
 
     public function store(HojaDeVidaStoreRequest $request)
     {
-        $this->hojaDeVidaService->guardar($request->validated());
-        return redirect()->route('HojaDeVida.index')->with('success', 'Hoja de vida creada exitosamente.');
+        $datos = $request->validated();
+        $datos['fechaActualizacion'] = now('America/Bogota');
+        $this->hojaDeVidaService->guardar($datos);
+        return redirect()->route('hojaDeVida.index')->with('success', 'Hoja de vida creada exitosamente.');
     }
+
 
     public function show(HojaDeVida $hojaDeVida)
     {
@@ -52,13 +55,15 @@ class HojaDeVidaController extends Controller
 
     public function update(int $id, HojaDeVidaUpdateRequest $request)
     {
-        $this->hojaDeVidaService->actualizar($id, $request->validated());
-        return redirect()->route('HojaDeVida.index')->with('success', 'Hoja de vida actualizada exitosamente.');
+        $datos = $request->validated();
+        $datos['fechaActualizacion'] = now('America/Bogota');
+        $this->hojaDeVidaService->actualizar($id, $datos);
+        return redirect()->route('hojaDeVida.index')->with('success', 'Hoja de vida actualizada exitosamente.');
     }
 
     public function destroy(int $id)
     {
         $this->hojaDeVidaService->eliminar($id);
-        return redirect()->route('HojaDeVida.index')->with('success', 'Hoja de vida eliminada exitosamente.');
+        return redirect()->route('hojaDeVida.index')->with('success', 'Hoja de vida eliminada exitosamente.');
     }
 }

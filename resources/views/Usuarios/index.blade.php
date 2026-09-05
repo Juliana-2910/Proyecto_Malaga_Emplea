@@ -9,7 +9,7 @@ Crud de usuarios
 
 <div class="min-h-screen bg-gray-100 py-10">
 
-<div class="mx-auto max-w-7xl px-6">
+<div class="mx-auto max-w-6xl px-6">
 
     {{-- Encabezado --}}
     <div class="mb-6 flex items-center justify-between">
