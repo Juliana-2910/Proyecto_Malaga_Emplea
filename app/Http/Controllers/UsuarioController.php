@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Usuario;
-use App\Models\Rol;
 use App\Services\usuariosService;
 use App\Services\rolesServices;
 use App\Http\Requests\UsuariosStoreRequest;
@@ -24,7 +23,6 @@ class UsuarioController extends Controller
     public function index()
     {
         $usuarios = $this->usuariosService->listarTodos();
-
         return view('Usuarios.index', compact('usuarios'));
     }
 
