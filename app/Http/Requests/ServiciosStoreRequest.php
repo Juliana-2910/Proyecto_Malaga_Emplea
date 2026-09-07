@@ -25,6 +25,7 @@ class ServiciosStoreRequest extends FormRequest
         return [
             'nombre' => 'required|string|max:255',
             'descripcion' => 'required|string|max:255',
+            'idCategoria' => 'required|exists:categorias,id',
         ];
     }
 
@@ -38,6 +39,9 @@ class ServiciosStoreRequest extends FormRequest
             'descripcion.required' => 'El campo descripción es obligatorio.',
             'descripcion.string' => 'El campo descripción debe ser una cadena de texto.',
             'descripcion.max' => 'El campo descripción no debe exceder los 255 caracteres.',
+
+            'idCategoria.required' => 'El campo categoría es obligatorio.',
+            'idCategoria.exists' => 'La categoría seleccionada no es válida.',
         ];
     }
 }

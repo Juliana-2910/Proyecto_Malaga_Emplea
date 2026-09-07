@@ -8,9 +8,7 @@ class Servicios extends Model
 {
     protected $table = 'servicios';
 
-    protected $fillable = [ 'nombre', 'descripcion',
-    ];
-
+    protected $fillable = [ 'nombre', 'descripcion','idCategoria'];
 
     public function categoria()
     {
