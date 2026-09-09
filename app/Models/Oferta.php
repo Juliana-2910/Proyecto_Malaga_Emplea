@@ -12,4 +12,9 @@ class Oferta extends Model
     {
         return $this->belongsTo(Empresa::class, 'idEmpresa');
     }
+
+    public function postulaciones()
+    {
+        return $this->hasMany(Postulacion::class, 'idOferta');
+    }
 }

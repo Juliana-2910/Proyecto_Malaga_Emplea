@@ -21,4 +21,9 @@ class Usuario extends Model
     {
         return $this->hasMany(HojaDeVida::class, 'idUsuario'); /*Tabla padre con hoja de vida*/
     }
+
+    public function postulaciones()
+    {
+        return $this->hasMany(Postulacion::class, 'idUsuario');
+    }
 }
