@@ -9,8 +9,8 @@ class Usuario extends Model
     protected $table = 'usuarios';
 
     protected $fillable = ['nombres', 'apellidos', 'fechaNacimiento', 'tipoDocumento',
-     'numeroDocumento', 'correoElectronico', 'password', 'telefono', 'fechaRegistro',
-     'estado', 'idRol'];
+    'numeroDocumento', 'correoElectronico', 'password', 'telefono', 'fechaRegistro',
+    'estado', 'idRol'];
 
     public function rol()
     {
@@ -20,5 +20,10 @@ class Usuario extends Model
     public function hojaDeVida()
     {
         return $this->hasMany(HojaDeVida::class, 'idUsuario'); /*Tabla padre con hoja de vida*/
+    }
+
+    public function calificacion()
+    {
+        return $this->hasMany(Calificacion::class,'idUsuario');
     }
 }

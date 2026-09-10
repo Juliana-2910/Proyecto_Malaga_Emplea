@@ -4,6 +4,7 @@ use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\HojaDeVidaController;
 use App\Http\Controllers\ServiciosController;
+use App\Http\Controllers\CalificacionController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RolesController;
 use App\Http\Controllers\EmpresaController;
@@ -20,4 +21,5 @@ Route::resource('usuarios', UsuarioController::class);
 Route::resource('ofertas', OfertaController::class);
 Route::resource('hojaDeVida', HojaDeVidaController::class);
 Route::resource('servicios', ServiciosController::class);
+Route::resource('calificacion', CalificacionController::class);
 

@@ -12,8 +12,13 @@ class Empresa extends Model
     ];
 
     public function ofertas()
-  {
-    return $this->hasMany(Oferta::class, 'idEmpresa');
-  }
+    {
+        return $this->hasMany(Oferta::class, 'idEmpresa');
+    }
+
+    public function calificacion()
+    {
+        return $this->hasMany(Calificacion::class,'idEmpresa');
+    }
 
 }
