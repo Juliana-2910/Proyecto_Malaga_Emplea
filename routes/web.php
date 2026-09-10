@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RolesController;
 use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\OfertaController;
+use App\Http\Controllers\PostulacionController;
 
 
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard.index');
@@ -21,5 +22,5 @@ Route::resource('usuarios', UsuarioController::class);
 Route::resource('ofertas', OfertaController::class);
 Route::resource('hojaDeVida', HojaDeVidaController::class);
 Route::resource('servicios', ServiciosController::class);
+Route::resource('postulacion', PostulacionController::class);
 Route::resource('calificacion', CalificacionController::class);
-

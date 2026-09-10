@@ -30,6 +30,10 @@
           ['label' => 'Categorías',  'route' => 'categorias.index', 'icon' => 'tag'],
           ['label' => 'Empresas',    'route' => 'empresas.index',   'icon' => 'box'],
           ['label' => 'Ofertas',     'route' => 'ofertas.index',    'icon' => 'chart'],
+          ['label' => 'Hoja De Vida',     'route' => 'hojaDeVida.index',    'icon' => 'tag'],
+          ['label' => 'Servicios',     'route' => 'servicios.index',    'icon' => 'chart'],
+          ['label' => 'Postulaciones', 'route' => 'postulacion.index',   'icon' => 'box'],
+
       ];
          @endphp
 
