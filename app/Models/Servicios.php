@@ -14,4 +14,9 @@ class Servicios extends Model
     {
         return $this->belongsTo(Categoria::class, 'idCategoria'); /*Tabla Hija con categorias*/
     }
+
+    public function ofertaServicio()
+    {
+        return $this->hasMany(OfertaServicio::class,'idServicio'); /*Relación con la tabla ofertaServicios*/
+    }
 }

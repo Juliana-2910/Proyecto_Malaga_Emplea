@@ -33,7 +33,8 @@
           ['label' => 'Hoja De Vida',     'route' => 'hojaDeVida.index',    'icon' => 'tag'],
           ['label' => 'Servicios',     'route' => 'servicios.index',    'icon' => 'chart'],
           ['label' => 'Postulaciones', 'route' => 'postulacion.index',   'icon' => 'box'],
-
+          ['label' => 'Calificacion', 'route' => 'calificacion.index',   'icon' => 'star'],
+          ['label' => 'Oferta Servicios', 'route' => 'ofertaServicios.index',   'icon' => 'tag'],
       ];
          @endphp
 
