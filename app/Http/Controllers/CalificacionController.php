@@ -64,12 +64,12 @@ class CalificacionController extends Controller
     {
         $datos = $request->validated();
         $this->calificacionService->actualizar($id, $datos);
-        return redirect()->route('calificacion.index')->with('success','Calificacion actualizada correctamente');
+        return redirect()->route('calificacion.index')->with('actualizar','Calificacion actualizada correctamente');
     }
 
     public function destroy(int $id)
     {
         $this->calificacionService->eliminar($id);
-        return redirect()->route('calificacion.index')->with('success','Calificacion eliminada correctamente');
+        return redirect()->route('calificacion.index')->with('eliminar','Calificacion eliminada correctamente');
     }
 }

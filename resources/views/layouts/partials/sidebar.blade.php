@@ -13,30 +13,31 @@
 
         {{-- Logo --}}
         <div class="flex items-center gap-3 h-16 px-6 border-b border-[#444444]">
-            <div class="w-9 h-9 rounded-lg bg-[#4DB6E8] flex items-center justify-center text-white font-bold">
-                A
-            </div>
+        <div class="w-12 h-12 flex items-center justify-center">
+        <img
+            src="{{ asset('images/Logo Malaga Emplea.png') }}" >
+        </div>
             <span class="text-white font-semibold text-lg tracking-tight">{{ config('app.name', 'AdminPanel') }}</span>
         </div>
 
         {{-- Navegación --}}
         <nav class="flex-1 overflow-y-auto px-3 py-6 space-y-1" aria-label="Navegación lateral">
 
-      @php
-      $links = [
-          ['label' => 'Dashboard',   'route' => 'dashboard.index',  'icon' => 'home'],
-          ['label' => 'Roles',       'route' => 'roles.index',      'icon' => 'shield'],
-          ['label' => 'Usuarios',    'route' => 'usuarios.index',      'icon' => 'users'],
-          ['label' => 'Categorías',  'route' => 'categorias.index', 'icon' => 'tag'],
-          ['label' => 'Empresas',    'route' => 'empresas.index',   'icon' => 'box'],
-          ['label' => 'Ofertas',     'route' => 'ofertas.index',    'icon' => 'chart'],
-          ['label' => 'Hoja De Vida',     'route' => 'hojaDeVida.index',    'icon' => 'tag'],
-          ['label' => 'Servicios',     'route' => 'servicios.index',    'icon' => 'chart'],
-          ['label' => 'Postulaciones', 'route' => 'postulacion.index',   'icon' => 'box'],
-          ['label' => 'Calificacion', 'route' => 'calificacion.index',   'icon' => 'star'],
-          ['label' => 'Oferta Servicios', 'route' => 'ofertaServicios.index',   'icon' => 'tag'],
-      ];
-         @endphp
+        @php
+            $links = [
+            ['label' => 'Dashboard',   'route' => 'dashboard.index',  'icon' => 'home'],
+            ['label' => 'Roles',       'route' => 'roles.index',      'icon' => 'shield-check'],
+            ['label' => 'Categorías',  'route' => 'categorias.index', 'icon' => 'tag'],
+            ['label' => 'Servicios',     'route' => 'servicios.index',    'icon' => 'chart-bar'],
+            ['label' => 'Usuarios',    'route' => 'usuarios.index',      'icon' => 'user-group'],
+            ['label' => 'Empresas',    'route' => 'empresas.index',   'icon' => 'building'],
+            ['label' => 'Ofertas',     'route' => 'ofertas.index',    'icon' => 'briefcase'],
+            ['label' => 'Hoja de vida',     'route' => 'hojaDeVida.index',    'icon' => 'link'],
+            ['label' => 'Postulaciones', 'route' => 'postulacion.index',   'icon' => 'document'],
+            ['label' => 'Oferta Servicios', 'route' => 'ofertaServicios.index',   'icon' => 'circle-stack'],
+            ['label' => 'Calificacion', 'route' => 'calificacion.index',   'icon' => 'star'],
+            ];
+        @endphp
 
             @foreach ($links as $link)
                 @php
@@ -64,7 +65,7 @@
                 @csrf
                 <button
                     type="submit"
-                    class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-red-400 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500"
                     aria-label="Cerrar sesión"
                 >
                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">

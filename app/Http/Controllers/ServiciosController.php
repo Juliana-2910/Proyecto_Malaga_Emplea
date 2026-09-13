@@ -53,12 +53,12 @@ class ServiciosController extends Controller
     public function update(int $id, ServiciosUpdateRequest $request)
     {
         $this->serviciosService->actualizar($id, $request->validated());
-        return redirect()->route('servicios.index')->with('success', 'Servicio actualizado exitosamente.');
+        return redirect()->route('servicios.index')->with('actualizar', 'Servicio actualizado exitosamente.');
     }
 
     public function destroy($id)
     {
         $this->serviciosService->eliminar($id);
-        return redirect()->route('servicios.index')->with('success', 'Servicio eliminado exitosamente.');
+        return redirect()->route('servicios.index')->with('eliminar', 'Servicio eliminado exitosamente.');
     }
 }

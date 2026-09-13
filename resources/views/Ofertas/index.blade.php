@@ -2,160 +2,346 @@
 @extends('layouts.app')
 
 @section('title')
-    Ofertas laborales
+    Ofertas
 @endsection
 
 @section('content')
 
-<div class="min-h-screen bg-gray-100 py-10">
+<div class="min-h-screen bg-gray-100 py-8">
 
-<div class="mx-auto max-w-5xl px-6">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
-    {{-- Encabezado --}}
-    <div class="mb-6">
+        {{-- ENCABEZADO --}}
+        <div class="mb-7 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
 
-        <h1 class="text-3xl font-bold text-gray-800">
-            Ofertas laborales
-        </h1>
+            <div>
 
-        <p class="mt-1 text-sm text-gray-500">
-            Gestión de las ofertas laborales registradas
-        </p>
+                <h1 class="text-2xl font-bold tracking-tight text-gray-800 sm:text-3xl">
+                    Ofertas
+                </h1>
 
-    </div>
+                <p class="mt-1 text-sm text-gray-500">
+                    Administración de ofertas laborales del sistema
+                </p>
 
-    {{-- Mensajes --}}
-    @if(session('success'))
-        <div class="mb-6 rounded-lg bg-green-100 px-4 py-3 text-sm text-green-700">
-            {{ session('success') }}
-        </div>
-    @endif
+            </div>
 
-    @if(session('actualizar'))
-        <div class="mb-6 rounded-lg bg-blue-100 px-4 py-3 text-sm text-blue-700">
-            {{ session('actualizar') }}
-        </div>
-    @endif
+            <a
+                href="{{ route('ofertas.create') }}"
+                class="inline-flex items-center justify-center gap-2 rounded-xl bg-[#4DB6E8] px-5 py-3 text-sm font-semibold text-white shadow-sm transition duration-200 hover:bg-[#333333]">
 
-    @if(session('eliminar'))
-        <div class="mb-6 rounded-lg bg-red-100 px-4 py-3 text-sm text-red-700">
-            {{ session('eliminar') }}
-        </div>
-    @endif
+                @php($icon = 'plus')
+                @include('layouts.partials.icons')
 
-    {{-- Tabla --}}
-    <div class="rounded-xl bg-white p-8 shadow">
+                Crear oferta
 
-        <div class="mb-6 flex justify-end">
-
-            <a href="{{ route('ofertas.create') }}"
-                class="rounded-lg bg-[#4DB6E8] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#333333]">
-                Nueva oferta
             </a>
 
         </div>
 
-        <div class="overflow-x-auto">
 
-            <table class="w-full text-left text-sm text-gray-600">
+        {{-- TARJETA PRINCIPAL --}}
+        <div class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-[0_10px_35px_rgba(77,182,232,0.20)]">
 
-                <thead class="bg-gray-100 text-xs uppercase text-gray-700">
+            {{-- TÍTULO DE LA TABLA --}}
+            <div class="border-b border-gray-100 px-6 py-4">
 
-                    <tr>
+                <h2 class="text-lg font-semibold text-gray-800">
+                    Ofertas registradas
+                </h2>
 
-                        <th class="px-4 py-3">
-                            Título
-                        </th>
+            </div>
 
-                        <th class="px-4 py-3">
-                            Salario
-                        </th>
 
-                        <th class="px-4 py-3">
-                            Tipo de contrato
-                        </th>
+            {{-- TABLA --}}
+            <div class="overflow-x-auto">
 
-                        <th class="px-4 py-3">
-                            Ubicación
-                        </th>
+                <table class="w-full text-center text-gray-600">
 
-                        <th class="px-4 py-3">
-                            Empresa
-                        </th>
+                    <thead class="bg-[#333333] text-white">
 
-                        <th class="px-4 py-3 text-center">
-                            Acciones
-                        </th>
+                        <tr>
 
-                    </tr>
+                            <th class="border-r border-gray-600 px-6 py-4 text-sm font-semibold">
+                                ID
+                            </th>
 
-                </thead>
+                            <th class="border-r border-gray-600 px-6 py-4 text-sm font-semibold">
+                                Título
+                            </th>
 
-                <tbody>
+                            <th class="border-r border-gray-600 px-6 py-4 text-sm font-semibold">
+                                Salario
+                            </th>
 
-                    @foreach ($ofertas as $oferta)
+                            <th class="border-r border-gray-600 px-6 py-4 text-sm font-semibold">
+                                Tipo de contrato
+                            </th>
 
-                        <tr class="border-b border-gray-200 hover:bg-gray-50">
+                            <th class="border-r border-gray-600 px-6 py-4 text-sm font-semibold">
+                                Ubicación
+                            </th>
 
-                            <td class="px-4 py-3 font-semibold text-gray-800">
-                                {{ $oferta->titulo }}
-                            </td>
+                            <th class="border-r border-gray-600 px-6 py-4 text-sm font-semibold">
+                                Empresa
+                            </th>
 
-                            <td class="px-4 py-3">
-                                ${{ number_format($oferta->salario, 0, ',', '.') }}
-                            </td>
+                            <th class="px-6 py-4 text-sm font-semibold">
+                                Acciones
+                            </th>
 
-                            <td class="px-4 py-3">
-                                {{ $oferta->tipoContrato }}
-                            </td>
+                        </tr>
 
-                            <td class="px-4 py-3">
-                                {{ $oferta->ubicacion }}
-                            </td>
+                    </thead>
 
-                            <td class="px-4 py-3">
-                                {{ $oferta->empresa->nombreEmpresa }}
-                            </td>
 
-                            <td class="px-4 py-3">
+                    <tbody class="divide-y divide-gray-200">
 
-                                <div class="flex justify-center gap-2">
+                        @forelse ($ofertas as $oferta)
 
-                                    <a href="{{ route('ofertas.edit', $oferta->id) }}"
-                                        class="rounded-lg bg-[#4DB6E8] px-4 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-[#333333]">
-                                        Editar
-                                    </a>
+                            <tr class="transition hover:bg-gray-50">
 
-                                    <form action="{{ route('ofertas.destroy', $oferta->id) }}" method="POST">
+                                {{-- ID --}}
+                                <td class="border-r border-gray-100 px-6 py-5 text-sm font-medium text-gray-600">
+
+                                    {{ $oferta->id }}
+
+                                </td>
+
+
+                                {{-- TÍTULO --}}
+                                <td class="border-r border-gray-100 px-6 py-5 text-sm font-medium text-gray-600">
+
+                                    {{ $oferta->titulo }}
+
+                                </td>
+
+
+                                {{-- SALARIO --}}
+                                <td class="border-r border-gray-100 px-6 py-5 text-sm font-medium text-gray-600">
+
+                                    ${{ number_format($oferta->salario, 0, ',', '.') }}
+
+                                </td>
+
+
+                                {{-- TIPO DE CONTRATO --}}
+                                <td class="border-r border-gray-100 px-6 py-5 text-sm font-medium text-gray-600">
+
+                                    {{ $oferta->tipoContrato }}
+
+                                </td>
+
+
+                                {{-- UBICACIÓN --}}
+                                <td class="border-r border-gray-100 px-6 py-5 text-sm font-medium text-gray-600">
+
+                                    {{ $oferta->ubicacion }}
+
+                                </td>
+
+
+                                {{-- EMPRESA --}}
+                                <td class="border-r border-gray-100 px-6 py-5 text-sm font-medium text-gray-600">
+
+                                    {{ $oferta->empresa->nombreEmpresa }}
+
+                                </td>
+
+
+                                {{-- ACCIONES --}}
+                                <td class="px-6 py-5">
+
+                                    <div class="flex items-center justify-center gap-2">
+
+                                        {{-- EDITAR --}}
+                                        <a
+                                            href="{{ route('ofertas.edit', $oferta->id) }}"
+                                            title="Editar oferta"
+                                            class="flex h-9 w-9 items-center justify-center rounded-lg bg-[#4DB6E8]/10 text-[#4DB6E8] transition duration-200 hover:bg-[#4DB6E8] hover:text-white">
+
+                                            @php($icon = 'pencil')
+                                            @include('layouts.partials.icons')
+
+                                        </a>
+
+
+                                        {{-- ELIMINAR --}}
+                                        <button
+                                            type="button"
+                                            title="Eliminar oferta"
+                                            @click="$dispatch('open-modal', 'delete-{{ $oferta->id }}')"
+                                            class="flex h-9 w-9 items-center justify-center rounded-lg bg-red-50 text-red-500 transition duration-200 hover:bg-red-500 hover:text-white">
+
+                                            @php($icon = 'trash')
+                                            @include('layouts.partials.icons')
+
+                                        </button>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+
+                            {{-- MODAL ELIMINAR --}}
+                            <x-modal
+                                name="delete-{{ $oferta->id }}"
+                                title="Eliminar oferta"
+                                maxWidth="sm">
+
+                                <div class="text-center">
+
+                                    <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-100 text-red-600">
+
+                                        @php($icon = 'exclamation-triangle')
+                                        @include('layouts.partials.icons')
+
+                                    </div>
+
+                                    <p class="text-sm leading-6 text-gray-500">
+
+                                        ¿Seguro que deseas eliminar la oferta
+
+                                        <strong class="text-gray-800">
+                                            {{ $oferta->titulo }}
+                                        </strong>?
+
+                                        <br>
+
+                                        Esta acción no se puede deshacer.
+
+                                    </p>
+
+                                </div>
+
+
+                                <x-slot:footer>
+
+                                    <x-button
+                                        variant="secondary"
+                                        @click="show = false">
+
+                                        Cancelar
+
+                                    </x-button>
+
+
+                                    <form
+                                        action="{{ route('ofertas.destroy', $oferta->id) }}"
+                                        method="POST">
 
                                         @csrf
                                         @method('DELETE')
 
-                                        <button type="submit"
-                                            onclick="return confirm('¿Está seguro de eliminar esta oferta?')"
-                                            class="rounded-lg bg-gray-500 px-4 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-[#333333]">
+                                        <x-button
+                                            variant="danger"
+                                            type="submit">
+
                                             Eliminar
-                                        </button>
+
+                                        </x-button>
 
                                     </form>
 
-                                </div>
+                                </x-slot:footer>
 
-                            </td>
+                            </x-modal>
 
-                        </tr>
 
-                    @endforeach
+                        @empty
 
-                </tbody>
+                            {{-- ESTADO VACÍO --}}
+                            <tr>
 
-            </table>
+                                <td colspan="7">
+
+                                    <div class="px-6 py-16 text-center">
+
+                                        <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#4DB6E8]/10 text-[#4DB6E8]">
+
+                                            @php($icon = 'briefcase')
+                                            @include('layouts.partials.icons')
+
+                                        </div>
+
+
+                                        <h3 class="text-lg font-semibold text-gray-800">
+
+                                            No hay ofertas laborales registradas
+
+                                        </h3>
+
+
+                                        <p class="mx-auto mt-2 max-w-md text-sm text-gray-500">
+
+                                            Todavía no existen ofertas laborales registradas en el sistema.
+
+                                        </p>
+
+
+                                        <a
+                                            href="{{ route('ofertas.create') }}"
+                                            class="mt-5 inline-flex items-center gap-2 rounded-xl bg-[#4DB6E8] px-5 py-2.5 text-sm font-semibold text-white transition duration-200 hover:bg-[#333333]">
+
+                                            @php($icon = 'plus')
+                                            @include('layouts.partials.icons')
+
+                                            Crear oferta
+
+                                        </a>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                        @endforelse
+
+                    </tbody>
+
+                </table>
+
+            </div>
 
         </div>
 
-    </div>
 
-</div>
+        {{-- CONTADOR --}}
+        @if ($ofertas->count() > 0)
+
+            <div class="mt-4 flex items-center justify-between px-1">
+
+                <p class="text-sm text-gray-500">
+
+                    Mostrando
+
+                    <span class="font-semibold text-gray-800">
+                        {{ $ofertas->count() }}
+                    </span>
+
+                    {{ $ofertas->count() == 1
+                        ? 'oferta laboral registrada'
+                        : 'ofertas laborales registradas' }}
+
+                </p>
+
+
+                <div class="hidden items-center gap-2 text-xs text-gray-400 sm:flex">
+
+                    <span class="h-2 w-2 rounded-full bg-[#4DB6E8]"></span>
+
+                    Málaga Emplea
+
+                </div>
+
+            </div>
+
+        @endif
+
+    </div>
 
 </div>
 

@@ -2,250 +2,379 @@
 @extends('layouts.app')
 
 @section('title')
-Crud de usuarios
+    Usuarios
 @endsection
 
 @section('content')
 
-<div class="min-h-screen bg-gray-100 py-10">
+<div class="min-h-screen bg-gray-100 py-8">
 
-<div class="mx-auto max-w-6xl px-6">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
-    {{-- Encabezado --}}
-    <div class="mb-6 flex items-center justify-between">
+        {{-- ENCABEZADO --}}
+        <div class="mb-7 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
 
-        <div>
-            <h1 class="text-3xl font-bold text-gray-800">
-                Usuarios
-            </h1>
+            <div>
 
-            <p class="mt-1 text-sm text-gray-500">
-                Administración de usuarios del sistema
-            </p>
-        </div>
+                <h1 class="text-2xl font-bold tracking-tight text-gray-800 sm:text-3xl">
+                    Usuarios
+                </h1>
 
-        <a href="{{ route('usuarios.create') }}"
-           class="rounded-lg bg-[#4DB6E8] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#333333]">
-            Crear usuario
-        </a>
+                <p class="mt-1 text-sm text-gray-500">
+                    Administración de usuarios del sistema
+                </p>
 
-    </div>
+            </div>
 
+            <a
+                href="{{ route('usuarios.create') }}"
+                class="inline-flex items-center justify-center gap-2 rounded-xl bg-[#4DB6E8] px-5 py-3 text-sm font-semibold text-white shadow-sm transition duration-200 hover:bg-[#333333]">
 
-    {{-- Mensajes --}}
-    @if (session('success'))
+                @php($icon = 'plus')
+                @include('layouts.partials.icons')
 
-        <div class="mb-5 rounded-lg bg-green-100 px-4 py-3 text-sm text-green-700">
-            {{ session('success') }}
-        </div>
+                Crear usuario
 
-    @endif
-
-
-    @if (session('actualizar'))
-
-        <div class="mb-5 rounded-lg bg-blue-100 px-4 py-3 text-sm text-blue-700">
-            {{ session('actualizar') }}
-        </div>
-
-    @endif
-
-
-    @if (session('eliminar'))
-
-        <div class="mb-5 rounded-lg bg-red-100 px-4 py-3 text-sm text-red-700">
-            {{ session('eliminar') }}
-        </div>
-
-    @endif
-
-
-    {{-- Tabla de usuarios --}}
-    <div class="overflow-hidden rounded-xl bg-white shadow">
-
-        <div class="border-b border-gray-200 px-6 py-4">
-
-            <h2 class="text-lg font-semibold text-gray-800">
-                Lista de usuarios
-            </h2>
+            </a>
 
         </div>
 
 
-        <div class="overflow-x-auto">
+        {{-- TARJETA PRINCIPAL --}}
+        <div class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-[0_10px_35px_rgba(77,182,232,0.20)]">
 
-            <table class="w-full text-left text-sm text-gray-600">
+            {{-- TÍTULO DE LA TABLA --}}
+            <div class="border-b border-gray-100 px-6 py-4">
 
-                <thead class="bg-[#333333] text-white">
+                <h2 class="text-lg font-semibold text-gray-800">
+                    Usuarios registrados
+                </h2>
 
-                    <tr>
-
-                        <th class="px-6 py-4 font-semibold">
-                            ID
-                        </th>
-
-                        <th class="px-6 py-4 font-semibold">
-                            Nombres
-                        </th>
-
-                        <th class="px-6 py-4 font-semibold">
-                            Apellidos
-                        </th>
-
-                        <th class="px-6 py-4 font-semibold">
-                            Tipo documento
-                        </th>
-
-                        <th class="px-6 py-4 font-semibold">
-                            Número documento
-                        </th>
-
-                        <th class="px-6 py-4 font-semibold">
-                            Correo electrónico
-                        </th>
-
-                        <th class="px-6 py-4 font-semibold">
-                            Teléfono
-                        </th>
-
-                        <th class="px-6 py-4 font-semibold">
-                            Estado
-                        </th>
-
-                        <th class="px-6 py-4 text-center font-semibold">
-                            Acciones
-                        </th>
-
-                    </tr>
-
-                </thead>
+            </div>
 
 
-                <tbody class="divide-y divide-gray-200">
+            {{-- TABLA --}}
+            <div class="overflow-x-auto">
 
-                    @forelse ($usuarios as $usuario)
+                <table class="w-full text-center text-gray-600">
 
-                        <tr class="transition hover:bg-gray-50">
+                    <thead class="bg-[#333333] text-white">
 
-                            {{-- ID --}}
-                            <td class="px-6 py-4 font-medium text-gray-800">
-                                {{ $usuario->id }}
-                            </td>
+                        <tr>
+
+                            <th class="border-r border-gray-600 px-6 py-4 text-sm font-semibold">
+                                ID
+                            </th>
+
+                            <th class="border-r border-gray-600 px-6 py-4 text-sm font-semibold">
+                                Nombres
+                            </th>
+
+                            <th class="border-r border-gray-600 px-6 py-4 text-sm font-semibold">
+                                Apellidos
+                            </th>
+
+                            <th class="border-r border-gray-600 px-6 py-4 text-sm font-semibold">
+                                Tipo de documento
+                            </th>
+
+                            <th class="border-r border-gray-600 px-6 py-4 text-sm font-semibold">
+                                Número de documento
+                            </th>
+
+                            <th class="border-r border-gray-600 px-6 py-4 text-sm font-semibold">
+                                Correo electrónico
+                            </th>
+
+                            <th class="border-r border-gray-600 px-6 py-4 text-sm font-semibold">
+                                Teléfono
+                            </th>
+
+                            <th class="border-r border-gray-600 px-6 py-4 text-sm font-semibold">
+                                Estado
+                            </th>
+
+                            <th class="px-6 py-4 text-sm font-semibold">
+                                Acciones
+                            </th>
+
+                        </tr>
+
+                    </thead>
 
 
-                            {{-- Nombres --}}
-                            <td class="px-6 py-4">
-                                <span class="font-medium text-gray-700">
+                    <tbody class="divide-y divide-gray-200">
+
+                        @forelse ($usuarios as $usuario)
+
+                            <tr class="transition hover:bg-gray-50">
+
+                                {{-- ID --}}
+                                <td class="border-r border-gray-100 px-6 py-5 text-sm font-medium text-gray-600">
+
+                                    {{ $usuario->id }}
+
+                                </td>
+
+
+                                {{-- NOMBRES --}}
+                                <td class="border-r border-gray-100 px-6 py-5 text-sm font-medium text-gray-600">
+
                                     {{ $usuario->nombres }}
-                                </span>
-                            </td>
+
+                                </td>
 
 
-                            {{-- Apellidos --}}
-                            <td class="px-6 py-4">
-                                {{ $usuario->apellidos }}
-                            </td>
+                                {{-- APELLIDOS --}}
+                                <td class="border-r border-gray-100 px-6 py-5 text-sm font-medium text-gray-600">
+
+                                    {{ $usuario->apellidos }}
+
+                                </td>
 
 
-                            {{-- Tipo de documento --}}
-                            <td class="px-6 py-4">
-                                {{ $usuario->tipoDocumento }}
-                            </td>
+                                {{-- TIPO DE DOCUMENTO --}}
+                                <td class="border-r border-gray-100 px-6 py-5 text-sm font-medium text-gray-600">
+
+                                    {{ $usuario->tipoDocumento }}
+
+                                </td>
 
 
-                            {{-- Número de documento --}}
-                            <td class="px-6 py-4">
-                                {{ $usuario->numeroDocumento }}
-                            </td>
+                                {{-- NÚMERO DE DOCUMENTO --}}
+                                <td class="border-r border-gray-100 px-6 py-5 text-sm font-medium text-gray-600">
+
+                                    {{ $usuario->numeroDocumento }}
+
+                                </td>
 
 
-                            {{-- Correo electrónico --}}
-                            <td class="px-6 py-4">
-                                {{ $usuario->correoElectronico }}
-                            </td>
+                                {{-- CORREO ELECTRÓNICO --}}
+                                <td class="border-r border-gray-100 px-6 py-5 text-sm font-medium text-gray-600">
+
+                                    {{ $usuario->correoElectronico }}
+
+                                </td>
 
 
-                            {{-- Teléfono --}}
-                            <td class="px-6 py-4">
-                                {{ $usuario->telefono }}
-                            </td>
+                                {{-- TELÉFONO --}}
+                                <td class="border-r border-gray-100 px-6 py-5 text-sm font-medium text-gray-600">
+
+                                    {{ $usuario->telefono }}
+
+                                </td>
 
 
-                            {{-- Estado --}}
-                            <td class="px-6 py-4">
+                                {{-- ESTADO --}}
+                                <td class="border-r border-gray-100 px-6 py-5">
 
-                                @if ($usuario->estado === 'Activo')
+                                    @if ($usuario->estado === 'Activo')
 
-                                    <span class="rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">
-                                        Activo
-                                    </span>
+                                        <span class="rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">
+                                            Activo
+                                        </span>
 
-                                @else
+                                    @else
 
-                                    <span class="rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-700">
-                                        Inactivo
-                                    </span>
+                                        <span class="rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-700">
+                                            Inactivo
+                                        </span>
 
-                                @endif
+                                    @endif
 
-                            </td>
-
-
-                            {{-- Acciones --}}
-                            <td class="px-6 py-4">
-
-                                <div class="flex justify-center gap-2">
-
-                                    {{-- Editar --}}
-                                    <a href="{{ route('usuarios.edit', $usuario->id) }}"
-                                       class="rounded-lg bg-[#4DB6E8] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#333333]">
-                                        Editar
-                                    </a>
+                                </td>
 
 
-                                    {{-- Eliminar --}}
-                                    <form action="{{ route('usuarios.destroy', $usuario->id) }}"
-                                          method="POST">
+                                {{-- ACCIONES --}}
+                                <td class="px-6 py-5">
+
+                                    <div class="flex items-center justify-center gap-2">
+
+                                        {{-- EDITAR --}}
+                                        <a
+                                            href="{{ route('usuarios.edit', $usuario->id) }}"
+                                            title="Editar usuario"
+                                            class="flex h-9 w-9 items-center justify-center rounded-lg bg-[#4DB6E8]/10 text-[#4DB6E8] transition duration-200 hover:bg-[#4DB6E8] hover:text-white">
+
+                                            @php($icon = 'pencil')
+                                            @include('layouts.partials.icons')
+
+                                        </a>
+
+
+                                        {{-- ELIMINAR --}}
+                                        <button
+                                            type="button"
+                                            title="Eliminar usuario"
+                                            @click="$dispatch('open-modal', 'delete-{{ $usuario->id }}')"
+                                            class="flex h-9 w-9 items-center justify-center rounded-lg bg-red-50 text-red-500 transition duration-200 hover:bg-red-500 hover:text-white">
+
+                                            @php($icon = 'trash')
+                                            @include('layouts.partials.icons')
+
+                                        </button>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+
+                            {{-- MODAL ELIMINAR --}}
+                            <x-modal
+                                name="delete-{{ $usuario->id }}"
+                                title="Eliminar usuario"
+                                maxWidth="sm">
+
+                                <div class="text-center">
+
+                                    <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-100 text-red-600">
+
+                                        @php($icon = 'exclamation-triangle')
+                                        @include('layouts.partials.icons')
+
+                                    </div>
+
+                                    <p class="text-sm leading-6 text-gray-500">
+
+                                        ¿Seguro que deseas eliminar al usuario
+
+                                        <strong class="text-gray-800">
+                                            {{ $usuario->nombres }} {{ $usuario->apellidos }}
+                                        </strong>?
+
+                                        <br>
+
+                                        Esta acción no se puede deshacer.
+
+                                    </p>
+
+                                </div>
+
+
+                                <x-slot:footer>
+
+                                    <x-button
+                                        variant="secondary"
+                                        @click="show = false">
+
+                                        Cancelar
+
+                                    </x-button>
+
+
+                                    <form
+                                        action="{{ route('usuarios.destroy', $usuario->id) }}"
+                                        method="POST">
 
                                         @csrf
 
                                         @method('DELETE')
 
-                                        <button type="submit"
-                                                class="rounded-lg bg-red-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#333333]"
-                                                onclick="return confirm('¿Está seguro de eliminar este usuario?')">
+                                        <x-button
+                                            variant="danger"
+                                            type="submit">
+
                                             Eliminar
-                                        </button>
+
+                                        </x-button>
 
                                     </form>
 
-                                </div>
+                                </x-slot:footer>
 
-                            </td>
+                            </x-modal>
 
-                        </tr>
 
-                    @empty
+                        @empty
 
-                        <tr>
+                            {{-- ESTADO VACÍO --}}
+                            <tr>
 
-                            <td colspan="9" class="px-6 py-8 text-center text-gray-500">
-                                No hay usuarios registrados.
-                            </td>
+                                <td colspan="9">
 
-                        </tr>
+                                    <div class="px-6 py-16 text-center">
 
-                    @endforelse
+                                        <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#4DB6E8]/10 text-[#4DB6E8]">
 
-                </tbody>
+                                            @php($icon = 'user-group')
+                                            @include('layouts.partials.icons')
 
-            </table>
+                                        </div>
+
+
+                                        <h3 class="text-lg font-semibold text-gray-800">
+                                            No hay usuarios registrados
+                                        </h3>
+
+
+                                        <p class="mx-auto mt-2 max-w-md text-sm text-gray-500">
+                                            Todavía no existen usuarios registrados en el sistema.
+                                        </p>
+
+
+                                        <a
+                                            href="{{ route('usuarios.create') }}"
+                                            class="mt-5 inline-flex items-center gap-2 rounded-xl bg-[#4DB6E8] px-5 py-2.5 text-sm font-semibold text-white transition duration-200 hover:bg-[#333333]">
+
+                                            @php($icon = 'plus')
+                                            @include('layouts.partials.icons')
+
+                                            Crear usuario
+
+                                        </a>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                        @endforelse
+
+                    </tbody>
+
+                </table>
+
+            </div>
 
         </div>
 
-    </div>
 
-</div>
+        {{-- CONTADOR --}}
+        @if ($usuarios->count() > 0)
+
+            <div class="mt-4 flex items-center justify-between px-1">
+
+                <p class="text-sm text-gray-500">
+
+                    Mostrando
+
+                    <span class="font-semibold text-gray-800">
+                        {{ $usuarios->count() }}
+                    </span>
+
+                    {{ $usuarios->count() == 1
+                        ? 'usuario registrado'
+                        : 'usuarios registrados' }}
+
+                </p>
+
+
+                <div class="hidden items-center gap-2 text-xs text-gray-400 sm:flex">
+
+                    <span class="h-2 w-2 rounded-full bg-[#4DB6E8]"></span>
+
+                    Málaga Emplea
+
+                </div>
+
+            </div>
+
+        @endif
+
+    </div>
 
 </div>
 

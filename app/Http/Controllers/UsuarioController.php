@@ -53,12 +53,12 @@ class UsuarioController extends Controller
     public function update(int $id,UsuariosUpdateRequest $request)
     {
         $this->usuariosService->actualizar($id, $request->validated());
-        return redirect()->route('usuarios.index')->with('success', 'Usuario actualizado exitosamente.');
+        return redirect()->route('usuarios.index')->with('actualizar', 'Usuario actualizado exitosamente.');
     }
 
     public function destroy($id)
     {
         $this->usuariosService->eliminar($id);
-        return redirect()->route('usuarios.index')->with('success', 'Usuario eliminado exitosamente.');
+        return redirect()->route('usuarios.index')->with('eliminar', 'Usuario eliminado exitosamente.');
     }
 }

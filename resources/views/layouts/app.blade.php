@@ -138,17 +138,125 @@
         {{-- Contenido de cada vista --}}
         <main class="flex-1 p-4 sm:p-6 lg:p-8">
 
-            @if (session('success'))
-                <x-alert type="success" class="mb-6">
-                    {{ session('success') }}
-                </x-alert>
-            @endif
+        {{-- Mensajes --}}
 
-            @if (session('error'))
-                <x-alert type="error" class="mb-6">
-                    {{ session('error') }}
-                </x-alert>
-            @endif
+        {{-- Mensaje de éxito --}}
+
+        @if (session('success'))
+
+            <div
+                class="mb-6 flex items-center justify-between rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700 shadow-sm"
+                x-data="{ show: true }"
+                x-show="show"
+                x-transition>
+
+                <div class="flex items-center gap-3">
+
+                    <div class="flex h-8 w-8 items-center justify-center rounded-full bg-green-100">
+
+                        @php($icon = 'check')
+                        @include('layouts.partials.icons')
+
+                    </div>
+
+                    <span>
+                        {{ session('success') }}
+                    </span>
+
+                </div>
+
+                <button
+                    type="button"
+                    @click="show = false"
+                    class="ml-4 text-green-600 transition hover:text-green-900">
+
+                    @php($icon = 'x-mark')
+                    @include('layouts.partials.icons')
+
+                </button>
+
+            </div>
+
+        @endif
+
+
+        {{-- Mensaje de actualizacion --}}
+        @if (session('actualizar'))
+
+            <div
+                class="mb-6 flex items-center justify-between rounded-xl border border-[#4DB6E8]/30 bg-[#4DB6E8]/10 px-4 py-3 text-sm text-[#2386B5] shadow-sm"
+                x-data="{ show: true }"
+                x-show="show"
+                x-transition>
+
+                <div class="flex items-center gap-3">
+
+                    <div class="flex h-8 w-8 items-center justify-center rounded-full bg-[#4DB6E8]/20">
+
+                        @php($icon = 'arrow-path')
+                        @include('layouts.partials.icons')
+
+                    </div>
+
+                    <span>
+                        {{ session('actualizar') }}
+                    </span>
+
+                </div>
+
+                <button
+                    type="button"
+                    @click="show = false"
+                    class="ml-4 text-[#2386B5] transition hover:text-[#333333]">
+
+                    @php($icon = 'x-mark')
+                    @include('layouts.partials.icons')
+
+                </button>
+
+            </div>
+
+        @endif
+
+
+        {{-- Mensaje de eliminacion --}}
+        @if (session('eliminar'))
+
+            <div
+                class="mb-6 flex items-center justify-between rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 shadow-sm"
+                x-data="{ show: true }"
+                x-show="show"
+                x-transition>
+
+                <div class="flex items-center gap-3">
+
+                    <div class="flex h-8 w-8 items-center justify-center rounded-full bg-red-100">
+
+                        @php($icon = 'trash')
+                        @include('layouts.partials.icons')
+
+                    </div>
+
+                    <span>
+                        {{ session('eliminar') }}
+                    </span>
+
+                </div>
+
+                <button
+                    type="button"
+                    @click="show = false"
+                    class="ml-4 text-red-600 transition hover:text-red-900">
+
+                    @php($icon = 'x-mark')
+                    @include('layouts.partials.icons')
+
+                </button>
+
+            </div>
+
+        @endif
+
 
             @yield('content')
 

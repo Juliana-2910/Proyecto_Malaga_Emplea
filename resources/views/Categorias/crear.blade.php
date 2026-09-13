@@ -2,106 +2,76 @@
 @extends('layouts.app')
 
 @section('title')
-Crear Categoría
+    Crear categoría
 @endsection
 
 @section('content')
 
+<div class="min-h-screen bg-gray-100 py-10">
 
-<div class="container mx-auto mt-10">
+    <div class="mx-auto max-w-5xl px-6">
 
-    <div class="max-w-2xl mx-auto">
+        {{-- Encabezado --}}
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-800">
+                Crear categoría
+            </h1>
 
-        <div class="bg-white shadow-lg rounded-lg p-6">
+            <p class="mt-1 text-sm text-gray-500">
+                Registra una nueva categoría.
+            </p>
+        </div>
 
-            {{-- Encabezado --}}
-            <div class="mb-6">
+        {{-- Formulario --}}
+        <div class="rounded-xl bg-white p-8 shadow">
 
-                <h2 class="text-3xl font-bold text-gray-700">
-                    Crear Categoría
-                </h2>
-
-                <p class="text-gray-500 mt-2">
-                    Registra una nueva categoría.
-                </p>
-
-            </div>
-
-            {{-- Errores de validación --}}
-            @if ($errors->any())
-
-                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
-
-                    <p class="font-semibold mb-2">
-                        Por favor corrige los siguientes errores:
-                    </p>
-
-                    <ul class="list-disc list-inside">
-
-                        @foreach ($errors->all() as $error)
-
-                            <li>
-                                {{ $error }}
-                            </li>
-
-                        @endforeach
-
-                    </ul>
-
-                </div>
-
-            @endif
-
-            {{-- Formulario --}}
             <form action="{{ route('categorias.store') }}" method="POST">
-
                 @csrf
 
-                {{-- Nombre --}}
-                <div class="mb-5">
+                <div class="grid grid-cols-1 gap-6">
 
-                    <label
-                        for="nombre"
-                        class="block text-gray-700 font-semibold mb-2"
-                    >
-                        Nombre de la categoría
-                    </label>
+                    {{-- Nombre --}}
+                    <div>
+                        <label
+                            for="nombre"
+                            class="mb-1 block text-sm font-medium text-gray-700"
+                        >
+                            Nombre de la categoría
+                        </label>
 
-                    <input
-                        type="text"
-                        id="nombre"
-                        name="nombre"
-                        value="{{ old('nombre') }}"
-                        placeholder="Ingrese el nombre de la categoría"
-                        class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        required
-                    >
+                        <input
+                            type="text"
+                            name="nombre"
+                            id="nombre"
+                            value="{{ old('nombre') }}"
+                            placeholder="Ingrese el nombre de la categoría"
+                            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]"
+                        >
 
-                    @error('nombre')
-
-                        <p class="text-red-500 text-sm mt-1">
-                            {{ $message }}
-                        </p>
-
-                    @enderror
+                        @error('nombre')
+                            <p class="mt-1 text-sm text-red-500">
+                                {{ $message }}
+                            </p>
+                        @enderror
+                    </div>
 
                 </div>
 
                 {{-- Botones --}}
-                <div class="flex justify-end gap-3 mt-6">
+                <div class="mt-8 flex justify-end gap-3">
 
                     <a
                         href="{{ route('categorias.index') }}"
-                        class="bg-gray-500 hover:bg-gray-600 text-white font-semibold px-5 py-2 rounded-lg shadow transition duration-300"
+                        class="rounded-lg bg-gray-500 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-[#333333]"
                     >
                         Cancelar
                     </a>
 
                     <button
                         type="submit"
-                        class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2 rounded-lg shadow transition duration-300"
+                        class="rounded-lg bg-[#4DB6E8] px-5 py-2.5 text-sm font-medium text-white transition hover:bg-[#333333]"
                     >
-                        Guardar Categoría
+                        Guardar categoría
                     </button>
 
                 </div>
@@ -113,6 +83,5 @@ Crear Categoría
     </div>
 
 </div>
-
 
 @endsection

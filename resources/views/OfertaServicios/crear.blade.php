@@ -49,10 +49,9 @@
                         Seleccione una oferta
                     </option>
 
-                    @foreach ($ofertas as $oferta)
+                    @foreach ($ofertas->unique('titulo') as $oferta)
 
-                        <option value="{{ $oferta->id }}"
-                            {{ old('idOferta') == $oferta->id ? 'selected' : '' }}>
+                        <option value="{{ $oferta->id }}">
 
                             {{ $oferta->titulo }}
 
@@ -88,13 +87,10 @@
                         Seleccione un servicio
                     </option>
 
-                    @foreach ($servicios as $servicio)
+                    @foreach ($servicios->unique('nombre') as $servicio)
 
-                        <option value="{{ $servicio->id }}"
-                            {{ old('idServicio') == $servicio->id ? 'selected' : '' }}>
-
+                        <option value="{{ $servicio->id }}">
                             {{ $servicio->nombre }}
-
                         </option>
 
                     @endforeach

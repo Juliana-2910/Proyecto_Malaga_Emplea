@@ -6,8 +6,8 @@ use App\Models\Roles;
 
 class rolesRepository{
 
-   public function listarTodos()
-   {
+    public function listarTodos()
+    {
         $roles = Roles::all();
         return $roles;
     }

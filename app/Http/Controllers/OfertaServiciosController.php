@@ -48,7 +48,7 @@ class OfertaServiciosController extends Controller
         return redirect()->route('ofertaServicios.index')->with('success','Oferta Servicio creada exitosamente');
     }
 
-    public function show(OfertaServicio $ofertaServicio)
+    public function show()
     {
         //
     }
@@ -70,6 +70,6 @@ class OfertaServiciosController extends Controller
     public function destroy($id)
     {
         $this->ofertaServiciosService->eliminar($id);
-        return redirect()->route('ofertaServicios.index')->with('success', 'Oferta Servicio eliminada exitosamente');
+        return redirect()->route('ofertaServicios.index')->with('eliminar', 'Oferta Servicio eliminada exitosamente');
     }
 }
