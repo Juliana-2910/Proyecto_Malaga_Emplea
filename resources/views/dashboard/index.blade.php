@@ -1,185 +1,752 @@
+
 @extends('layouts.app')
 
-@section('title', 'Dashboard')
-@section('page-title', 'Dashboard')
+@section('title', 'Inicio')
+
+@section('page-title', 'Panel Administrativo')
 
 @section('content')
 
-    {{-- Tarjetas estadísticas --}}
-    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-6">
-        <x-stat-card
-            label="Total de usuarios"
-            :value="number_format($totalUsers)"
-            change="+12.4%"
-            trend="up"
-            icon="users"
-        />
-        <x-stat-card
-            label="Total de productos"
-            :value="number_format($totalProducts)"
-            change="+4.1%"
-            trend="up"
-            icon="box"
-        />
-        <x-stat-card
-            label="Ventas del mes"
-            :value="number_format($totalSales)"
-            change="-2.3%"
-            trend="down"
-            icon="chart"
-        />
-        <x-stat-card
-            label="Ingresos"
-            :value="'$' . number_format($totalRevenue, 2)"
-            change="+8.7%"
-            trend="up"
-            icon="tag"
-        />
+<div class="space-y-6">
+
+    {{-- ENCABEZADO DEL DASHBOARD --}}
+
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+
+        <div>
+
+            <h1 class="text-2xl sm:text-3xl font-semibold text-[#4DB6E8]">
+                Bienvenido a Málaga Emplea
+            </h1>
+
+            <p class="text-sm text-gray-500 mt-2">
+                Consulta el estado de las oportunidades y servicios de la plataforma.
+            </p>
+
+        </div>
+
+
+        {{-- FECHA --}}
+
+        <div class="bg-white border border-gray-100 rounded-2xl px-5 py-3 shadow-sm">
+
+            <div class="flex items-center gap-3">
+
+                <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-[#4DB6E8]">
+
+                    @php($icon = 'calendar-days')
+                    @include('layouts.partials.icons')
+
+                </div>
+
+                <div>
+
+                    <p class="text-xs text-gray-400">
+                        Fecha actual
+                    </p>
+
+                    <p class="text-sm font-semibold text-gray-700">
+                        {{ now('America/Bogota')->locale('es')->translatedFormat('d \d\e F \d\e Y') }}
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
 
-    {{-- Gráficos --}}
-    <div class="mt-6 grid grid-cols-1 xl:grid-cols-3 gap-4 sm:gap-6">
 
-        <x-card title="Ventas mensuales" subtitle="Últimos 6 meses" class="xl:col-span-2">
-            <canvas id="salesChart" height="110" role="img" aria-label="Gráfico de ventas mensuales"></canvas>
-        </x-card>
 
-        <x-card title="Productos por categoría">
-            <canvas id="categoryChart" height="200" role="img" aria-label="Gráfico de productos por categoría"></canvas>
-        </x-card>
+    {{--INDICADORES PRINCIPALES --}}
+
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm">
+
+        <div class="grid grid-cols-2 lg:grid-cols-4">
+
+
+            {{-- USUARIOS --}}
+
+            <div class="p-5 sm:p-6 border-b lg:border-b-0 lg:border-r border-gray-100">
+
+                <div class="flex items-center gap-3 mb-3">
+
+                    <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-[#4DB6E8]">
+
+                        @php($icon = 'user-group')
+                        @include('layouts.partials.icons')
+
+                    </div>
+
+                    <span class="text-sm text-gray-500">
+                        Usuarios
+                    </span>
+
+                </div>
+
+                <p class="text-2xl sm:text-3xl font-semibold text-gray-800">
+                    {{ $totalUsers }}
+                </p>
+
+                <p class="text-xs text-gray-400 mt-1">
+                    Personas registradas
+                </p>
+
+            </div>
+
+
+
+            {{-- EMPRESAS --}}
+
+            <div class="p-5 sm:p-6 border-b lg:border-b-0 lg:border-r border-gray-100">
+
+                <div class="flex items-center gap-3 mb-3">
+
+                    <div class="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center text-purple-500">
+
+                        @php($icon = 'building')
+                        @include('layouts.partials.icons')
+
+                    </div>
+
+                    <span class="text-sm text-gray-500">
+                        Empresas
+                    </span>
+
+                </div>
+
+                <p class="text-2xl sm:text-3xl font-semibold text-gray-800">
+                    {{ $totalCompanies }}
+                </p>
+
+                <p class="text-xs text-gray-400 mt-1">
+                    Empresas registradas
+                </p>
+
+            </div>
+
+
+
+            {{-- OFERTAS --}}
+
+            <div class="p-5 sm:p-6 border-b lg:border-b-0 lg:border-r border-gray-100">
+
+                <div class="flex items-center gap-3 mb-3">
+
+                    <div class="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center text-green-500">
+
+                        @php($icon = 'briefcase')
+                        @include('layouts.partials.icons')
+
+                    </div>
+
+                    <span class="text-sm text-gray-500">
+                        Ofertas
+                    </span>
+
+                </div>
+
+                <p class="text-2xl sm:text-3xl font-semibold text-gray-800">
+                    {{ $totalOffers }}
+                </p>
+
+                <p class="text-xs text-gray-400 mt-1">
+                    Oportunidades publicadas
+                </p>
+
+            </div>
+
+
+
+            {{-- SERVICIOS --}}
+
+            <div class="p-5 sm:p-6">
+
+                <div class="flex items-center gap-3 mb-3">
+
+                    <div class="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center text-orange-500">
+
+                        @php($icon = 'chart-bar')
+                        @include('layouts.partials.icons')
+
+                    </div>
+
+                    <span class="text-sm text-gray-500">
+                        Servicios
+                    </span>
+
+                </div>
+
+                <p class="text-2xl sm:text-3xl font-semibold text-gray-800">
+                    {{ $totalServices }}
+                </p>
+
+                <p class="text-xs text-gray-400 mt-1">
+                    Servicios publicados
+                </p>
+
+            </div>
+
+        </div>
+
     </div>
 
-    <div class="mt-6 grid grid-cols-1 xl:grid-cols-3 gap-4 sm:gap-6">
-        <x-card title="Usuarios registrados" subtitle="Últimos 6 meses" class="xl:col-span-3">
-            <canvas id="usersChart" height="90" role="img" aria-label="Gráfico de usuarios registrados"></canvas>
-        </x-card>
+
+
+    {{-- INFORMACIÓN GENERAL + POSTULACIONES --}}
+
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+
+
+        {{-- LO QUE ESTÁ PASANDO --}}
+
+        <div class="xl:col-span-2 bg-white rounded-2xl border border-gray-100 shadow-sm">
+
+            <div class="p-6 border-b border-gray-100">
+
+                <h2 class="text-lg font-semibold text-gray-800">
+                    Lo que está pasando
+                </h2>
+
+                <p class="text-sm text-gray-400 mt-1">
+                    Estado actual de la plataforma
+                </p>
+
+            </div>
+
+
+
+            <div class="p-6">
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+
+                    {{-- OFERTAS --}}
+
+                    <div class="flex items-center gap-4 p-4 rounded-xl bg-green-50/50">
+
+                        <div class="w-11 h-11 rounded-xl bg-green-100 flex items-center justify-center">
+
+                            <span class="w-3 h-3 rounded-full bg-green-500"></span>
+
+                        </div>
+
+                        <div>
+
+                            <p class="text-2xl font-semibold text-gray-800">
+                                {{ $activeOffers }}
+                            </p>
+
+                            <p class="text-sm text-gray-500">
+                                Ofertas activas
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+
+                    {{-- EMPRESAS --}}
+
+                    <div class="flex items-center gap-4 p-4 rounded-xl bg-purple-50/50">
+
+                        <div class="w-11 h-11 rounded-xl bg-purple-100 flex items-center justify-center">
+
+                            <span class="w-3 h-3 rounded-full bg-purple-500"></span>
+
+                        </div>
+
+                        <div>
+
+                            <p class="text-2xl font-semibold text-gray-800">
+                                {{ $totalCompanies }}
+                            </p>
+
+                            <p class="text-sm text-gray-500">
+                                Empresas registradas
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+
+                    {{-- HOJAS DE VIDA --}}
+
+                    <div class="flex items-center gap-4 p-4 rounded-xl bg-pink-50/50">
+
+                        <div class="w-11 h-11 rounded-xl bg-pink-100 flex items-center justify-center">
+
+                            <span class="w-3 h-3 rounded-full bg-pink-500"></span>
+
+                        </div>
+
+                        <div>
+
+                            <p class="text-2xl font-semibold text-gray-800">
+                                {{ $totalCV }}
+                            </p>
+
+                            <p class="text-sm text-gray-500">
+                                Hojas de vida
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+
+                    {{-- SERVICIOS --}}
+
+                    <div class="flex items-center gap-4 p-4 rounded-xl bg-orange-50/50">
+
+                        <div class="w-11 h-11 rounded-xl bg-orange-100 flex items-center justify-center">
+
+                            <span class="w-3 h-3 rounded-full bg-orange-500"></span>
+
+                        </div>
+
+                        <div>
+
+                            <p class="text-2xl font-semibold text-gray-800">
+                                {{ $totalServices }}
+                            </p>
+
+                            <p class="text-sm text-gray-500">
+                                Servicios disponibles
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="mt-5 flex items-center justify-center gap-2">
+
+                    <span class="w-2.5 h-2.5 rounded-full bg-green-500"></span>
+
+                    <span class="text-sm font-medium text-green-600">
+                        Plataforma activa
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        {{-- POSTULACIONES --}}
+
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm">
+
+            <div class="p-6 border-b border-gray-100">
+
+                <div class="flex items-start justify-between gap-3">
+
+                    <div>
+
+                        <h2 class="text-lg font-semibold text-gray-800">
+                            Postulaciones
+                        </h2>
+
+                        <p class="text-sm text-gray-400 mt-1">
+                            Estado de las postulaciones
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="p-6 space-y-5">
+
+
+                {{-- ENVIADAS --}}
+
+                <div>
+
+                    <div class="flex items-center justify-between mb-2">
+
+                        <div class="flex items-center gap-2">
+
+                            <span class="w-2.5 h-2.5 rounded-full bg-yellow-400"></span>
+
+                            <span class="text-sm text-gray-600">
+                                Enviadas
+                            </span>
+
+                        </div>
+
+                        <span class="font-semibold text-gray-800">
+                            {{ $postulacionesEnviadas }}
+                        </span>
+
+                    </div>
+
+                    <div class="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+
+                        <div
+                            class="h-full bg-yellow-400 rounded-full"
+                            style="width: {{ $porcentajeEnviadas }}%">
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                {{-- ACEPTADAS --}}
+
+                <div>
+
+                    <div class="flex items-center justify-between mb-2">
+
+                        <div class="flex items-center gap-2">
+
+                            <span class="w-2.5 h-2.5 rounded-full bg-green-500"></span>
+
+                            <span class="text-sm text-gray-600">
+                                Aceptadas
+                            </span>
+
+                        </div>
+
+                        <span class="font-semibold text-gray-800">
+                            {{ $postulacionesAceptadas }}
+                        </span>
+
+                    </div>
+
+                    <div class="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+
+                        <div
+                            class="h-full bg-green-500 rounded-full"
+                            style="width: {{ $porcentajeAceptadas }}%">
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                {{-- RECHAZADAS --}}
+
+                <div>
+
+                    <div class="flex items-center justify-between mb-2">
+
+                        <div class="flex items-center gap-2">
+
+                            <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
+
+                            <span class="text-sm text-gray-600">
+                                Rechazadas
+                            </span>
+
+                        </div>
+
+                        <span class="font-semibold text-gray-800">
+                            {{ $postulacionesRechazadas }}
+                        </span>
+
+                    </div>
+
+                    <div class="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+
+                        <div
+                            class="h-full bg-red-500 rounded-full"
+                            style="width: {{ $porcentajeRechazadas }}%">
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                {{-- TOTAL + VER MÁS --}}
+
+                <div class="pt-4 mt-2 border-t border-gray-100">
+
+                    <div class="flex items-end justify-between">
+
+                        <div>
+
+                            <p class="text-xs text-gray-400">
+                                Total
+                            </p>
+
+                            <p class="text-2xl font-semibold text-gray-800">
+                                {{ $totalPostulaciones }}
+                            </p>
+
+                        </div>
+
+                        <a href="{{ route('postulacion.index') }}"
+                            class="text-xs font-medium text-[#4DB6E8] hover:text-[#333333]">
+
+                            Ver más →
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
 
-    {{-- Tabla de actividad reciente --}}
-    <div class="mt-6">
-        <x-card title="Actividad reciente" subtitle="Últimos registros del sistema" :padding="false">
-            <x-slot:actions>
-                <x-button variant="secondary" href="#">Ver todo</x-button>
-            </x-slot:actions>
 
-            <x-table :headers="['Usuario', 'Descripción', 'Estado', 'Fecha', 'Acciones']">
-                @forelse ($recentActivity as $item)
-                    <tr class="hover:bg-slate-50">
-                        <td class="px-5 py-3.5">
-                            <div class="flex items-center gap-3">
-                                <img
-                                    src="{{ $item['avatar'] }}"
-                                    class="w-8 h-8 rounded-full object-cover ring-1 ring-slate-100"
-                                    alt="Avatar de {{ $item['name'] }}"
-                                >
-                                <span class="font-medium text-slate-700 whitespace-nowrap">{{ $item['name'] }}</span>
-                            </div>
-                        </td>
-                        <td class="px-5 py-3.5 text-slate-500 max-w-xs truncate">{{ $item['description'] }}</td>
-                        <td class="px-5 py-3.5"><x-badge :status="$item['status']" /></td>
-                        <td class="px-5 py-3.5 text-slate-500 whitespace-nowrap">{{ $item['date'] }}</td>
-                        <td class="px-5 py-3.5">
-                            <div class="flex items-center gap-1">
-                                <a href="#" class="p-1.5 rounded-lg text-slate-400 hover:bg-slate-100 hover:text-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-500" aria-label="Ver {{ $item['name'] }}">
-                                    <span class="w-4 h-4 block">@include('layouts.partials.icons', ['icon' => 'eye'])</span>
-                                </a>
-                                <a href="#" class="p-1.5 rounded-lg text-slate-400 hover:bg-slate-100 hover:text-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-500" aria-label="Editar {{ $item['name'] }}">
-                                    <span class="w-4 h-4 block">@include('layouts.partials.icons', ['icon' => 'pencil'])</span>
-                                </a>
-                                <button
-                                    type="button"
-                                    @click="$dispatch('open-modal', 'delete-{{ $loop->index }}')"
-                                    class="p-1.5 rounded-lg text-slate-400 hover:bg-red-50 hover:text-red-600 focus:outline-none focus:ring-2 focus:ring-red-500"
-                                    aria-label="Eliminar {{ $item['name'] }}"
-                                >
-                                    <span class="w-4 h-4 block">@include('layouts.partials.icons', ['icon' => 'trash'])</span>
-                                </button>
 
-                                <x-modal name="delete-{{ $loop->index }}" title="Eliminar registro" maxWidth="sm">
-                                    <p class="text-sm text-slate-500">
-                                        ¿Seguro que deseas eliminar a <strong>{{ $item['name'] }}</strong>? Esta acción no se puede deshacer.
-                                    </p>
-                                    <x-slot:footer>
-                                        <x-button variant="secondary" @click="show = false">Cancelar</x-button>
-                                        <x-button variant="danger">Eliminar</x-button>
-                                    </x-slot:footer>
-                                </x-modal>
-                            </div>
-                        </td>
-                    </tr>
+    {{-- ÚLTIMAS OFERTAS + SERVICIOS --}}
+
+    <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+
+
+        {{-- OFERTAS --}}
+
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm">
+
+            <div class="p-6 border-b border-gray-100 flex items-center justify-between">
+
+                <div>
+
+                    <h2 class="text-lg font-semibold text-gray-800">
+                        Últimas ofertas laborales
+                    </h2>
+
+                    <p class="text-sm text-gray-400 mt-1">
+                        Oportunidades publicadas recientemente
+                    </p>
+
+                </div>
+
+                <a href="{{ route('ofertas.index') }}"
+                    class="text-sm font-medium text-[#4DB6E8] hover:text-[#333333]">
+
+                    Ver todas →
+
+                </a>
+
+            </div>
+
+
+            <div class="divide-y divide-gray-100">
+
+                @forelse($recentOffers as $offer)
+
+                    <div class="p-5 flex items-center gap-4">
+
+                        <div class="w-11 h-11 rounded-xl bg-blue-50 flex items-center justify-center text-[#4DB6E8]">
+
+                            @php($icon = 'box')
+                            @include('layouts.partials.icons')
+                        </div>
+
+                        <div class="flex-1 min-w-0">
+
+                            <p class="text-sm font-medium text-gray-800 truncate">
+                                {{ $offer->titulo }}
+                            </p>
+
+                            <p class="text-xs text-gray-400 mt-1">
+                                {{ $offer->nombreEmpresa }}
+                            </p>
+
+                        </div>
+
+
+                        <span class="text-xs text-gray-400 whitespace-nowrap">
+
+                            {{ $offer->created_at
+                                ? \Carbon\Carbon::parse($offer->created_at)->diffForHumans()
+                                : ''
+                            }}
+
+                        </span>
+
+                    </div>
+
                 @empty
-                    <tr>
-                        <td colspan="5" class="px-5 py-10 text-center text-sm text-slate-400">
-                            No hay actividad reciente.
-                        </td>
-                    </tr>
+
+                    <div class="p-10 text-center">
+
+                        <p class="text-sm text-gray-400">
+                            No hay ofertas laborales recientes.
+                        </p>
+
+                    </div>
+
                 @endforelse
-            </x-table>
-        </x-card>
+
+            </div>
+
+        </div>
+
+
+
+        {{-- SERVICIOS --}}
+
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm">
+
+            <div class="p-6 border-b border-gray-100 flex items-center justify-between">
+
+                <div>
+
+                    <h2 class="text-lg font-semibold text-gray-800">
+                        Servicios recientes
+                    </h2>
+
+                    <p class="text-sm text-gray-400 mt-1">
+                        Últimos servicios publicados
+                    </p>
+
+                </div>
+
+                <a href="{{ route('servicios.index') }}"
+                    class="text-sm font-medium text-[#4DB6E8] hover:text-[#333333]">
+
+                    Ver todos →
+
+                </a>
+
+            </div>
+
+
+            <div class="divide-y divide-gray-100">
+
+                @forelse($recentServices as $service)
+
+                    <div class="p-5 flex items-center gap-4">
+
+                        <div class="w-11 h-11 rounded-xl bg-orange-50 flex items-center justify-center text-orange-500">
+
+                            @php($icon = 'plus')
+                            @include('layouts.partials.icons')
+
+                        </div>
+
+                        <div class="flex-1 min-w-0">
+
+                            <p class="text-sm font-medium text-gray-800 truncate">
+                                {{ $service->nombre }}
+                            </p>
+
+                            <p class="text-xs text-gray-400 mt-1">
+                                {{ $service->categoria }}
+                            </p>
+
+                        </div>
+
+                        <span class="text-xs text-gray-400 whitespace-nowrap">
+
+                            {{ $service->created_at
+                                ? \Carbon\Carbon::parse($service->created_at)->diffForHumans()
+                                : ''
+                            }}
+
+                        </span>
+
+                    </div>
+
+                @empty
+
+                    <div class="p-10 text-center">
+
+                        <p class="text-sm text-gray-400">
+                            No hay servicios recientes.
+                        </p>
+
+                    </div>
+
+                @endforelse
+
+            </div>
+
+        </div>
+
     </div>
+
+
+
+    {{-- ACTIVIDAD RECIENTE --}}
+
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm">
+
+        <div class="p-6 border-b border-gray-100">
+
+            <h2 class="text-lg font-semibold text-gray-800">
+                Actividad reciente
+            </h2>
+
+            <p class="text-sm text-gray-400 mt-1">
+                Últimos movimientos registrados en la plataforma
+            </p>
+
+        </div>
+
+
+        <div class="p-6">
+
+            @forelse($recentActivity as $activity)
+
+                <div class="flex items-center gap-4 py-4 border-b border-gray-100 last:border-0">
+
+                    <div class="w-9 h-9 rounded-full bg-indigo-50 flex items-center justify-center ">
+
+                        <span class="w-2.5 h-2.5 rounded-full bg-indigo-500"></span>
+
+                    </div>
+
+                    <div class="flex-1 min-w-0">
+
+                        <p class="text-sm text-gray-600">
+
+                            <span class="font-medium text-gray-800">
+                                {{ $activity['name'] }}
+                            </span>
+
+                            {{ $activity['action'] }}
+
+                        </p>
+
+                    </div>
+
+                    <span class="text-xs text-gray-400 whitespace-nowrap">
+                        {{ $activity['time'] }}
+                    </span>
+
+                </div>
+
+            @empty
+
+                <div class="py-8 text-center">
+
+                    <p class="text-sm text-gray-400">
+                        No hay actividad reciente.
+                    </p>
+
+                </div>
+
+            @endforelse
+
+        </div>
+
+    </div>
+
+</div>
 
 @endsection
-
-@push('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const monthLabels = @json($chartData['months']);
-
-        new Chart(document.getElementById('salesChart'), {
-            type: 'line',
-            data: {
-                labels: monthLabels,
-                datasets: [{
-                    label: 'Ventas',
-                    data: @json($chartData['sales']),
-                    borderColor: '#4DB6E8',
-                    backgroundColor: 'rgba(77,182,232,0.08)',
-                    tension: 0.35,
-                    fill: true,
-                    pointRadius: 3,
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: { legend: { display: false } },
-                scales: { y: { beginAtZero: true, grid: { color: '#f1f5f9' } }, x: { grid: { display: false } } }
-            }
-        });
-
-        new Chart(document.getElementById('usersChart'), {
-            type: 'bar',
-            data: {
-                labels: monthLabels,
-                datasets: [{
-                    label: 'Usuarios registrados',
-                    data: @json($chartData['users']),
-                    backgroundColor: '#4DB6E8',
-                    borderRadius: 6,
-                    maxBarThickness: 36,
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: { legend: { display: false } },
-                scales: { y: { beginAtZero: true, grid: { color: '#f1f5f9' } }, x: { grid: { display: false } } }
-            }
-        });
-
-        new Chart(document.getElementById('categoryChart'), {
-            type: 'doughnut',
-            data: {
-                labels: @json($chartData['categoryLabels']),
-                datasets: [{
-                    data: @json($chartData['categoryValues']),
-                    backgroundColor: ['#4DB6E8', '#818cf8', '#c7d2fe', '#a5b4fc', '#312e81'],
-                    borderWidth: 0,
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, padding: 16, font: { size: 11 } } } }
-            }
-        });
-    });
-</script>
-@endpush
