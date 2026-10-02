@@ -25,7 +25,7 @@
 
         @php
             $links = [
-            ['label' => 'Dashboard',   'route' => 'dashboard.index',  'icon' => 'home'],
+            ['label' => 'Inicio',   'route' => 'dashboard.index',  'icon' => 'home'],
             ['label' => 'Roles',       'route' => 'roles.index',      'icon' => 'shield-check'],
             ['label' => 'Categorías',  'route' => 'categorias.index', 'icon' => 'tag'],
             ['label' => 'Servicios',     'route' => 'servicios.index',    'icon' => 'chart-bar'],

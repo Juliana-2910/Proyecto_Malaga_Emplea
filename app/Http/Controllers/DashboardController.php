@@ -3,68 +3,212 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
-    /**
-     * Muestra el dashboard principal.
-     *
-     * Reemplaza los valores de ejemplo por consultas reales a tus modelos,
-     * por ejemplo: User::count(), Product::count(), Order::sum('total'), etc.
-     */
+    /** Muestra el dashboard principal de Málaga Emplea. */
     public function index(Request $request)
     {
-        $totalUsers    = 8241;
-        $totalProducts = 1523;
-        $totalSales    = 962;
-        $totalRevenue  = 48920.50;
+        /*  INDICADORES PRINCIPALES */
 
-        $recentActivity = [
-            [
-                'avatar'      => 'https://ui-avatars.com/api/?name=Laura+Gomez',
-                'name'        => 'Laura Gómez',
-                'description' => 'Registró un nuevo producto en la categoría Electrónica',
-                'status'      => 'Activo',
-                'date'        => now()->subHours(2)->format('d/m/Y H:i'),
-            ],
-            [
-                'avatar'      => 'https://ui-avatars.com/api/?name=Carlos+Ruiz',
-                'name'        => 'Carlos Ruiz',
-                'description' => 'Solicitud de reembolso pendiente de revisión',
-                'status'      => 'Pendiente',
-                'date'        => now()->subHours(5)->format('d/m/Y H:i'),
-            ],
-            [
-                'avatar'      => 'https://ui-avatars.com/api/?name=Maria+Torres',
-                'name'        => 'María Torres',
-                'description' => 'Cuenta suspendida por incumplimiento de políticas',
-                'status'      => 'Inactivo',
-                'date'        => now()->subDay()->format('d/m/Y H:i'),
-            ],
-            [
-                'avatar'      => 'https://ui-avatars.com/api/?name=Jorge+Diaz',
-                'name'        => 'Jorge Díaz',
-                'description' => 'Actualizó la información de su perfil',
-                'status'      => 'Activo',
-                'date'        => now()->subDays(2)->format('d/m/Y H:i'),
-            ],
-        ];
+        // Total de usuarios registrados
+        $totalUsers = DB::table('usuarios')->count();
 
-        $chartData = [
-            'months'         => ['Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago'],
-            'sales'          => [320, 410, 380, 512, 460, 590],
-            'users'          => [120, 190, 150, 260, 210, 300],
-            'categoryLabels' => ['Electrónica', 'Ropa', 'Hogar', 'Deportes', 'Otros'],
-            'categoryValues' => [38, 24, 18, 12, 8],
-        ];
+        // Total de empresas registradas
+        $totalCompanies = DB::table('empresas')->count();
+
+        // Total de ofertas laborales
+        $totalOffers = DB::table('ofertas')->count();
+
+        // Total de servicios publicados
+        $totalServices = DB::table('servicios')->count();
+
+
+        /* INFORMACIÓN GENERAL DE LA PLATAFORMA */
+
+        // Ofertas laborales activas
+        $activeOffers = DB::table('ofertas')
+            ->where('estado', 'Activo')
+            ->count();
+
+        // Total de hojas de vida
+        $totalCV = DB::table('hojaDeVida')->count();
+
+
+        /* POSTULACIONES */
+
+        // Postulaciones enviadas
+        $postulacionesEnviadas = DB::table('postulacion')
+            ->where('estado', 'Enviado')
+            ->count();
+
+        // Postulaciones aceptadas
+        $postulacionesAceptadas = DB::table('postulacion')
+            ->where('estado', 'Aceptado')
+            ->count();
+
+        // Postulaciones rechazadas
+        $postulacionesRechazadas = DB::table('postulacion')
+            ->where('estado', 'Rechazado')
+            ->count();
+
+
+        // Total de postulaciones
+        $totalPostulaciones =
+            $postulacionesEnviadas +
+            $postulacionesAceptadas +
+            $postulacionesRechazadas;
+
+
+        /* PORCENTAJES DE POSTULACIONES */
+
+        if ($totalPostulaciones > 0) {
+
+            $porcentajeEnviadas = round(
+                ($postulacionesEnviadas / $totalPostulaciones) * 100
+            );
+
+            $porcentajeAceptadas = round(
+                ($postulacionesAceptadas / $totalPostulaciones) * 100
+            );
+
+            $porcentajeRechazadas = round(
+                ($postulacionesRechazadas / $totalPostulaciones) * 100
+            );
+
+        } else {
+
+            $porcentajeEnviadas = 0;
+            $porcentajeAceptadas = 0;
+            $porcentajeRechazadas = 0;
+        }
+
+
+        /* ÚLTIMAS OFERTAS LABORALES */
+
+        $recentOffers = DB::table('ofertas')
+            ->join(
+                'empresas',
+                'ofertas.idEmpresa',
+                '=',
+                'empresas.id'
+            )
+            ->select(
+                'ofertas.id',
+                'ofertas.titulo',
+                'ofertas.created_at',
+                'empresas.nombreEmpresa'
+            )
+            ->orderByDesc('ofertas.created_at')
+            ->limit(5)
+            ->get();
+
+
+        /* SERVICIOS RECIENTES */
+
+        $recentServices = DB::table('servicios')
+            ->join(
+                'categorias',
+                'servicios.idCategoria',
+                '=',
+                'categorias.id'
+            )
+            ->select(
+                'servicios.id',
+                'servicios.nombre',
+                'servicios.created_at',
+                'categorias.nombre as categoria'
+            )
+            ->orderByDesc('servicios.created_at')
+            ->limit(5)
+            ->get();
+
+
+        /* ACTIVIDAD RECIENTE */
+
+        $recentApplications = DB::table('postulacion')
+            ->join(
+                'usuarios',
+                'postulacion.idUsuario',
+                '=',
+                'usuarios.id'
+            )
+            ->join(
+                'ofertas',
+                'postulacion.idOferta',
+                '=',
+                'ofertas.id'
+            )
+            ->select(
+                'postulacion.id',
+                'postulacion.fecha',
+                'postulacion.estado',
+                'usuarios.nombres',
+                'usuarios.apellidos',
+                'ofertas.titulo'
+            )
+            ->orderByDesc('postulacion.fecha')
+            ->limit(5)
+            ->get();
+
+
+        /* PREPARAR ACTIVIDAD PARA EL DASHBOARD */
+
+        $recentActivity = [];
+
+        foreach ($recentApplications as $application) {
+
+            $nombreUsuario = trim(
+                ($application->nombres ?? '') .
+                ' ' .
+                ($application->apellidos ?? '')
+            );
+
+            $recentActivity[] = [
+                'name' => $nombreUsuario ?: 'Usuario',
+
+                'action' => 'realizó una postulación para "' .
+                    ($application->titulo ?? 'Oferta laboral') .
+                    '"',
+
+                'time' => $application->fecha
+                    ? Carbon::parse($application->fecha)->diffForHumans()
+                    : '',
+            ];
+        }
+
+
+        /* ENVIAR INFORMACIÓN A LA VISTA */
 
         return view('dashboard.index', compact(
+
+            // Indicadores principales
             'totalUsers',
-            'totalProducts',
-            'totalSales',
-            'totalRevenue',
-            'recentActivity',
-            'chartData'
+            'totalCompanies',
+            'totalOffers',
+            'totalServices',
+
+            // Información general
+            'activeOffers',
+            'totalCV',
+
+            // Postulaciones
+            'postulacionesEnviadas',
+            'postulacionesAceptadas',
+            'postulacionesRechazadas',
+            'totalPostulaciones',
+
+            // Porcentajes
+            'porcentajeEnviadas',
+            'porcentajeAceptadas',
+            'porcentajeRechazadas',
+
+            // Información reciente
+            'recentOffers',
+            'recentServices',
+            'recentActivity'
         ));
     }
 }
