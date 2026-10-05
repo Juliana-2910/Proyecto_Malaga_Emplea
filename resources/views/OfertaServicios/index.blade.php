@@ -1,9 +1,9 @@
 
 @extends('layouts.app')
 
-@section('title')
-    Oferta y Servicios
-@endsection
+@section('title', 'Oferta y Servicios')
+
+@section('page-title', 'Panel Administrativo')
 
 @section('content')
 

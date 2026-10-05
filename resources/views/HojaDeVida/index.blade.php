@@ -1,13 +1,13 @@
 
 @extends('layouts.app')
 
-@section('title')
-    Hoja de Vida
-@endsection
+@section('title', 'Hoja de Vida')
+
+@section('page-title', 'Panel Administrativo')
 
 @section('content')
 
-<div class="min-h-screen bg-gray-100 py-8">
+<div class="min-h-screen bg-[#F5F7FA] py-8">
 
 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
@@ -15,7 +15,6 @@
     <div class="mb-7 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
 
         <div>
-
             <h1 class="text-2xl font-bold tracking-tight text-gray-800 sm:text-3xl">
                 Hoja de Vida
             </h1>
@@ -23,304 +22,416 @@
             <p class="mt-1 text-sm text-gray-500">
                 Administración de hojas de vida de los usuarios
             </p>
-
         </div>
 
         <a
             href="{{ route('hojaDeVida.create') }}"
             class="inline-flex items-center justify-center gap-2 rounded-xl bg-[#4DB6E8] px-5 py-3 text-sm font-semibold text-white shadow-sm transition duration-200 hover:bg-[#333333]">
-
             @php($icon = 'plus')
             @include('layouts.partials.icons')
 
-            Crear hoja de vida
-
+            Nueva Hoja de Vida
         </a>
 
     </div>
 
 
-    {{-- TARJETA PRINCIPAL --}}
-    <div class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-[0_10px_35px_rgba(77,182,232,0.20)]">
+    {{-- CONTENEDOR PRINCIPAL --}}
+    <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-[0_10px_35px_rgba(77,182,232,0.12)] sm:p-6">
 
-        {{-- TÍTULO DE LA TABLA --}}
-        <div class="border-b border-gray-100 px-6 py-4">
+        {{-- ENCABEZADO DE LA SECCIÓN --}}
+        <div class="mb-6 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
 
-            <h2 class="text-lg font-semibold text-gray-800">
-                Hojas de vida registradas
-            </h2>
+            <div>
+                <h2 class="text-lg font-semibold text-gray-800">
+                    Registradas
+                </h2>
+
+                <p class="mt-1 text-sm text-gray-500">
+                    Consulta la información profesional de los usuarios.
+                </p>
+            </div>
+
+            @if ($hojaDeVida->count() > 0)
+
+                <div class="inline-flex w-fit items-center gap-2 rounded-full bg-[#4DB6E8]/10 px-3 py-1.5 text-xs font-semibold text-[#3199CC]">
+
+                    <span class="h-2 w-2 rounded-full bg-[#4DB6E8]"></span>
+
+                    {{ $hojaDeVida->count() }}
+                    {{ $hojaDeVida->count() == 1 ? 'registro' : 'registros' }}
+
+                </div>
+
+            @endif
 
         </div>
 
 
-        {{-- TABLA --}}
-        <div class="overflow-x-auto">
+        {{-- GRID DE TARJETAS --}}
+        <div class="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
 
-            <table class="w-full text-center text-gray-600">
+            @forelse ($hojaDeVida as $hojaDeVida)
 
-                <thead class="bg-[#333333] text-white">
+                {{-- TARJETA --}}
+                <div class="flex h-full flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition duration-200 hover:border-[#4DB6E8]/40 hover:shadow-[0_8px_25px_rgba(77,182,232,0.12)]">
 
-                    <tr>
+                    {{-- ENCABEZADO DE LA TARJETA --}}
+                    <div class="border-b border-gray-100 bg-gradient-to-r from-[#4DB6E8]/5 to-white px-4 py-4">
 
-                        <th class="border-r border-gray-600 px-6 py-4 text-sm font-semibold">
-                            ID
-                        </th>
+                        <div class="flex items-center justify-between gap-3">
 
-                        <th class="border-r border-gray-600 px-6 py-4 text-sm font-semibold">
-                            Usuario
-                        </th>
+                            <div class="flex min-w-0 items-center gap-3">
 
-                        <th class="border-r border-gray-600 px-6 py-4 text-sm font-semibold">
-                            Ubicación
-                        </th>
+                                {{-- ICONO USUARIO --}}
+                                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#4DB6E8]/10 text-[#4DB6E8]">
 
-                        <th class="border-r border-gray-600 px-6 py-4 text-sm font-semibold">
-                            Nivel Educativo
-                        </th>
+                                    @php($icon = 'user-circle')
+                                    @include('layouts.partials.icons')
 
-                        <th class="border-r border-gray-600 px-6 py-4 text-sm font-semibold">
-                            Perfil Profesional
-                        </th>
+                                </div>
 
-                        <th class="border-r border-gray-600 px-6 py-4 text-sm font-semibold">
-                            Experiencia Laboral
-                        </th>
+                                <div class="min-w-0">
 
-                        <th class="border-r border-gray-600 px-6 py-4 text-sm font-semibold">
-                            Fecha de Actualización
-                        </th>
+                                    <p class="text-[10px] font-bold uppercase tracking-wider text-[#4DB6E8]">
+                                        Hoja de vida
+                                    </p>
 
-                        <th class="border-r border-gray-600 px-6 py-4 text-sm font-semibold">
-                            Archivo CV
-                        </th>
+                                    <h3 class="truncate text-sm font-bold text-gray-800">
+                                        {{ $hojaDeVida->usuario->nombres }}
+                                        {{ $hojaDeVida->usuario->apellidos }}
+                                    </h3>
 
-                        <th class="px-6 py-4 text-sm font-semibold">
-                            Acciones
-                        </th>
+                                </div>
 
-                    </tr>
-
-                </thead>
-
-
-                <tbody class="divide-y divide-gray-200">
-
-                    @forelse ($hojaDeVida as $hojaDeVida)
-
-                        <tr class="transition hover:bg-gray-50">
+                            </div>
 
                             {{-- ID --}}
-                            <td class="border-r border-gray-100 px-6 py-5 text-sm font-medium text-gray-600">
-                                {{ $hojaDeVida->id }}
-                            </td>
+                            <span class="shrink-0 rounded-full bg-gray-100 px-2.5 py-1 text-[10px] font-semibold text-gray-600">
+                                #{{ $hojaDeVida->id }}
+                            </span>
+
+                        </div>
+
+                    </div>
 
 
-                            {{-- USUARIO --}}
-                            <td class="border-r border-gray-100 px-6 py-5 text-sm font-medium text-gray-600">
+                    {{-- INFORMACIÓN DE LA TARJETA --}}
+                    <div class="flex-1 px-4 py-4">
 
-                                {{ $hojaDeVida->usuario->nombres }}
-                                {{ $hojaDeVida->usuario->apellidos }}
-
-                            </td>
+                        <div class="space-y-4">
 
 
                             {{-- UBICACIÓN --}}
-                            <td class="border-r border-gray-100 px-6 py-5 text-sm font-medium text-gray-600">
-                                {{ $hojaDeVida->ubicacion }}
-                            </td>
+                            <div>
 
+                                <div class="mb-1 flex items-center gap-2">
 
-                            {{-- NIVEL EDUCATIVO --}}
-                            <td class="border-r border-gray-100 px-6 py-5 text-sm font-medium text-gray-600">
-                                {{ $hojaDeVida->nivelEducativo }}
-                            </td>
+                                    <div class="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-[#4DB6E8]/10 text-[#4DB6E8]">
 
-
-                            {{-- PERFIL PROFESIONAL --}}
-                            <td class="border-r border-gray-100 px-6 py-5 text-sm font-medium text-gray-600">
-                                {{ $hojaDeVida->perfilProfesional }}
-                            </td>
-
-                            {{-- EXPERIENCIA LABORAL --}}
-                            <td class="border-r border-gray-100 px-6 py-5 text-sm font-medium text-gray-600">
-                                {{ $hojaDeVida->experienciaLaboral }}
-                            </td>
-
-                            {{-- FECHA DE ACTUALIZACIÓN --}}
-                            <td class="border-r border-gray-100 px-6 py-5 text-sm font-medium text-gray-600">
-                                {{ $hojaDeVida->fechaActualizacion }}
-                            </td>
-
-                            {{-- ARCHIVO CV --}}
-                            <td class="border-r border-gray-100 px-6 py-5 text-sm font-medium">
-
-                                <a
-                                    href="{{ $hojaDeVida->archivoCV }}"
-                                    target="_blank"
-                                    title="Ver hoja de vida"
-                                    class="mx-auto flex h-9 w-9 items-center justify-center rounded-lg bg-[#4DB6E8]/10 text-[#4DB6E8] transition duration-200 hover:bg-[#4DB6E8] hover:text-white">
-
-                                    @php($icon = 'eye')
-                                    @include('layouts.partials.icons')
-
-                                </a>
-
-                            </td>
-
-                            {{-- ACCIONES --}}
-                            <td class="px-6 py-5">
-
-                                <div class="flex items-center justify-center gap-2">
-
-                                    {{-- EDITAR --}}
-                                    <a
-                                        href="{{ route('hojaDeVida.edit', $hojaDeVida->id) }}"
-                                        title="Editar hoja de vida"
-                                        class="flex h-9 w-9 items-center justify-center rounded-lg bg-[#4DB6E8]/10 text-[#4DB6E8] transition duration-200 hover:bg-[#4DB6E8] hover:text-white">
-
-                                        @php($icon = 'pencil')
+                                        @php($icon = 'map-pin')
                                         @include('layouts.partials.icons')
 
-                                    </a>
+                                    </div>
 
-
-                                    {{-- ELIMINAR --}}
-                                    <button
-                                        type="button"
-                                        title="Eliminar hoja de vida"
-                                        @click="$dispatch('open-modal', 'delete-{{ $hojaDeVida->id }}')"
-                                        class="flex h-9 w-9 items-center justify-center rounded-lg bg-red-50 text-red-500 transition duration-200 hover:bg-red-500 hover:text-white">
-
-                                        @php($icon = 'trash')
-                                        @include('layouts.partials.icons')
-
-                                    </button>
+                                    <p class="text-[10px] font-bold uppercase tracking-wide text-gray-500">
+                                        Ubicación
+                                    </p>
 
                                 </div>
 
-                            </td>
-
-                        </tr>
-
-
-                        {{-- MODAL ELIMINAR --}}
-                        <x-modal
-                            name="delete-{{ $hojaDeVida->id }}"
-                            title="Eliminar hoja de vida"
-                            maxWidth="sm">
-
-                            <div class="text-center">
-
-                                <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-100 text-red-600">
-
-                                    @php($icon = 'exclamation-triangle')
-                                    @include('layouts.partials.icons')
-
-                                </div>
-
-                                <p class="text-sm leading-6 text-gray-500">
-
-                                    ¿Seguro que deseas eliminar la hoja de vida de
-
-                                    <strong class="text-gray-800">
-
-                                        {{ $hojaDeVida->usuario->nombres }}
-                                        {{ $hojaDeVida->usuario->apellidos }}
-
-                                    </strong>?
-
-                                    <br>
-
-                                    Esta acción no se puede deshacer.
-
+                                <p class="pl-8 text-xs font-medium text-gray-700">
+                                    {{ $hojaDeVida->ubicacion }}
                                 </p>
 
                             </div>
 
 
-                            <x-slot:footer>
+                            {{-- NIVEL EDUCATIVO --}}
+                            <div>
 
-                                <x-button
-                                    variant="secondary"
-                                    @click="show = false">
+                                <div class="mb-1 flex items-center gap-2">
 
-                                    Cancelar
+                                    <div class="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-[#4DB6E8]/10 text-[#4DB6E8]">
 
-                                </x-button>
-
-
-                                <form
-                                    action="{{ route('hojaDeVida.destroy', $hojaDeVida->id) }}"
-                                    method="POST">
-
-                                    @csrf
-
-                                    @method('DELETE')
-
-                                    <x-button
-                                        variant="danger"
-                                        type="submit">
-
-                                        Eliminar
-
-                                    </x-button>
-
-                                </form>
-
-                            </x-slot:footer>
-
-                        </x-modal>
-
-
-                    @empty
-
-                        {{-- ESTADO VACÍO --}}
-                        <tr>
-
-                            <td colspan="9">
-
-                                <div class="px-6 py-16 text-center">
-
-                                    <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#4DB6E8]/10 text-[#4DB6E8]">
-
-                                        @php($icon = 'link')
+                                        @php($icon = 'academic-cap')
                                         @include('layouts.partials.icons')
 
                                     </div>
 
-
-                                    <h3 class="text-lg font-semibold text-gray-800">
-                                        No hay hojas de vida registradas
-                                    </h3>
-
-
-                                    <p class="mx-auto mt-2 max-w-md text-sm text-gray-500">
-                                        Todavía no existen hojas de vida registradas en el sistema.
+                                    <p class="text-[10px] font-bold uppercase tracking-wide text-gray-500">
+                                        Nivel Educativo
                                     </p>
 
+                                </div>
 
-                                    <a
-                                        href="{{ route('hojaDeVida.create') }}"
-                                        class="mt-5 inline-flex items-center gap-2 rounded-xl bg-[#4DB6E8] px-5 py-2.5 text-sm font-semibold text-white transition duration-200 hover:bg-[#333333]">
+                                <p class="pl-8 text-xs font-medium text-gray-700">
+                                    {{ $hojaDeVida->nivelEducativo }}
+                                </p>
 
-                                        @php($icon = 'plus')
+                            </div>
+
+
+                            {{-- PERFIL PROFESIONAL --}}
+                            <div>
+
+                                <div class="mb-1 flex items-center gap-2">
+
+                                    <div class="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-[#4DB6E8]/10 text-[#4DB6E8]">
+
+                                        @php($icon = 'briefcase')
                                         @include('layouts.partials.icons')
 
-                                        Crear hoja de vida
+                                    </div>
+
+                                    <p class="text-[10px] font-bold uppercase tracking-wide text-gray-500">
+                                        Perfil Profesional
+                                    </p>
+
+                                </div>
+
+                                    <div class="max-h-24 overflow-y-auto rounded-lg bg-gray-50 px-3 py-2">
+                                        <p class="text-xs leading-5 text-gray-700 break-words">
+                                            {{ $hojaDeVida->perfilProfesional }}
+                                        </p>
+                                    </div>
+
+                            </div>
+
+
+                            {{-- EXPERIENCIA LABORAL --}}
+                            <div>
+
+                                <div class="mb-1 flex items-center gap-2">
+
+                                    <div class="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-[#4DB6E8]/10 text-[#4DB6E8]">
+
+                                        @php($icon = 'paper-clip')
+                                        @include('layouts.partials.icons')
+
+                                    </div>
+
+                                    <p class="text-[10px] font-bold uppercase tracking-wide text-gray-500">
+                                        Experiencia Laboral
+                                    </p>
+
+                                </div>
+
+                                <div class="max-h-24 overflow-y-auto rounded-lg bg-gray-50 px-3 py-2">
+
+                                    <p class="text-xs leading-5 text-gray-700 break-words">
+                                        {{ $hojaDeVida->experienciaLaboral }}
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            {{-- FECHA DE ACTUALIZACIÓN --}}
+                            <div>
+
+                                <div class="mb-1 flex items-center gap-2">
+
+                                    <div class="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-[#4DB6E8]/10 text-[#4DB6E8]">
+
+                                        @php($icon = 'calendar-days')
+                                        @include('layouts.partials.icons')
+
+                                    </div>
+
+                                    <p class="text-[10px] font-bold uppercase tracking-wide text-gray-500">
+                                        Fecha de Actualización
+                                    </p>
+
+                                </div>
+
+                                <p class="pl-8 text-xs font-medium text-gray-700">
+                                    {{ $hojaDeVida->fechaActualizacion }}
+                                </p>
+
+                            </div>
+
+
+                            {{-- ARCHIVO CV --}}
+                            <div>
+
+                                <div class="mb-1 flex items-center gap-2">
+
+                                    <div class="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-[#4DB6E8]/10 text-[#4DB6E8]">
+
+                                        @php($icon = 'arrow-down-circle')
+                                        @include('layouts.partials.icons')
+
+                                    </div>
+
+                                    <p class="text-[10px] font-bold uppercase tracking-wide text-gray-500">
+                                        Archivo CV
+                                    </p>
+
+                                </div>
+
+                                <div class="pl-8">
+
+                                    <a
+                                        href="{{ $hojaDeVida->archivoCV }}"
+                                        target="_blank"
+                                        title="Ver hoja de vida"
+                                        class="flex h-8 w-8 items-center justify-center rounded-lg bg-[#4DB6E8]/10 text-[#4DB6E8] transition duration-200 hover:bg-[#4DB6E8] hover:text-white">
+
+                                        @php($icon = 'eye')
+                                        @include('layouts.partials.icons')
 
                                     </a>
 
                                 </div>
 
-                            </td>
+                            </div>
 
-                        </tr>
+                        </div>
 
-                    @endforelse
+                    </div>
 
-                </tbody>
 
-            </table>
+                    {{-- ACCIONES --}}
+                    <div class="flex justify-end border-t border-gray-100 bg-gray-50/60 px-4 py-3">
+
+                        <div class="flex items-center justify-center gap-2">
+
+                            {{-- EDITAR --}}
+                            <a
+                                href="{{ route('hojaDeVida.edit', $hojaDeVida->id) }}"
+                                title="Editar hoja de vida"
+                                class="inline-flex items-center gap-1.5 rounded-lg bg-[#4DB6E8]/10 px-3 py-2 text-xs font-semibold text-[#4DB6E8] transition duration-200 hover:bg-[#4DB6E8] hover:text-white">
+
+                                @php($icon = 'pencil')
+                                @include('layouts.partials.icons')
+
+                                <span>Editar</span>
+
+                            </a>
+
+
+                            {{-- ELIMINAR --}}
+                            <button
+                                type="button"
+                                title="Eliminar hoja de vida"
+                                @click="$dispatch('open-modal', 'delete-{{ $hojaDeVida->id }}')"
+                                class="inline-flex items-center gap-1.5 rounded-lg bg-red-50 px-3 py-2 text-xs font-semibold text-red-500 transition duration-200 hover:bg-red-500 hover:text-white">
+
+                                @php($icon = 'trash')
+                                @include('layouts.partials.icons')
+
+                                <span>Eliminar</span>
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                {{-- MODAL ELIMINAR --}}
+                <x-modal
+                    name="delete-{{ $hojaDeVida->id }}"
+                    title="Eliminar hoja de vida"
+                    maxWidth="sm"
+                >
+
+                    <div class="text-center">
+
+                        <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-100 text-red-600">
+
+                            @php($icon = 'exclamation-triangle')
+                            @include('layouts.partials.icons')
+
+                        </div>
+
+                        <p class="text-sm leading-6 text-gray-500">
+
+                            ¿Seguro que deseas eliminar la hoja de vida de
+
+                            <strong class="text-gray-800">
+                                {{ $hojaDeVida->usuario->nombres }}
+                                {{ $hojaDeVida->usuario->apellidos }}
+                            </strong>?
+
+                            <br>
+
+                            Esta acción no se puede deshacer.
+
+                        </p>
+
+                    </div>
+
+
+                    <x-slot:footer>
+
+                        <x-button
+                            variant="secondary"
+                            @click="show = false"
+                        >
+                            Cancelar
+                        </x-button>
+
+                        <form
+                            action="{{ route('hojaDeVida.destroy', $hojaDeVida->id) }}"
+                            method="POST"
+                        >
+
+                            @csrf
+                            @method('DELETE')
+
+                            <x-button
+                                variant="danger"
+                                type="submit"
+                            >
+                                Eliminar
+                            </x-button>
+
+                        </form>
+
+                    </x-slot:footer>
+
+                </x-modal>
+
+
+            @empty
+
+                {{-- ESTADO VACÍO --}}
+                <div class="col-span-full rounded-2xl border border-dashed border-gray-300 bg-gray-50 px-6 py-14 text-center">
+
+                    <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#4DB6E8]/10 text-[#4DB6E8]">
+
+                        @php($icon = 'link')
+                        @include('layouts.partials.icons')
+
+                    </div>
+
+                    <h3 class="text-lg font-semibold text-gray-800">
+                        No hay hojas de vida registradas
+                    </h3>
+
+                    <p class="mx-auto mt-2 max-w-md text-sm leading-6 text-gray-500">
+                        Todavía no existen hojas de vida registradas en el sistema.
+                    </p>
+
+                    <a
+                        href="{{ route('hojaDeVida.create') }}"
+                        class="mt-5 inline-flex items-center gap-2 rounded-xl bg-[#4DB6E8] px-5 py-2.5 text-sm font-semibold text-white transition duration-200 hover:bg-[#333333]">
+
+                        @php($icon = 'plus')
+                        @include('layouts.partials.icons')
+
+                        Crear hoja de vida
+
+                    </a>
+
+                </div>
+
+            @endforelse
 
         </div>
 
@@ -345,7 +456,6 @@
                     : 'hojas de vida registradas' }}
 
             </p>
-
 
             <div class="hidden items-center gap-2 text-xs text-gray-400 sm:flex">
 

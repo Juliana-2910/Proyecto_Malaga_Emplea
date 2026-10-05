@@ -28,13 +28,21 @@ class DashboardController extends Controller
 
         /* INFORMACIÓN GENERAL DE LA PLATAFORMA */
 
-        // Ofertas laborales activas
-        $activeOffers = DB::table('ofertas')
+        // Usuarios activos
+        $activeUsers = DB::table('usuarios')
             ->where('estado', 'Activo')
+            ->count();
+
+        // Empresas activas
+        $activeCompanies = DB::table('empresas')
+            ->where('estado', 'activo')
             ->count();
 
         // Total de hojas de vida
         $totalCV = DB::table('hojaDeVida')->count();
+
+        // Total de categorias
+        $totalCategories = DB::table('categorias')->count();
 
 
         /* POSTULACIONES */
@@ -174,7 +182,7 @@ class DashboardController extends Controller
                     '"',
 
                 'time' => $application->fecha
-                    ? Carbon::parse($application->fecha)->diffForHumans()
+                    ? Carbon::parse($application->fecha, 'America/Bogota')->locale('es')->diffForHumans()
                     : '',
             ];
         }
@@ -191,9 +199,11 @@ class DashboardController extends Controller
             'totalServices',
 
             // Información general
-            'activeOffers',
+            'activeUsers',
+            'activeCompanies',
             'totalCV',
-
+            'totalCategories',
+            
             // Postulaciones
             'postulacionesEnviadas',
             'postulacionesAceptadas',
