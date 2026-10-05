@@ -25,7 +25,6 @@
 
         </div>
 
-
         {{-- FECHA --}}
 
         <div class="bg-white border border-gray-100 rounded-2xl px-5 py-3 shadow-sm">
@@ -224,22 +223,22 @@
 
                     {{-- OFERTAS --}}
 
-                    <div class="flex items-center gap-4 p-4 rounded-xl bg-green-50/50">
+                    <div class="flex items-center gap-4 p-4 rounded-xl bg-blue-50/50">
 
-                        <div class="w-11 h-11 rounded-xl bg-green-100 flex items-center justify-center">
+                        <div class="w-11 h-11 rounded-xl bg-blue-100 flex items-center justify-center">
 
-                            <span class="w-3 h-3 rounded-full bg-green-500"></span>
+                            <span class="w-3 h-3 rounded-full bg-[#4DB6E8]"></span>
 
                         </div>
 
                         <div>
 
                             <p class="text-2xl font-semibold text-gray-800">
-                                {{ $activeOffers }}
+                                {{ $activeUsers }}
                             </p>
 
                             <p class="text-sm text-gray-500">
-                                Ofertas activas
+                                Usuarios activos
                             </p>
 
                         </div>
@@ -261,11 +260,11 @@
                         <div>
 
                             <p class="text-2xl font-semibold text-gray-800">
-                                {{ $totalCompanies }}
+                                {{ $activeCompanies }}
                             </p>
 
                             <p class="text-sm text-gray-500">
-                                Empresas registradas
+                                Empresas activas
                             </p>
 
                         </div>
@@ -291,7 +290,7 @@
                             </p>
 
                             <p class="text-sm text-gray-500">
-                                Hojas de vida
+                                Hojas de vida registradas
                             </p>
 
                         </div>
@@ -302,22 +301,22 @@
 
                     {{-- SERVICIOS --}}
 
-                    <div class="flex items-center gap-4 p-4 rounded-xl bg-orange-50/50">
+                    <div class="flex items-center gap-4 p-4 rounded-xl bg-yellow-50/50">
 
-                        <div class="w-11 h-11 rounded-xl bg-orange-100 flex items-center justify-center">
+                        <div class="w-11 h-11 rounded-xl bg-yellow-100 flex items-center justify-center">
 
-                            <span class="w-3 h-3 rounded-full bg-orange-500"></span>
+                            <span class="w-3 h-3 rounded-full bg-yellow-500"></span>
 
                         </div>
 
                         <div>
 
                             <p class="text-2xl font-semibold text-gray-800">
-                                {{ $totalServices }}
+                                {{ $totalCategories }}
                             </p>
 
                             <p class="text-sm text-gray-500">
-                                Servicios disponibles
+                                Categorias Registrados
                             </p>
 
                         </div>
@@ -550,7 +549,7 @@
 
                     <div class="p-5 flex items-center gap-4">
 
-                        <div class="w-11 h-11 rounded-xl bg-blue-50 flex items-center justify-center text-[#4DB6E8]">
+                        <div class="w-11 h-11 rounded-xl bg-green-50 flex items-center justify-center text-green-500">
 
                             @php($icon = 'box')
                             @include('layouts.partials.icons')
@@ -572,7 +571,7 @@
                         <span class="text-xs text-gray-400 whitespace-nowrap">
 
                             {{ $offer->created_at
-                                ? \Carbon\Carbon::parse($offer->created_at)->diffForHumans()
+                                ? \Carbon\Carbon::parse($offer->created_at)->locale('es')->diffForHumans()
                                 : ''
                             }}
 
@@ -654,7 +653,7 @@
                         <span class="text-xs text-gray-400 whitespace-nowrap">
 
                             {{ $service->created_at
-                                ? \Carbon\Carbon::parse($service->created_at)->diffForHumans()
+                                ? \Carbon\Carbon::parse($service->created_at)->locale('es')->diffForHumans()
                                 : ''
                             }}
 
@@ -705,9 +704,9 @@
 
                 <div class="flex items-center gap-4 py-4 border-b border-gray-100 last:border-0">
 
-                    <div class="w-9 h-9 rounded-full bg-indigo-50 flex items-center justify-center ">
+                    <div class="w-9 h-9 rounded-full bg-blue-50 flex items-center justify-center ">
 
-                        <span class="w-2.5 h-2.5 rounded-full bg-indigo-500"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-[#4DB6E8]"></span>
 
                     </div>
 
