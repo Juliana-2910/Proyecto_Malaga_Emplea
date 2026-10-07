@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Oferta;
 use App\Services\ofertasService;
+use App\Services\usuariosService;
 use App\Http\Requests\OfertaStoreRequest;
 use App\Http\Requests\OfertaUpdateRequest;
 use App\Services\empresasServices;
@@ -11,14 +12,15 @@ use Illuminate\Http\Request;
 
 class OfertaController extends Controller
 {
-
+    private usuariosService $usuariosService;
     private ofertasService $ofertasService;
     private empresasServices $empresasServices;
 
-    public function __construct(ofertasService $ofertasService, empresasServices $empresasServices)
+    public function __construct(ofertasService $ofertasService, empresasServices $empresasServices, usuariosService $usuariosService)
     {
         $this->ofertasService = $ofertasService;
         $this->empresasServices = $empresasServices;
+        $this->usuariosService = $usuariosService;
     }
 
     public function index()
@@ -31,7 +33,9 @@ class OfertaController extends Controller
     public function create()
     {
         $empresas = $this->empresasServices->listarTodos();
-        return view('Ofertas.crear', compact('empresas'));
+        $usuarios = $this->usuariosService->listarUsuarios();
+
+        return view('Ofertas.crear', compact('empresas', 'usuarios'));
     }
 
     public function store(OfertaStoreRequest $request)
@@ -49,7 +53,9 @@ class OfertaController extends Controller
     {
         $oferta = $this->ofertasService->buscarporid($id);
         $empresas = $this->empresasServices->listarTodos();
-        return view('Ofertas.editar', compact('oferta', 'empresas'));
+        $usuarios = $this->usuariosService->listarUsuarios();
+
+        return view('Ofertas.editar', compact('oferta', 'empresas', 'usuarios'));
     }
 
 

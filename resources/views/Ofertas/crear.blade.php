@@ -224,40 +224,95 @@
 
 
                 {{-- Empresa --}}
-                <div>
-                    <label for="idEmpresa"
-                           class="mb-2 block text-sm font-semibold text-gray-700">
-                        Empresa
-                    </label>
+                {{-- Quién publica la oferta --}}
+        <div>
+            <label for="tipoPublicador"
+           class="mb-2 block text-sm font-semibold text-gray-700">
+        ¿Quién publica la oferta?
+            </label>
 
-                    <select name="idEmpresa"
-                            id="idEmpresa"
-                            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
+            <select name="tipoPublicador"
+            id="tipoPublicador"
+            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
 
-                        <option value="">
-                            Seleccione una empresa
-                        </option>
+              <option value="empresa"
+            {{ old('tipoPublicador', 'empresa') == 'empresa' ? 'selected' : '' }}>
+            Empresa
+             </option>
 
-                        @foreach ($empresas as $empresa)
+                <option value="usuario"
+            {{ old('tipoPublicador') == 'usuario' ? 'selected' : '' }}>
+            Persona natural
+             </option>
 
-                            <option value="{{ $empresa->id }}"
-                                {{ old('idEmpresa') == $empresa->id ? 'selected' : '' }}>
-                                {{ $empresa->nombreEmpresa }}
-                            </option>
+         </select>
+        </div>
 
-                        @endforeach
+            {{-- Empresa --}}
+        <div id="empresaContainer">
+            <label for="idEmpresa"
+           class="mb-2 block text-sm font-semibold text-gray-700">
+        Empresa
+            </label>
 
-                    </select>
+            <select name="idEmpresa"
+            id="idEmpresa"
+            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
 
-                    @error('idEmpresa')
-                        <p class="mt-1 text-sm text-red-500">
-                            {{ $message }}
-                        </p>
-                    @enderror
-                </div>
+                <option value="">
+            Seleccione una empresa
+                </option>
 
+                @foreach ($empresas as $empresa)
+
+            <option value="{{ $empresa->id }}"
+                {{ old('idEmpresa') == $empresa->id ? 'selected' : '' }}>
+                {{ $empresa->nombreEmpresa }}
+            </option>
+
+                @endforeach
+
+            </select>
+
+         @error('idEmpresa')
+                <p class="mt-1 text-sm text-red-500">
+            {{ $message }}
+                </p>
+        @enderror
             </div>
 
+            {{-- Persona natural --}}
+        <div id="usuarioContainer" class="hidden">
+            <label for="idUsuario"
+           class="mb-2 block text-sm font-semibold text-gray-700">
+        Persona natural
+            </label>
+
+            <select name="idUsuario"
+            id="idUsuario"
+            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
+
+                <option value="">
+            Seleccione una persona
+                </option>
+
+                @foreach ($usuarios as $usuario)
+
+            <option value="{{ $usuario->id }}"
+                {{ old('idUsuario') == $usuario->id ? 'selected' : '' }}>
+                {{ $usuario->nombres }} {{ $usuario->apellidos }}
+            </option>
+
+                @endforeach
+
+            </select>
+
+            @error('idUsuario')
+        <p class="mt-1 text-sm text-red-500">
+            {{ $message }}
+        </p>
+            @enderror
+        </div>
 
             {{-- Botones --}}
             <div class="mt-8 flex justify-end gap-3">
@@ -281,5 +336,39 @@
 </div>
 
 </div>
+   {{-- JavaScript --}} 
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        const tipoPublicador = document.getElementById('tipoPublicador');
+        const empresaContainer = document.getElementById('empresaContainer');
+        const usuarioContainer = document.getElementById('usuarioContainer');
+
+        const idEmpresa = document.getElementById('idEmpresa');
+        const idUsuario = document.getElementById('idUsuario');
+
+        function mostrarPublicador() {
+
+            if (tipoPublicador.value === 'usuario') {
+
+                empresaContainer.classList.add('hidden');
+                usuarioContainer.classList.remove('hidden');
+
+                idEmpresa.value = '';
+
+            } else {
+
+                empresaContainer.classList.remove('hidden');
+                usuarioContainer.classList.add('hidden');
+
+                idUsuario.value = '';
+            }
+        }
+
+        tipoPublicador.addEventListener('change', mostrarPublicador);
+
+        mostrarPublicador();
+    });
+</script>
 
 @endsection

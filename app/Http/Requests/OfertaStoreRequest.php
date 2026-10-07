@@ -32,7 +32,8 @@ class OfertaStoreRequest extends FormRequest
         'ubicacion' => 'required|string|max:255',
         'fechaPublicacion' => 'required|date',
         'fechaLimite' => 'required|date|after_or_equal:fechaPublicacion',
-        'idEmpresa' => 'required|exists:empresas,id',
+        'idEmpresa' => 'nullable|exists:empresas,id|required_without:idUsuario',
+        'idUsuario' => 'nullable|exists:usuarios,id|required_without:idEmpresa',
 
         ];
     }
@@ -63,8 +64,11 @@ class OfertaStoreRequest extends FormRequest
         'fechaLimite.date' => 'La fecha límite no es válida.',
         'fechaLimite.after_or_equal' => 'La fecha límite debe ser igual o posterior a la fecha de publicación.',
 
-        'idEmpresa.required' => 'Debe seleccionar una empresa.',
+        'idEmpresa.required_without' => 'Debe seleccionar una empresa o un usuario.',
         'idEmpresa.exists' => 'La empresa seleccionada no existe.',
+
+        'idUsuario.required_without' => 'Debe seleccionar una empresa o un usuario.',
+        'idUsuario.exists' => 'El usuario seleccionado no existe.',
     ];
 }
 }
