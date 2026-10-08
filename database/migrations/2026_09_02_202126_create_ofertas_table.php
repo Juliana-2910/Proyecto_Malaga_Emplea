@@ -21,11 +21,16 @@ return new class extends Migration
             $table->string('ubicacion', 255);
             $table->date('fechaPublicacion');
             $table->date('fechaLimite');
-            $table->unsignedBigInteger('idEmpresa');
+            $table->unsignedBigInteger('idEmpresa')->nullable();
+            $table->unsignedBigInteger('idUsuario')->nullable();
 
             $table->foreign('idEmpresa')
              ->references('id')
              ->on('empresas');
+
+            $table->foreign('idUsuario')
+             ->references('id')
+             ->on('usuarios');
 
             $table->timestamps();
     

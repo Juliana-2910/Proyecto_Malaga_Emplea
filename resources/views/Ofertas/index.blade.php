@@ -83,7 +83,7 @@
                             </th>
 
                             <th class="border-r border-gray-600 px-6 py-4 text-sm font-semibold">
-                                Empresa
+                                Publicado por
                             </th>
 
                             <th class="px-6 py-4 text-sm font-semibold">
@@ -141,12 +141,16 @@
                                 </td>
 
 
-                                {{-- EMPRESA --}}
-                                <td class="border-r border-gray-100 px-6 py-5 text-sm font-medium text-gray-600">
+                                {{-- PUBLICADO POR --}}
+                                 <td class="border-r border-gray-100 px-6 py-5 text-sm font-medium text-gray-600">
 
+                                @if ($oferta->idEmpresa)
                                     {{ $oferta->empresa->nombreEmpresa }}
+                                @else
+                                    {{ $oferta->usuario->nombres }} {{ $oferta->usuario->apellidos }}
+                                @endif
 
-                                </td>
+                    </td>
 
 
                                 {{-- ACCIONES --}}

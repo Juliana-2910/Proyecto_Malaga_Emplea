@@ -11,6 +11,15 @@ class usuariosRepository{
         return Usuario::with('rol')->get();
     }
 
+    public function listarUsuarios()
+    {
+    return Usuario::with('rol')
+        ->whereHas('rol', function ($query) {
+            $query->where('rol', 'usuario');
+        })
+        ->get();
+    }
+
     public function guardar(array $datos)
     {
         Usuario::create($datos);

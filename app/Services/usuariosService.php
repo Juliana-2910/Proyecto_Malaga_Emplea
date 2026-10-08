@@ -18,6 +18,11 @@ class usuariosService{
         return $this->usuariosRepository->listarTodos();
     }
 
+    public function listarUsuarios()
+    {
+    return $this->usuariosRepository->listarUsuarios();
+    }
+
     public function guardar(array $datos)
     {
         $this->usuariosRepository->guardar($datos);
