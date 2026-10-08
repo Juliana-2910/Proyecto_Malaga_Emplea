@@ -6,7 +6,6 @@ use App\Models\Empresa;
 use App\Services\empresasServices;
 use App\Http\Requests\EmpresaStoreRequest;
 use App\Http\Requests\EmpresaUpdateRequest;
-use Illuminate\Http\Request;
 
 class EmpresaController extends Controller
 {
@@ -29,7 +28,7 @@ class EmpresaController extends Controller
         }
 
 
-        public function store(Request $request)
+        public function store(EmpresaStoreRequest $request)
         {
             $this->empresasServices->guardar($request->all());
             return redirect()->route('empresas.index')->with('success', 'Empresa creada exitosamente.');

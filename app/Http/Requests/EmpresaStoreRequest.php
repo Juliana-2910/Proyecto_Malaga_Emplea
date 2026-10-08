@@ -24,13 +24,14 @@ class EmpresaStoreRequest extends FormRequest
     {
             return [
     'nombreEmpresa' => 'required|string|max:100',
+    'fotoPerfil' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
     'nit' => 'required|string|unique:empresas,nit',
     'direccion' => 'required|string|max:255',
     'estado' => 'required|in:activo,inactivo',
     'correoElectronico' => 'required|email|max:255',
     'password' => 'required|string|min:8',
 
-    ]; 
+    ];
     }
 
     public function messages(): array
@@ -38,6 +39,10 @@ class EmpresaStoreRequest extends FormRequest
     return [
         'nombreEmpresa.required' => 'El nombre de la empresa es obligatorio.',
         'nombreEmpresa.max' => 'El nombre de la empresa no puede superar los 100 caracteres.',
+
+        'fotoPerfil.image' => 'El archivo debe ser una imagen.',
+        'fotoPerfil.mimes' => 'El archivo debe ser de tipo: jpeg, png, jpg',
+        'fotoPerfil.max' => 'El tamaño de la imagen no debe exceder los 2MB.',
 
         'nit.required' => 'El NIT es obligatorio.',
         'nit.unique' => 'El NIT ingresado ya se encuentra registrado.',
