@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('fotoPerfil')->nullable();
             $table->string('nit')->unique();
             $table->string('direccion');
-            $table->enum('estado',['Activo','Inactivo']);
+            $table->enum('estado',['activo','inactivo']);
             $table->string('correoElectronico')->unique();
             $table->string('password');
             $table->timestamps();

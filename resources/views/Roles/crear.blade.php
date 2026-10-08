@@ -7,7 +7,6 @@
 
 <div class="min-h-screen bg-gray-100 py-10">
 
-```
 <div class="mx-auto max-w-3xl px-6">
 
     {{-- Encabezado --}}
@@ -89,7 +88,6 @@
     </div>
 
 </div>
-```
 
 </div>
 

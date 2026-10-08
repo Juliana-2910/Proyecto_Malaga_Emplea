@@ -9,331 +9,383 @@
 
 <div class="min-h-screen bg-gray-100 py-8">
 
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
-        {{-- ENCABEZADO --}}
-        <div class="mb-7 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+    {{-- Encabezado --}}
+    <div class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+
+        <div>
+
+            <h1 class="text-2xl font-bold text-gray-800 sm:text-3xl">
+                Empresas
+            </h1>
+
+            <p class="mt-1 text-sm text-gray-500">
+                Administración de empresas registradas
+            </p>
+
+        </div>
+
+        <a href="{{ route('empresas.create') }}"
+            class="inline-flex items-center justify-center gap-2 rounded-xl bg-[#4DB6E8] px-5 py-3 text-sm font-semibold text-white shadow-sm transition duration-200 hover:bg-[#333333]">
+
+            @php($icon = 'plus')
+            @include('layouts.partials.icons')
+
+            Nueva Empresa
+
+        </a>
+
+    </div>
+
+
+    {{-- Contenedor principal --}}
+    <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-[0_10px_35px_rgba(77,182,232,0.12)] sm:p-6">
+
+        {{-- Encabezado de sección --}}
+        <div class="mb-6 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
 
             <div>
 
-                <h1 class="text-2xl font-bold tracking-tight text-gray-800 sm:text-3xl">
-                    Empresas
-                </h1>
+                <h2 class="text-lg font-semibold text-gray-800">
+                    Registradas
+                </h2>
 
                 <p class="mt-1 text-sm text-gray-500">
-                    Administración de empresas del sistema
+                    Consulta la información de las empresas registradas.
                 </p>
 
             </div>
 
-            <a
-                href="{{ route('empresas.create') }}"
-                class="inline-flex items-center justify-center gap-2 rounded-xl bg-[#4DB6E8] px-5 py-3 text-sm font-semibold text-white shadow-sm transition duration-200 hover:bg-[#333333]">
+            @if ($empresas->count() > 0)
 
-                @php($icon = 'plus')
-                @include('layouts.partials.icons')
+                <div class="inline-flex w-fit items-center gap-2 rounded-full bg-[#4DB6E8]/10 px-3 py-1.5 text-xs font-semibold text-[#3199CC]">
 
-                Crear empresa
+                    <span class="h-2 w-2 rounded-full bg-[#4DB6E8]"></span>
 
-            </a>
+                    {{ $empresas->count() }}
+
+                    {{ $empresas->count() == 1 ? 'registro' : 'registros' }}
+
+                </div>
+
+            @endif
 
         </div>
 
 
-        {{-- TARJETA PRINCIPAL --}}
-        <div class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-[0_10px_35px_rgba(77,182,232,0.20)]">
+        {{-- Tarjetas --}}
+        <div class="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
 
-            {{-- TÍTULO DE LA TABLA --}}
-            <div class="border-b border-gray-100 px-6 py-4">
+            @forelse ($empresas as $empresa)
 
-                <h2 class="text-lg font-semibold text-gray-800">
-                    Empresas registradas
-                </h2>
-
-            </div>
+                <div class="flex h-full flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition duration-200 hover:border-[#4DB6E8]/40 hover:shadow-[0_8px_25px_rgba(77,182,232,0.12)]">
 
 
-            {{-- TABLA --}}
-            <div class="overflow-x-auto">
+                    {{-- Encabezado de tarjeta --}}
+                    <div class="border-b border-gray-100 bg-gradient-to-r from-[#4DB6E8]/5 to-white px-4 py-4">
 
-                <table class="w-full text-center text-gray-600">
-
-                    <thead class="bg-[#333333] text-white">
-
-                        <tr>
-
-                            <th class="border-r border-gray-600 px-6 py-4 text-sm font-semibold">
-                                ID
-                            </th>
-
-                            <th class="border-r border-gray-600 px-6 py-4 text-sm font-semibold">
-                                Empresa
-                            </th>
-
-                            <th class="border-r border-gray-600 px-6 py-4 text-sm font-semibold">
-                                NIT
-                            </th>
-
-                            <th class="border-r border-gray-600 px-6 py-4 text-sm font-semibold">
-                                Dirección
-                            </th>
-
-                            <th class="border-r border-gray-600 px-6 py-4 text-sm font-semibold">
-                                Estado
-                            </th>
-
-                            <th class="border-r border-gray-600 px-6 py-4 text-sm font-semibold">
-                                Correo electrónico
-                            </th>
-
-                            <th class="px-6 py-4 text-sm font-semibold">
-                                Acciones
-                            </th>
-
-                        </tr>
-
-                    </thead>
+                        <div class="flex items-center gap-3">
 
 
-                    <tbody class="divide-y divide-gray-200">
+                            {{-- Foto de empresa --}}
+                            <div class="flex h-16 w-16 flex-shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-white bg-[#4DB6E8]/10 text-[#4DB6E8] shadow-sm">
 
-                        @forelse ($empresas as $empresa)
+                                @if (!empty($empresa->fotoPerfil))
 
-                            <tr class="transition hover:bg-gray-50">
+                                    <img
+                                        src="{{ asset('storage/empresas/' . $empresa->fotoPerfil) }}"
+                                        alt="Foto de {{ $empresa->nombreEmpresa }}"
+                                        class="h-full w-full object-cover"
+                                    >
 
-                                {{-- ID --}}
-                                <td class="border-r border-gray-100 px-6 py-5 text-sm font-medium text-gray-600">
-                                    {{ $empresa->id }}
-                                </td>
+                                @else
+
+                                    @php($icon = 'building-office-2')
+                                    @include('layouts.partials.icons')
+
+                                @endif
+
+                            </div>
 
 
-                                {{-- EMPRESA --}}
-                                <td class="border-r border-gray-100 px-6 py-5 text-sm font-medium text-gray-600">
+                            {{-- Nombre de empresa --}}
+                            <div class="min-w-0 flex-1">
+
+                                <p class="text-[10px] font-bold uppercase tracking-wider text-[#4DB6E8]">
+                                    Empresa
+                                </p>
+
+                                <h3 class="mt-1 truncate text-base font-bold text-gray-800">
                                     {{ $empresa->nombreEmpresa }}
-                                </td>
+                                </h3>
+
+                            </div>
 
 
-                                {{-- NIT --}}
-                                <td class="border-r border-gray-100 px-6 py-5 text-sm font-medium text-gray-600">
+                            {{-- ID --}}
+                            <span class="self-start rounded-full bg-gray-100 px-2.5 py-1 text-xs font-semibold text-gray-600">
+
+                                #{{ $empresa->id }}
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    {{-- Datos de la empresa --}}
+                    <div class="flex-1 px-5 py-5">
+
+                        <div class="grid grid-cols-1 gap-x-5 gap-y-4 sm:grid-cols-2">
+
+
+                            {{-- NIT --}}
+                            <div>
+
+                                <p class="text-xs font-medium text-gray-400">
+                                    NIT
+                                </p>
+
+                                <p class="mt-1 break-words text-sm font-medium text-gray-700">
                                     {{ $empresa->nit }}
-                                </td>
+                                </p>
+
+                            </div>
 
 
-                                {{-- DIRECCIÓN --}}
-                                <td class="border-r border-gray-100 px-6 py-5 text-sm font-medium text-gray-600">
+                            {{-- Dirección --}}
+                            <div>
+
+                                <p class="text-xs font-medium text-gray-400">
+                                    Dirección
+                                </p>
+
+                                <p class="mt-1 break-words text-sm font-medium text-gray-700">
                                     {{ $empresa->direccion }}
-                                </td>
+                                </p>
+
+                            </div>
 
 
-                                {{-- ESTADO --}}
-                                <td class="border-r border-gray-100 px-6 py-5">
+                            {{-- Correo electrónico --}}
+                            <div>
 
-                                    @if ($empresa->estado === 'activo')
+                                <p class="text-xs font-medium text-gray-400">
+                                    Correo electrónico
+                                </p>
 
-                                        <span class="rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">
-                                            Activo
-                                        </span>
-
-                                    @else
-
-                                        <span class="rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-700">
-                                            Inactivo
-                                        </span>
-
-                                    @endif
-
-                                </td>
-
-
-                                {{-- CORREO ELECTRÓNICO --}}
-                                <td class="border-r border-gray-100 px-6 py-5 text-sm font-medium text-gray-600">
+                                <p class="mt-1 break-all text-sm font-medium text-gray-700">
                                     {{ $empresa->correoElectronico }}
-                                </td>
+                                </p>
+
+                            </div>
 
 
-                                {{-- ACCIONES --}}
-                                <td class="px-6 py-5">
+                            {{-- Fecha de registro --}}
+                            <div>
 
-                                    <div class="flex items-center justify-center gap-2">
+                                <p class="text-xs font-medium text-gray-400">
+                                    Fecha de registro
+                                </p>
 
-                                        {{-- EDITAR --}}
-                                        <a
-                                            href="{{ route('empresas.edit', $empresa->id) }}"
-                                            title="Editar empresa"
-                                            class="flex h-9 w-9 items-center justify-center rounded-lg bg-[#4DB6E8]/10 text-[#4DB6E8] transition duration-200 hover:bg-[#4DB6E8] hover:text-white">
+                                <p class="mt-1 text-sm font-medium text-gray-700">
+                                    {{ $empresa->created_at ? $empresa->created_at->format('d/m/Y') : 'No registrada' }}
+                                </p>
 
-                                            @php($icon = 'pencil')
-                                            @include('layouts.partials.icons')
+                            </div>
 
-                                        </a>
-
-
-                                        {{-- ELIMINAR --}}
-                                        <button
-                                            type="button"
-                                            title="Eliminar empresa"
-                                            @click="$dispatch('open-modal', 'delete-{{ $empresa->id }}')"
-                                            class="flex h-9 w-9 items-center justify-center rounded-lg bg-red-50 text-red-500 transition duration-200 hover:bg-red-500 hover:text-white">
-
-                                            @php($icon = 'trash')
-                                            @include('layouts.partials.icons')
-
-                                        </button>
-
-                                    </div>
-
-                                </td>
-
-                            </tr>
+                        </div>
 
 
-                            {{-- MODAL ELIMINAR --}}
-                            <x-modal
-                                name="delete-{{ $empresa->id }}"
+                        {{-- Estado --}}
+                        <div class="mt-5 border-t border-gray-100 pt-4">
+
+                            <p class="mb-2 text-xs font-medium text-gray-400">
+                                Estado
+                            </p>
+
+                            @if ($empresa->estado === 'activo')
+
+                                <span class="inline-flex items-center rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">
+                                    Activo
+                                </span>
+
+                            @else
+
+                                <span class="inline-flex items-center rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-700">
+                                    Inactivo
+                                </span>
+
+                            @endif
+
+                        </div>
+
+                    </div>
+
+
+                    {{-- ACCIONES --}}
+                    <div class="flex justify-end border-t border-gray-100 bg-gray-50/60 px-4 py-3">
+
+                        <div class="flex items-center justify-center gap-2">
+
+
+                            {{-- EDITAR --}}
+                            <a
+                                href="{{ route('empresas.edit', $empresa->id) }}"
+                                title="Editar empresa"
+                                class="inline-flex items-center gap-1.5 rounded-lg bg-[#4DB6E8]/10 px-3 py-2 text-xs font-semibold text-[#4DB6E8] transition duration-200 hover:bg-[#4DB6E8] hover:text-white">
+
+                                @php($icon = 'pencil')
+                                @include('layouts.partials.icons')
+
+                                <span>Editar</span>
+
+                            </a>
+
+
+                            {{-- ELIMINAR --}}
+                            <button
+                                type="button"
                                 title="Eliminar empresa"
-                                maxWidth="sm">
+                                @click="$dispatch('open-modal', 'delete-{{ $empresa->id }}')"
+                                class="inline-flex items-center gap-1.5 rounded-lg bg-red-50 px-3 py-2 text-xs font-semibold text-red-500 transition duration-200 hover:bg-red-500 hover:text-white">
 
-                                <div class="text-center">
+                                @php($icon = 'trash')
+                                @include('layouts.partials.icons')
 
-                                    <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-100 text-red-600">
+                                <span>Eliminar</span>
 
-                                        @php($icon = 'exclamation-triangle')
-                                        @include('layouts.partials.icons')
+                            </button>
 
-                                    </div>
+                        </div>
 
-                                    <p class="text-sm leading-6 text-gray-500">
+                    </div>
 
-                                        ¿Seguro que deseas eliminar la empresa
-
-                                        <strong class="text-gray-800">
-                                            {{ $empresa->nombreEmpresa }}
-                                        </strong>?
-
-                                        <br>
-
-                                        Esta acción no se puede deshacer.
-
-                                    </p>
-
-                                </div>
+                </div>
 
 
-                                <x-slot:footer>
+                {{-- MODAL ELIMINAR --}}
+                <x-modal
+                    name="delete-{{ $empresa->id }}"
+                    title="Eliminar empresa"
+                    maxWidth="sm"
+                >
 
-                                    <x-button
-                                        variant="secondary"
-                                        @click="show = false">
+                    <div class="text-center">
 
-                                        Cancelar
+                        <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-100 text-red-600">
 
-                                    </x-button>
+                            @php($icon = 'exclamation-triangle')
+                            @include('layouts.partials.icons')
 
+                        </div>
 
-                                    <form
-                                        action="{{ route('empresas.destroy', $empresa->id) }}"
-                                        method="POST">
+                        <p class="text-sm leading-6 text-gray-500">
 
-                                        @csrf
-                                        @method('DELETE')
+                            ¿Seguro que deseas eliminar la empresa de
 
-                                        <x-button
-                                            variant="danger"
-                                            type="submit">
+                            <strong class="text-gray-800">
+                                {{ $empresa->nombreEmpresa }}
+                            </strong>?
 
-                                            Eliminar
+                            <br>
 
-                                        </x-button>
+                            Esta acción no se puede deshacer.
 
-                                    </form>
+                        </p>
 
-                                </x-slot:footer>
-
-                            </x-modal>
-
-
-                        @empty
-
-                            {{-- ESTADO VACÍO --}}
-                            <tr>
-
-                                <td colspan="7">
-
-                                    <div class="px-6 py-16 text-center">
-
-                                        <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#4DB6E8]/10 text-[#4DB6E8]">
-
-                                            @php($icon = 'building')
-                                            @include('layouts.partials.icons')
-
-                                        </div>
+                    </div>
 
 
-                                        <h3 class="text-lg font-semibold text-gray-800">
-                                            No hay empresas registradas
-                                        </h3>
+                    <x-slot:footer>
+
+                        <x-button
+                            variant="secondary"
+                            @click="show = false"
+                        >
+                            Cancelar
+                        </x-button>
 
 
-                                        <p class="mx-auto mt-2 max-w-md text-sm text-gray-500">
-                                            Todavía no existen empresas registradas en el sistema.
-                                        </p>
+                        <form
+                            action="{{ route('empresas.destroy', $empresa->id) }}"
+                            method="POST"
+                        >
+
+                            @csrf
+
+                            @method('DELETE')
+
+                            <x-button
+                                variant="danger"
+                                type="submit"
+                            >
+                                Eliminar
+                            </x-button>
+
+                        </form>
+
+                    </x-slot:footer>
+
+                </x-modal>
 
 
-                                        <a
-                                            href="{{ route('empresas.create') }}"
-                                            class="mt-5 inline-flex items-center gap-2 rounded-xl bg-[#4DB6E8] px-5 py-2.5 text-sm font-semibold text-white transition duration-200 hover:bg-[#333333]">
+            @empty
 
-                                            @php($icon = 'plus')
-                                            @include('layouts.partials.icons')
+                {{-- ESTADO VACÍO --}}
+                <div class="col-span-full rounded-2xl border border-dashed border-gray-300 bg-gray-50 px-6 py-14 text-center">
 
-                                            Crear empresa
+                    <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#4DB6E8]/10 text-[#4DB6E8]">
 
-                                        </a>
+                        @php($icon = 'building')
+                        @include('layouts.partials.icons')
 
-                                    </div>
+                    </div>
 
-                                </td>
+                    <h3 class="text-lg font-semibold text-gray-800">
+                        No hay empresas registradas
+                    </h3>
 
-                            </tr>
+                    <p class="mx-auto mt-2 max-w-md text-sm leading-6 text-gray-500">
+                        Aún no se han registrado empresas en Málaga Emplea.
+                    </p>
 
-                        @endforelse
+                    <a href="{{ route('empresas.create') }}"
+                        class="mt-5 inline-flex items-center gap-2 rounded-xl bg-[#4DB6E8] px-5 py-2.5 text-sm font-semibold text-white transition duration-200 hover:bg-[#333333]">
 
-                    </tbody>
+                        @php($icon = 'plus')
+                        @include('layouts.partials.icons')
 
-                </table>
+                        Registrar Empresa
 
-            </div>
+                    </a>
+
+                </div>
+
+            @endforelse
 
         </div>
 
 
-        {{-- CONTADOR --}}
+        {{-- Contador --}}
         @if ($empresas->count() > 0)
 
-            <div class="mt-4 flex items-center justify-between px-1">
+            <div class="mt-6 border-t border-gray-100 pt-4">
 
                 <p class="text-sm text-gray-500">
 
                     Mostrando
 
-                    <span class="font-semibold text-gray-800">
+                    <span class="font-semibold text-gray-700">
                         {{ $empresas->count() }}
                     </span>
 
-                    {{ $empresas->count() == 1
-                        ? 'empresa registrada'
-                        : 'empresas registradas' }}
+                    {{ $empresas->count() == 1 ? 'empresa' : 'empresas' }}
+                    registrada(s).
 
                 </p>
-
-
-                <div class="hidden items-center gap-2 text-xs text-gray-400 sm:flex">
-
-                    <span class="h-2 w-2 rounded-full bg-[#4DB6E8]"></span>
-
-                    Málaga Emplea
-
-                </div>
 
             </div>
 
@@ -342,6 +394,8 @@
     </div>
 
 </div>
+```
+
+</div>
 
 @endsection
-
