@@ -27,7 +27,7 @@ class HojaDeVidaStoreRequest extends FormRequest
             'nivelEducativo' => 'required|string|max:255',
             'perfilProfesional' => 'required|string|max:255',
             'experienciaLaboral' => 'required|string|max:255',
-            'archivoCV' => 'required|string|max:255',
+            'archivoCV' => 'required|file|mimes:pdf|max:5120',
             'idUsuario' => 'required|exists:usuarios,id',
         ];
     }
@@ -52,8 +52,9 @@ class HojaDeVidaStoreRequest extends FormRequest
             'experienciaLaboral.max' => 'El campo experiencia laboral no debe exceder los 255 caracteres.',
 
             'archivoCV.required' => 'El archivo del CV es obligatorio.',
-            'archivoCV.string' => 'El archivo del CV debe ser una cadena de texto.',
-            'archivoCV.max' => 'El archivo del CV no debe exceder los 255 caracteres.',
+            'archivoCV.file' => 'El archivo del CV no es válido.',
+            'archivoCV.mimes' => 'El archivo del CV debe estar en formato PDF.',
+            'archivoCV.max' => 'El archivo del CV no debe superar los 5 MB.',
 
             'idUsuario.required' => 'El campo ID de usuario es obligatorio.',
             'idUsuario.exists' => 'El ID de usuario proporcionado no existe en la base de datos.',

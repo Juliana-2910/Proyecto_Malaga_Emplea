@@ -25,7 +25,8 @@ class UsuariosStoreRequest extends FormRequest
         return [
             'nombres' => 'required|string|max:255',
             'apellidos' => 'required|string|max:255',
-            'fechaNacimiento' => 'required|date',
+            'fotoPerfil' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'fechaNacimiento' => 'required|date|before_or_equal:' . now()->subYears(18)->format('Y-m-d'),
             'tipoDocumento' => 'required|in:CC,CE,PPT,PEP',
             'numeroDocumento' => 'required|string|max:255',
             'correoElectronico' => 'required|string|email|max:255',
@@ -47,8 +48,13 @@ class UsuariosStoreRequest extends FormRequest
             'apellidos.string' => 'El campo apellidos debe ser una cadena de texto.',
             'apellidos.max' => 'El campo apellidos no debe exceder los 255 caracteres.',
 
+            'fotoPerfil.image' => 'El archivo debe ser una imagen.',
+            'fotoPerfil.mimes' => 'El archivo debe ser de tipo: jpeg, png, jpg',
+            'fotoPerfil.max' => 'El tamaño de la imagen no debe exceder los 2MB.',
+
             'fechaNacimiento.required' => 'El campo fecha de nacimiento es obligatorio.',
             'fechaNacimiento.date' => 'El campo fecha de nacimiento debe ser una fecha válida.',
+            'fechaNacimiento.before_or_equal' => 'El usuario debe tener mínimo 18 años para registrarse.',
 
             'tipoDocumento.required' => 'El campo tipo de documento es obligatorio.',
             'tipoDocumento.in' => 'El campo tipo de documento debe ser uno de los valores permitidos.',

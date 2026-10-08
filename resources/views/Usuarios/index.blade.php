@@ -11,371 +11,393 @@
 
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
-        {{-- ENCABEZADO --}}
-        <div class="mb-7 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        {{-- Encabezado --}}
+        <div class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 
             <div>
-
-                <h1 class="text-2xl font-bold tracking-tight text-gray-800 sm:text-3xl">
+                <h1 class="text-2xl font-bold text-gray-800 sm:text-3xl">
                     Usuarios
                 </h1>
 
                 <p class="mt-1 text-sm text-gray-500">
-                    Administración de usuarios del sistema
+                    Administración de usuarios registrados
                 </p>
-
             </div>
 
-            <a
-                href="{{ route('usuarios.create') }}"
+            <a href="{{ route('usuarios.create') }}"
                 class="inline-flex items-center justify-center gap-2 rounded-xl bg-[#4DB6E8] px-5 py-3 text-sm font-semibold text-white shadow-sm transition duration-200 hover:bg-[#333333]">
 
                 @php($icon = 'plus')
                 @include('layouts.partials.icons')
 
-                Crear usuario
-
+                Nuevo Usuario
             </a>
 
         </div>
 
 
-        {{-- TARJETA PRINCIPAL --}}
-        <div class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-[0_10px_35px_rgba(77,182,232,0.20)]">
+        {{-- Contenedor principal --}}
+        <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-[0_10px_35px_rgba(77,182,232,0.12)] sm:p-6">
 
-            {{-- TÍTULO DE LA TABLA --}}
-            <div class="border-b border-gray-100 px-6 py-4">
+            {{-- Encabezado de sección --}}
+            <div class="mb-6 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
 
-                <h2 class="text-lg font-semibold text-gray-800">
-                    Usuarios registrados
-                </h2>
+                <div>
+                    <h2 class="text-lg font-semibold text-gray-800">
+                        Registrados
+                    </h2>
+
+                    <p class="mt-1 text-sm text-gray-500">
+                        Consulta la información de los usuarios registrados.
+                    </p>
+                </div>
+
+            @if ($usuarios->count() > 0)
+
+                <div class="inline-flex w-fit items-center gap-2 rounded-full bg-[#4DB6E8]/10 px-3 py-1.5 text-xs font-semibold text-[#3199CC]">
+
+                    <span class="h-2 w-2 rounded-full bg-[#4DB6E8]"></span>
+
+                    {{ $usuarios->count() }}
+                    {{ $usuarios->count() == 1 ? 'registro' : 'registros' }}
+
+                </div>
+
+            @endif
 
             </div>
 
 
-            {{-- TABLA --}}
-            <div class="overflow-x-auto">
+            {{-- Tarjetas --}}
+            <div class="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
 
-                <table class="w-full text-center text-gray-600">
+                @forelse ($usuarios as $usuario)
 
-                    <thead class="bg-[#333333] text-white">
+                    <div class="flex h-full flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition duration-200  hover:border-[#4DB6E8]/40 hover:shadow-[0_8px_25px_rgba(77,182,232,0.12)]">
 
-                        <tr>
+                        {{-- Encabezado de tarjeta --}}
+                        <div class="border-b border-gray-100 bg-gradient-to-r from-[#4DB6E8]/5 to-white px-4 py-4">
 
-                            <th class="border-r border-gray-600 px-6 py-4 text-sm font-semibold">
-                                ID
-                            </th>
+                            <div class="flex items-center gap-3">
 
-                            <th class="border-r border-gray-600 px-6 py-4 text-sm font-semibold">
-                                Nombres
-                            </th>
+                                {{-- Foto de perfil --}}
+                                <div class="flex h-16 w-16 flex-shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-white bg-[#4DB6E8]/10 shadow-sm text-[#4DB6E8]">
 
-                            <th class="border-r border-gray-600 px-6 py-4 text-sm font-semibold">
-                                Apellidos
-                            </th>
+                                    @if (!empty($usuario->fotoPerfil))
 
-                            <th class="border-r border-gray-600 px-6 py-4 text-sm font-semibold">
-                                Tipo de documento
-                            </th>
-
-                            <th class="border-r border-gray-600 px-6 py-4 text-sm font-semibold">
-                                Número de documento
-                            </th>
-
-                            <th class="border-r border-gray-600 px-6 py-4 text-sm font-semibold">
-                                Correo electrónico
-                            </th>
-
-                            <th class="border-r border-gray-600 px-6 py-4 text-sm font-semibold">
-                                Teléfono
-                            </th>
-
-                            <th class="border-r border-gray-600 px-6 py-4 text-sm font-semibold">
-                                Estado
-                            </th>
-
-                            <th class="px-6 py-4 text-sm font-semibold">
-                                Acciones
-                            </th>
-
-                        </tr>
-
-                    </thead>
-
-
-                    <tbody class="divide-y divide-gray-200">
-
-                        @forelse ($usuarios as $usuario)
-
-                            <tr class="transition hover:bg-gray-50">
-
-                                {{-- ID --}}
-                                <td class="border-r border-gray-100 px-6 py-5 text-sm font-medium text-gray-600">
-
-                                    {{ $usuario->id }}
-
-                                </td>
-
-
-                                {{-- NOMBRES --}}
-                                <td class="border-r border-gray-100 px-6 py-5 text-sm font-medium text-gray-600">
-
-                                    {{ $usuario->nombres }}
-
-                                </td>
-
-
-                                {{-- APELLIDOS --}}
-                                <td class="border-r border-gray-100 px-6 py-5 text-sm font-medium text-gray-600">
-
-                                    {{ $usuario->apellidos }}
-
-                                </td>
-
-
-                                {{-- TIPO DE DOCUMENTO --}}
-                                <td class="border-r border-gray-100 px-6 py-5 text-sm font-medium text-gray-600">
-
-                                    {{ $usuario->tipoDocumento }}
-
-                                </td>
-
-
-                                {{-- NÚMERO DE DOCUMENTO --}}
-                                <td class="border-r border-gray-100 px-6 py-5 text-sm font-medium text-gray-600">
-
-                                    {{ $usuario->numeroDocumento }}
-
-                                </td>
-
-
-                                {{-- CORREO ELECTRÓNICO --}}
-                                <td class="border-r border-gray-100 px-6 py-5 text-sm font-medium text-gray-600">
-
-                                    {{ $usuario->correoElectronico }}
-
-                                </td>
-
-
-                                {{-- TELÉFONO --}}
-                                <td class="border-r border-gray-100 px-6 py-5 text-sm font-medium text-gray-600">
-
-                                    {{ $usuario->telefono }}
-
-                                </td>
-
-
-                                {{-- ESTADO --}}
-                                <td class="border-r border-gray-100 px-6 py-5">
-
-                                    @if ($usuario->estado === 'Activo')
-
-                                        <span class="rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">
-                                            Activo
-                                        </span>
+                                        <img
+                                            src="{{ asset('storage/' . $usuario->fotoPerfil) }}"
+                                            alt="Foto de {{ $usuario->nombres }} {{ $usuario->apellidos }}"
+                                            class="h-full w-full object-cover"
+                                        >
 
                                     @else
 
-                                        <span class="rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-700">
-                                            Inactivo
-                                        </span>
-
-                                    @endif
-
-                                </td>
-
-
-                                {{-- ACCIONES --}}
-                                <td class="px-6 py-5">
-
-                                    <div class="flex items-center justify-center gap-2">
-
-                                        {{-- EDITAR --}}
-                                        <a
-                                            href="{{ route('usuarios.edit', $usuario->id) }}"
-                                            title="Editar usuario"
-                                            class="flex h-9 w-9 items-center justify-center rounded-lg bg-[#4DB6E8]/10 text-[#4DB6E8] transition duration-200 hover:bg-[#4DB6E8] hover:text-white">
-
-                                            @php($icon = 'pencil')
-                                            @include('layouts.partials.icons')
-
-                                        </a>
-
-
-                                        {{-- ELIMINAR --}}
-                                        <button
-                                            type="button"
-                                            title="Eliminar usuario"
-                                            @click="$dispatch('open-modal', 'delete-{{ $usuario->id }}')"
-                                            class="flex h-9 w-9 items-center justify-center rounded-lg bg-red-50 text-red-500 transition duration-200 hover:bg-red-500 hover:text-white">
-
-                                            @php($icon = 'trash')
-                                            @include('layouts.partials.icons')
-
-                                        </button>
-
-                                    </div>
-
-                                </td>
-
-                            </tr>
-
-
-                            {{-- MODAL ELIMINAR --}}
-                            <x-modal
-                                name="delete-{{ $usuario->id }}"
-                                title="Eliminar usuario"
-                                maxWidth="sm">
-
-                                <div class="text-center">
-
-                                    <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-100 text-red-600">
-
-                                        @php($icon = 'exclamation-triangle')
+                                        @php($icon = 'user-circle')
                                         @include('layouts.partials.icons')
 
-                                    </div>
-
-                                    <p class="text-sm leading-6 text-gray-500">
-
-                                        ¿Seguro que deseas eliminar al usuario
-
-                                        <strong class="text-gray-800">
-                                            {{ $usuario->nombres }} {{ $usuario->apellidos }}
-                                        </strong>?
-
-                                        <br>
-
-                                        Esta acción no se puede deshacer.
-
-                                    </p>
+                                    @endif
 
                                 </div>
 
 
-                                <x-slot:footer>
+                                {{-- Nombre completo del usuario --}}
+                                <div class="min-w-0 flex-1">
 
-                                    <x-button
-                                        variant="secondary"
-                                        @click="show = false">
+                                    <p class="text-[10px] font-bold uppercase tracking-wider text-[#4DB6E8]">
+                                        Usuario
+                                    </p>
 
-                                        Cancelar
+                                    <h3 class="mt-1 truncate text-base font-bold text-gray-800">
+                                        {{ $usuario->nombres }}
 
-                                    </x-button>
+                                    </h3>
 
+                                    <h3 class="mt-1 truncate text-base font-bold text-gray-800">
+                                        {{ $usuario->apellidos }}
+                                    </h3>
 
-                                    <form
-                                        action="{{ route('usuarios.destroy', $usuario->id) }}"
-                                        method="POST">
-
-                                        @csrf
-
-                                        @method('DELETE')
-
-                                        <x-button
-                                            variant="danger"
-                                            type="submit">
-
-                                            Eliminar
-
-                                        </x-button>
-
-                                    </form>
-
-                                </x-slot:footer>
-
-                            </x-modal>
+                                </div>
 
 
-                        @empty
+                                {{-- ID --}}
+                                <span class="self-start rounded-full bg-gray-100 px-2.5 py-1 text-xs font-semibold text-gray-600">
+                                    #{{ $usuario->id }}
+                                </span>
 
-                            {{-- ESTADO VACÍO --}}
-                            <tr>
+                            </div>
 
-                                <td colspan="9">
-
-                                    <div class="px-6 py-16 text-center">
-
-                                        <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#4DB6E8]/10 text-[#4DB6E8]">
-
-                                            @php($icon = 'user-group')
-                                            @include('layouts.partials.icons')
-
-                                        </div>
+                        </div>
 
 
-                                        <h3 class="text-lg font-semibold text-gray-800">
-                                            No hay usuarios registrados
-                                        </h3>
+                        {{-- Datos del usuario --}}
+                        <div class="flex-1 px-5 py-5">
+
+                            <div class="grid grid-cols-1 gap-x-5 gap-y-4 sm:grid-cols-2">
+
+                                {{-- Fecha de nacimiento --}}
+                                <div>
+                                    <p class="text-xs font-medium text-gray-400">
+                                        Fecha de nacimiento
+                                    </p>
+
+                                    <p class="mt-1 text-sm font-medium text-gray-700">
+                                        {{ $usuario->fechaNacimiento }}
+                                    </p>
+                                </div>
 
 
-                                        <p class="mx-auto mt-2 max-w-md text-sm text-gray-500">
-                                            Todavía no existen usuarios registrados en el sistema.
-                                        </p>
+                                {{-- Tipo de documento --}}
+                                <div>
+                                    <p class="text-xs font-medium text-gray-400">
+                                        Tipo de documento
+                                    </p>
+
+                                    <p class="mt-1 text-sm font-medium text-gray-700">
+                                        {{ $usuario->tipoDocumento }}
+                                    </p>
+                                </div>
 
 
-                                        <a
-                                            href="{{ route('usuarios.create') }}"
-                                            class="mt-5 inline-flex items-center gap-2 rounded-xl bg-[#4DB6E8] px-5 py-2.5 text-sm font-semibold text-white transition duration-200 hover:bg-[#333333]">
+                                {{-- Número de documento --}}
+                                <div>
+                                    <p class="text-xs font-medium text-gray-400">
+                                        Número de documento
+                                    </p>
 
-                                            @php($icon = 'plus')
-                                            @include('layouts.partials.icons')
-
-                                            Crear usuario
-
-                                        </a>
-
-                                    </div>
-
-                                </td>
-
-                            </tr>
-
-                        @endforelse
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-        </div>
+                                    <p class="mt-1 break-words text-sm font-medium text-gray-700">
+                                        {{ $usuario->numeroDocumento }}
+                                    </p>
+                                </div>
 
 
-        {{-- CONTADOR --}}
-        @if ($usuarios->count() > 0)
+                                {{-- Correo electrónico --}}
+                                <div>
+                                    <p class="text-xs font-medium text-gray-400">
+                                        Correo electrónico
+                                    </p>
 
-            <div class="mt-4 flex items-center justify-between px-1">
-
-                <p class="text-sm text-gray-500">
-
-                    Mostrando
-
-                    <span class="font-semibold text-gray-800">
-                        {{ $usuarios->count() }}
-                    </span>
-
-                    {{ $usuarios->count() == 1
-                        ? 'usuario registrado'
-                        : 'usuarios registrados' }}
-
-                </p>
+                                    <p class="mt-1 break-all text-sm font-medium text-gray-700">
+                                        {{ $usuario->correoElectronico }}
+                                    </p>
+                                </div>
 
 
-                <div class="hidden items-center gap-2 text-xs text-gray-400 sm:flex">
+                                {{-- Teléfono --}}
+                                <div>
+                                    <p class="text-xs font-medium text-gray-400">
+                                        Teléfono
+                                    </p>
 
-                    <span class="h-2 w-2 rounded-full bg-[#4DB6E8]"></span>
+                                    <p class="mt-1 text-sm font-medium text-gray-700">
+                                        {{ $usuario->telefono ?: 'No registrado' }}
+                                    </p>
+                                </div>
 
-                    Málaga Emplea
+
+                                {{-- Fecha de registro --}}
+                                <div>
+                                    <p class="text-xs font-medium text-gray-400">
+                                        Fecha de registro
+                                    </p>
+
+                                    <p class="mt-1 text-sm font-medium text-gray-700">
+                                        {{ $usuario->fechaRegistro }}
+                                    </p>
+                                </div>
+
+                            </div>
+
+
+                            {{-- Estado --}}
+                            <div class="mt-5 border-t border-gray-100 pt-4">
+
+                                <p class="mb-2 text-xs font-medium text-gray-400">
+                                    Estado
+                                </p>
+
+                                @if ($usuario->estado === 'Activo')
+
+                                    <span class="inline-flex items-center rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">
+                                        Activo
+                                    </span>
+
+                                @else
+
+                                    <span class="inline-flex items-center rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-700">
+                                        Inactivo
+                                    </span>
+
+                                @endif
+
+                            </div>
+
+                        </div>
+
+
+                    {{-- ACCIONES --}}
+                    <div class="flex justify-end border-t border-gray-100 bg-gray-50/60 px-4 py-3">
+
+                        <div class="flex items-center justify-center gap-2">
+
+                            {{-- EDITAR --}}
+                            <a
+                                href="{{ route('usuarios.edit', $usuario->id) }}"
+                                title="Editar usuario"
+                                class="inline-flex items-center gap-1.5 rounded-lg bg-[#4DB6E8]/10 px-3 py-2 text-xs font-semibold text-[#4DB6E8] transition duration-200 hover:bg-[#4DB6E8] hover:text-white">
+
+                                @php($icon = 'pencil')
+                                @include('layouts.partials.icons')
+
+                                <span>Editar</span>
+
+                            </a>
+
+
+                            {{-- ELIMINAR --}}
+                            <button
+                                type="button"
+                                title="Eliminar usuario"
+                                @click="$dispatch('open-modal', 'delete-{{ $usuario->id }}')"
+                                class="inline-flex items-center gap-1.5 rounded-lg bg-red-50 px-3 py-2 text-xs font-semibold text-red-500 transition duration-200 hover:bg-red-500 hover:text-white">
+
+                                @php($icon = 'trash')
+                                @include('layouts.partials.icons')
+
+                                <span>Eliminar</span>
+
+                            </button>
+
+                        </div>
+
+                    </div>
 
                 </div>
 
+
+                {{-- MODAL ELIMINAR --}}
+                <x-modal
+                    name="delete-{{ $usuario->id }}"
+                    title="Eliminar usuario"
+                    maxWidth="sm"
+                >
+
+                    <div class="text-center">
+
+                        <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-100 text-red-600">
+
+                            @php($icon = 'exclamation-triangle')
+                            @include('layouts.partials.icons')
+
+                        </div>
+
+                        <p class="text-sm leading-6 text-gray-500">
+
+                            ¿Seguro que deseas eliminar el usuario de
+
+                            <strong class="text-gray-800">
+                                {{ $usuario->nombres }}
+                                {{ $usuario->apellidos }}
+                            </strong>?
+
+                            <br>
+
+                            Esta acción no se puede deshacer.
+
+                        </p>
+
+                    </div>
+
+
+                    <x-slot:footer>
+
+                        <x-button
+                            variant="secondary"
+                            @click="show = false"
+                        >
+                            Cancelar
+                        </x-button>
+
+                        <form
+                            action="{{ route('usuarios.destroy', $usuario->id) }}"
+                            method="POST"
+                        >
+
+                            @csrf
+                            @method('DELETE')
+
+                            <x-button
+                                variant="danger"
+                                type="submit"
+                            >
+                                Eliminar
+                            </x-button>
+
+                        </form>
+
+                    </x-slot:footer>
+
+                </x-modal>
+
+
+            @empty
+                    {{-- ESTADO VACÍO --}}
+                    <div class="col-span-full rounded-2xl border border-dashed border-gray-300 bg-gray-50 px-6 py-14 text-center">
+
+                        <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#4DB6E8]/10 text-[#4DB6E8]">
+
+                            @php($icon = 'user-group')
+                            @include('layouts.partials.icons')
+
+                        </div>
+
+                        <h3 class="text-lg font-semibold text-gray-800">
+                            No hay usuarios registrados
+                        </h3>
+
+                        <p class="mx-auto mt-2 max-w-md text-sm leading-6 text-gray-500">
+                            Aún no se han registrado usuarios en Málaga Emplea.
+                        </p>
+
+                        <a href="{{ route('usuarios.create') }}"
+                            class="mt-5 inline-flex items-center gap-2 rounded-xl bg-[#4DB6E8] px-5 py-2.5 text-sm font-semibold text-white transition duration-200 hover:bg-[#333333]">
+
+                            @php($icon = 'plus')
+                            @include('layouts.partials.icons')
+
+                            Registrar Usuario
+
+                        </a>
+
+                    </div>
+
+                @endforelse
+
             </div>
 
-        @endif
+
+            {{-- Contador --}}
+            @if ($usuarios->count() > 0)
+
+                <div class="mt-6 border-t border-gray-100 pt-4">
+
+                    <p class="text-sm text-gray-500">
+                        Mostrando
+                        <span class="font-semibold text-gray-700">
+                            {{ $usuarios->count() }}
+                        </span>
+                        usuario(s) registrado(s).
+                    </p>
+
+                </div>
+
+            @endif
+
+        </div>
 
     </div>
 
 </div>
 
 @endsection
+
