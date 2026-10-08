@@ -25,6 +25,7 @@ class UsuariosUpdateRequest extends FormRequest
         return [
             'nombres' => 'required|string|max:255',
             'apellidos' => 'required|string|max:255',
+            'fotoPerfil' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'fechaNacimiento' => 'required|date',
             'tipoDocumento' => 'required|in:CC,CE,PPT,PEP',
             'numeroDocumento' => 'required|string|max:255',
@@ -46,6 +47,10 @@ class UsuariosUpdateRequest extends FormRequest
             'apellidos.required' => 'El campo apellidos es obligatorio.',
             'apellidos.string' => 'El campo apellidos debe ser una cadena de texto.',
             'apellidos.max' => 'El campo apellidos no debe exceder los 255 caracteres.',
+
+            'fotoPerfil.image' => 'El archivo debe ser una imagen.',
+            'fotoPerfil.mimes' => 'El archivo debe ser de tipo: jpeg, png, jpg',
+            'fotoPerfil.max' => 'El tamaño de la imagen no debe exceder los 2MB.',
 
             'fechaNacimiento.required' => 'El campo fecha de nacimiento es obligatorio.',
             'fechaNacimiento.date' => 'El campo fecha de nacimiento debe ser una fecha válida.',

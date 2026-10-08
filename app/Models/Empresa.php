@@ -8,7 +8,7 @@ class Empresa extends Model
 {
     protected $table = 'empresas';
 
-    protected $fillable = [ 'nombreEmpresa','nit','direccion','estado','correoElectronico','password',
+    protected $fillable = [ 'nombreEmpresa','fotoPerfil','nit','direccion','estado','correoElectronico','password',
     ];
 
     public function ofertas()

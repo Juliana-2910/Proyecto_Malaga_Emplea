@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('nombres');
             $table->string('apellidos');
+            $table->string('fotoPerfil')->nullable();
             $table->date('fechaNacimiento');
             $table->enum('tipoDocumento', ['CC', 'CE', 'PPT','PEP', 'PASAPORTE']);
             $table->string('numeroDocumento')->unique();

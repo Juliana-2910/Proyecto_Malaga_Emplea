@@ -7,7 +7,7 @@
 
 @section('content')
 
-<div class="min-h-screen bg-[#F5F7FA] py-8">
+<div class="min-h-screen bg-gray-100 py-8">
 
 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
@@ -83,11 +83,24 @@
 
                             <div class="flex min-w-0 items-center gap-3">
 
-                                {{-- ICONO USUARIO --}}
-                                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#4DB6E8]/10 text-[#4DB6E8]">
 
-                                    @php($icon = 'user-circle')
-                                    @include('layouts.partials.icons')
+                                {{-- Foto de perfil --}}
+                                <div class="flex h-16 w-16 flex-shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-white bg-[#4DB6E8]/10 shadow-sm text-[#4DB6E8]">
+
+                                    @if (!empty($hojaDeVida->usuario->fotoPerfil))
+
+                                        <img
+                                            src="{{ asset('storage/' . $hojaDeVida->usuario->fotoPerfil) }}"
+                                            alt="Foto de {{ $hojaDeVida->usuario->nombres }} {{ $hojaDeVida->usuario->apellidos }}"
+                                            class="h-full w-full object-cover"
+                                        >
+
+                                    @else
+
+                                        @php($icon = 'user-circle')
+                                        @include('layouts.partials.icons')
+
+                                    @endif
 
                                 </div>
 
@@ -97,8 +110,11 @@
                                         Hoja de vida
                                     </p>
 
-                                    <h3 class="truncate text-sm font-bold text-gray-800">
+                                    <h3 class="mt-1 truncate text-base font-bold text-gray-800">
                                         {{ $hojaDeVida->usuario->nombres }}
+                                    </h3>
+
+                                    <h3 class="mt-1 truncate text-base font-bold text-gray-800">
                                         {{ $hojaDeVida->usuario->apellidos }}
                                     </h3>
 
@@ -107,7 +123,7 @@
                             </div>
 
                             {{-- ID --}}
-                            <span class="shrink-0 rounded-full bg-gray-100 px-2.5 py-1 text-[10px] font-semibold text-gray-600">
+                            <span class="self-start rounded-full bg-gray-100 px-2.5 py-1 text-xs font-semibold text-gray-600">
                                 #{{ $hojaDeVida->id }}
                             </span>
 
@@ -274,7 +290,7 @@
                                 <div class="pl-8">
 
                                     <a
-                                        href="{{ $hojaDeVida->archivoCV }}"
+                                        href="{{ asset('storage/' . $hojaDeVida->archivoCV) }}"
                                         target="_blank"
                                         title="Ver hoja de vida"
                                         class="flex h-8 w-8 items-center justify-center rounded-lg bg-[#4DB6E8]/10 text-[#4DB6E8] transition duration-200 hover:bg-[#4DB6E8] hover:text-white">
@@ -425,7 +441,7 @@
                         @php($icon = 'plus')
                         @include('layouts.partials.icons')
 
-                        Crear hoja de vida
+                        Registrar Hoja de Vida
 
                     </a>
 

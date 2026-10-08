@@ -18,12 +18,14 @@ class usuariosRepository{
 
     public function eliminar (int $id)
     {
-        Usuario::destroy($id);
+        $usuario = Usuario::findOrFail($id);
+        $usuario->delete();
     }
 
     public function buscarPorId(int $id)
     {
         $usuario = Usuario::findOrFail($id);
+
         return $usuario;
     }
 
@@ -33,3 +35,4 @@ class usuariosRepository{
         $usuario->update($datos);
     }
 }
+

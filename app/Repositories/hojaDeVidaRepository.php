@@ -13,18 +13,18 @@ class hojaDeVidaRepository{
 
     public function guardar(array $datos)
     {
-        HojaDeVida::create($datos);
+        return HojaDeVida::create($datos);
     }
 
-    public function eliminar (int $id)
+    public function eliminar(int $id)
     {
-        HojaDeVida::destroy($id);
+        $hojaDeVida = HojaDeVida::findOrFail($id);
+        $hojaDeVida->delete();
     }
 
     public function buscarPorId(int $id)
     {
-        $hojaDeVida = HojaDeVida::findOrFail($id);
-        return $hojaDeVida;
+        return HojaDeVida::findOrFail($id);
     }
 
     public function actualizar(int $id, array $datos)
