@@ -1,0 +1,79 @@
+{{--
+    Sidebar principal.
+    Usa la variable de ruta actual (Route::currentRouteName() o request()->routeIs())
+    para resaltar el enlace activo.
+--}}
+<aside
+    x-cloak
+    :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'"
+    class="fixed inset-y-0 left-0 z-40 w-64 bg-[#333333] text-slate-300 transform transition-transform duration-200 ease-in-out lg:translate-x-0"
+    aria-label="Menú principal"
+>
+    <div class="h-full flex flex-col">
+
+        {{-- Logo --}}
+        <div class="flex items-center gap-3 h-16 px-6 border-b border-[#444444]">
+        <div class="w-12 h-12 flex items-center justify-center">
+        <img
+            src="{{ asset('images/Logo Malaga Emplea.png') }}" >
+        </div>
+            <span class="text-white font-semibold text-lg tracking-tight">{{ config('app.name', 'AdminPanel') }}</span>
+        </div>
+
+        {{-- Navegación --}}
+        <nav class="flex-1 overflow-y-auto px-3 py-6 space-y-1" aria-label="Navegación lateral">
+
+        @php
+            $links = [
+            ['label' => 'Inicio',   'route' => 'dashboard.index',  'icon' => 'home'],
+            ['label' => 'Roles',       'route' => 'roles.index',      'icon' => 'shield-check'],
+            ['label' => 'Categorías',  'route' => 'categorias.index', 'icon' => 'tag'],
+            ['label' => 'Servicios',     'route' => 'servicios.index',    'icon' => 'chart-bar'],
+            ['label' => 'Usuarios',    'route' => 'usuarios.index',      'icon' => 'user-group'],
+            ['label' => 'Empresas',    'route' => 'empresas.index',   'icon' => 'building'],
+            ['label' => 'Ofertas',     'route' => 'ofertas.index',    'icon' => 'briefcase'],
+            ['label' => 'Hoja de vida',     'route' => 'hojaDeVida.index',    'icon' => 'link'],
+            ['label' => 'Postulaciones', 'route' => 'postulacion.index',   'icon' => 'document'],
+            ['label' => 'Oferta Servicios', 'route' => 'ofertaServicios.index',   'icon' => 'circle-stack'],
+            ['label' => 'Calificacion', 'route' => 'calificacion.index',   'icon' => 'star'],
+            ];
+        @endphp
+
+            @foreach ($links as $link)
+                @php
+                    $active = Route::has($link['route']) && request()->routeIs(explode('.', $link['route'])[0] . '.*');
+                @endphp
+                <a
+                    href="{{ Route::has($link['route']) ? route($link['route']) : '#' }}"
+                    @if($active) aria-current="page" @endif
+                    class="group flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors
+                        {{ $active
+                            ? 'bg-[#4DB6E8] text-white shadow-sm'
+                            : 'text-slate-300 hover:hover:bg-[#4DB6E8]/20 hover:text-white' }}"
+                >
+                    <span class="w-5 h-5 flex-shrink-0" aria-hidden="true">
+                        @include('layouts.partials.icons', ['icon' => $link['icon']])
+                    </span>
+                    <span>{{ $link['label'] }}</span>
+                </a>
+            @endforeach
+        </nav>
+
+        {{-- Cerrar sesión --}}
+        <div class="px-3 py-4 border-t border-slate-800">
+            <form method="POST" action="{{ Route::has('logout') ? route('logout') : '#' }}">
+                @csrf
+                <button
+                    type="submit"
+                    class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-red-400 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    aria-label="Cerrar sesión"
+                >
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                    Cerrar sesión
+                </button>
+            </form>
+        </div>
+    </div>
+</aside>
