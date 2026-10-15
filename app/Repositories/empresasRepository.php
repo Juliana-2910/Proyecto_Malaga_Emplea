@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Empresa;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 class empresasRepository{
 
@@ -18,12 +19,12 @@ class empresasRepository{
     {
         $datos['password'] = Hash::make($datos['password']);
 
-        Empresa::create($datos);
+        return Empresa::create($datos);
     }
 
     public function eliminar(int $id)
     {
-        Empresa::destroy($id);
+        return Empresa::destroy($id);
     }
 
     public function buscarporid(int $id)
@@ -43,8 +44,20 @@ class empresasRepository{
             $datos['password'] = Hash::make($datos['password']);
         }
 
-        $empresa->update($datos);
+        return $empresa->update($datos);
     }
 
+    // Subconsulta: empresas que tienen ofertas
+    public function listarEmpresasConOfertas()
+    {
+        return DB::select("
+            SELECT id, nombreEmpresa
+            FROM empresas
+            WHERE id IN (
+                SELECT idEmpresa
+                FROM ofertas
+            )
+        ");
+    }
 
 }

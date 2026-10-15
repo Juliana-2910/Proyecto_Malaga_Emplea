@@ -26,6 +26,21 @@ class UsuarioController extends Controller
         return view('Usuarios.index', compact('usuarios'));
     }
 
+
+    public function usuariosConPostulaciones()
+    {
+        $usuarios = $this->usuariosService->listarUsuariosConPostulaciones();
+
+        return response()->json($usuarios);
+    }
+
+    public function usuariosSinPostulaciones()
+    {
+        $usuarios = $this->usuariosService->listarUsuariosSinPostulaciones();
+
+        return response()->json($usuarios);
+    }
+
     public function create()
     {
         $roles = $this->rolesService->listarTodos()->unique('rol');

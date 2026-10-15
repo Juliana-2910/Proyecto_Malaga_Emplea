@@ -20,6 +20,11 @@ class empresasServices
         return $this->empresasrepository->listarTodos();
     }
 
+    public function listarEmpresasConOfertas()
+    {
+        return $this->empresasrepository->listarEmpresasConOfertas();
+    }
+
     public function guardar(array $datos)
     {
         if (isset($datos['fotoPerfil'])) {

@@ -23,10 +23,11 @@ class CalificacionStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'puntuacion' => 'required|string|min:1|max:5',
+            'puntuacion' => 'required|integer|min:1|max:5',
             'comentario' => 'required|string|max:255',
             'idUsuario' => 'required|exists:usuarios,id',
             'idEmpresa' => 'required|exists:empresas,id',
+            'tipoCalificador' => 'required|in:usuario,empresa'
         ];
     }
 
@@ -34,7 +35,7 @@ class CalificacionStoreRequest extends FormRequest
     {
         return [
             'puntuacion.required' =>'La puntuación es obligatoria.',
-            'puntuacion.string' =>'La puntuación debe ser un número entero.',
+            'puntuacion.integer' =>'La puntuación debe ser un número entero.',
             'puntuacion.max' =>'La puntuación no puede ser menor que 1.',
             'puntuacion.min' =>'La puntuación no puede ser mayor que 5.',
 
@@ -47,6 +48,9 @@ class CalificacionStoreRequest extends FormRequest
 
             'idEmpresa.required' => 'La empresa es obligatoria.',
             'idEmpresa.exists' => 'La empresa seleccionada no existe.',
+
+            'tipoCalificador.required' => 'Debes indicar quién realiza la calificación.',
+            'tipoCalificador.in' => 'El tipo de calificador debe ser usuario o empresa.',
             ];
     }
 }
