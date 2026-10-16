@@ -14,7 +14,9 @@ use App\Http\Controllers\PostulacionController;
 
 
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard.index');
-
+Route::get('/empresas-con-ofertas',[EmpresaController::class, 'empresasConOfertas'])->name('empresas.conOfertas');
+Route::get('/usuarios-con-postulaciones',[UsuarioController::class, 'usuariosConPostulaciones'])->name('usuarios.conPostulaciones');
+Route::get('/usuarios-sin-postulaciones',[UsuarioController::class, 'usuariosSinPostulaciones'])->name('usuarios.sinPostulaciones');
 
 Route::resource('roles', RolesController::class);
 Route::resource('categorias', CategoriaController::class);
