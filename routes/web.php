@@ -6,6 +6,7 @@ use App\Http\Controllers\HojaDeVidaController;
 use App\Http\Controllers\ServiciosController;
 use App\Http\Controllers\CalificacionController;
 use App\Http\Controllers\OfertaServiciosController;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RolesController;
 use App\Http\Controllers\EmpresaController;
@@ -13,7 +14,8 @@ use App\Http\Controllers\OfertaController;
 use App\Http\Controllers\PostulacionController;
 
 
-Route::get('/', [DashboardController::class, 'index'])->name('dashboard.index');
+Route::get('/adm', [DashboardController::class, 'index'])->name('dashboard.index');
+Route::get('/', [HomeController::class, 'index'])->name('Publico.inicio');
 
 
 Route::resource('roles', RolesController::class);

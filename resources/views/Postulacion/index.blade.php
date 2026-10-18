@@ -38,7 +38,7 @@
             @php($icon = 'plus')
             @include('layouts.partials.icons')
 
-            Nueva postulación
+            Nueva Postulación
 
         </a>
 
@@ -337,7 +337,7 @@
                                         @php($icon = 'plus')
                                         @include('layouts.partials.icons')
 
-                                        Nueva postulación
+                                        Nueva Postulación
 
                                     </a>
 

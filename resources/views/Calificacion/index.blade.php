@@ -33,7 +33,7 @@
                 @php($icon = 'plus')
                 @include('layouts.partials.icons')
 
-                Crear calificación
+                Nueva Calificación
 
             </a>
 
@@ -322,7 +322,7 @@
                                             @php($icon = 'plus')
                                             @include('layouts.partials.icons')
 
-                                            Crear calificación
+                                            Nueva Calificación
 
                                         </a>
 
