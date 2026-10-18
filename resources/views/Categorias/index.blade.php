@@ -33,7 +33,7 @@
                 @php($icon = 'plus')
                 @include('layouts.partials.icons')
 
-                Nueva categoría
+                Nueva Categoría
 
             </a>
 

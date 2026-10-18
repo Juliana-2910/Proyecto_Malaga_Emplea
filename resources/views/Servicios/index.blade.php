@@ -38,7 +38,7 @@
             @php($icon = 'plus')
             @include('layouts.partials.icons')
 
-            Crear servicio
+            Nuevo Servicio
 
         </a>
 
