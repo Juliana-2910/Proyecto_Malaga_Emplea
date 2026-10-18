@@ -15,13 +15,6 @@ use App\Http\Controllers\PostulacionController;
 
 
 Route::get('/adm', [DashboardController::class, 'index'])->name('dashboard.index');
-Route::get('/', [HomeController::class, 'index'])->name('Publico.inicio');
-
-Route::get('/', [DashboardController::class, 'index'])->name('dashboard.index');
-Route::get('/empresas-con-ofertas',[EmpresaController::class, 'empresasConOfertas'])->name('empresas.conOfertas');
-Route::get('/usuarios-con-postulaciones',[UsuarioController::class, 'usuariosConPostulaciones'])->name('usuarios.conPostulaciones');
-Route::get('/usuarios-sin-postulaciones',[UsuarioController::class, 'usuariosSinPostulaciones'])->name('usuarios.sinPostulaciones');
-
 Route::resource('roles', RolesController::class);
 Route::resource('categorias', CategoriaController::class);
 Route::resource('empresas', EmpresaController::class);
@@ -32,3 +25,10 @@ Route::resource('servicios', ServiciosController::class);
 Route::resource('postulacion', PostulacionController::class);
 Route::resource('calificacion', CalificacionController::class);
 Route::resource('ofertaServicios', OfertaServiciosController::class);
+
+Route::get('/', [HomeController::class, 'index'])->name('Publico.inicio');
+
+Route::get('/empresas-con-ofertas',[EmpresaController::class, 'empresasConOfertas'])->name('empresas.conOfertas');
+Route::get('/usuarios-con-postulaciones',[UsuarioController::class, 'usuariosConPostulaciones'])->name('usuarios.conPostulaciones');
+Route::get('/usuarios-sin-postulaciones',[UsuarioController::class, 'usuariosSinPostulaciones'])->name('usuarios.sinPostulaciones');
+
