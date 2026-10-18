@@ -13,11 +13,12 @@ return new class extends Migration
     {
         Schema::create('calificacion', function (Blueprint $table) {
             $table->id();
-            $table->string('puntuacion');
+            $table->unsignedTinyInteger('puntuacion');
             $table->text('comentario');
             $table->date('fecha');
             $table->unsignedBigInteger('idUsuario');
             $table->unsignedBigInteger('idEmpresa');
+            $table->enum('tipoCalificador', ['usuario', 'empresa']);
             $table->foreign('idUsuario')->references('id')->on('usuarios');
             $table->foreign('idEmpresa')->references('id')->on('empresas');
             $table->timestamps();

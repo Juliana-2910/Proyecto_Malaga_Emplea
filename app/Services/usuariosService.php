@@ -30,6 +30,16 @@ class usuariosService{
     return $this->usuariosRepository->listarUsuarios();
     }
 
+    public function listarUsuariosConPostulaciones()
+    {
+    return $this->usuariosRepository->listarUsuariosConPostulaciones();
+    }
+    
+    public function listarUsuariosSinPostulaciones()
+    {
+    return $this->usuariosRepository->listarUsuariosSinPostulaciones();
+    }
+
     public function guardar(array $datos)
     {
         $fechaNacimiento = Carbon::parse($datos['fechaNacimiento']); // Validar que el usuario sea mayor de edad

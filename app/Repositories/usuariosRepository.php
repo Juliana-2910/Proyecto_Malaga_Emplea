@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Usuario;
+use Illuminate\Support\Facades\DB;
 
 class usuariosRepository{
 
@@ -43,5 +44,35 @@ class usuariosRepository{
         $usuario = Usuario::findOrFail($id);
         $usuario->update($datos);
     }
+    
+    // Subconsulta: usuarios que han realizado postulaciones
+    public function listarUsuariosConPostulaciones()
+    {
+        return DB::select("
+            SELECT u.id, u.nombres, u.apellidos
+            FROM usuarios AS u
+            WHERE EXISTS (
+                SELECT 1
+                FROM postulacion AS p
+                WHERE p.idUsuario = u.id
+            )
+        ");
+    }
+
+    
+    // Subconsulta: usuarios que no han realizado postulaciones
+    public function listarUsuariosSinPostulaciones()
+    {
+        return DB::select("
+            SELECT u.id, u.nombres, u.apellidos
+            FROM usuarios AS u
+            WHERE NOT EXISTS (
+                SELECT 1
+                FROM postulacion AS p
+                WHERE p.idUsuario = u.id
+            )
+        ");
+    }
+
 }
 

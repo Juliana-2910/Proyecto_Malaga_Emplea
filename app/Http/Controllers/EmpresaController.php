@@ -22,6 +22,13 @@ class EmpresaController extends Controller
             return view('Empresa.index', compact('empresas'));
         }
 
+        public function empresasConOfertas()
+        {
+             $empresas = $this->empresasServices->listarEmpresasConOfertas();
+
+            return view('Empresa.conOfertas', compact('empresas'));
+        }
+
         public function create()
         {
             return view('Empresa.crear');

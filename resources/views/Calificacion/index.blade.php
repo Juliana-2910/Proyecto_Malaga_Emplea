@@ -76,6 +76,11 @@
                             <th class="border-r border-gray-600 px-6 py-4 text-sm font-semibold">
                                 Empresa
                             </th>
+                            
+                            {{-- TIPO DE CALIFICADOR --}}
+                            <th class="border-r border-gray-600 px-6 py-4 text-sm font-semibold">
+                                Quién califica
+                            </th>
 
                             {{-- PUNTUACIÓN --}}
                             <th class="border-r border-gray-600 px-6 py-4 text-sm font-semibold">
@@ -132,7 +137,17 @@
 
                                 </td>
 
-
+                                {{-- TIPO DE CALIFICADOR --}}
+                                <td class="border-r border-gray-100 px-6 py-5 text-sm font-medium text-gray-600">
+                                     @if ($calificacion->tipoCalificador === 'usuario')
+                                        Usuario califica a empresa
+                                    @elseif ($calificacion->tipoCalificador === 'empresa')
+                                        Empresa califica a usuario
+                                    @else
+                                        Sin especificar
+                                     @endif
+                                </td>
+                                
                                 {{-- PUNTUACIÓN --}}
                                 <td class="border-r border-gray-100 px-6 py-5">
 
@@ -289,7 +304,7 @@
                             {{-- ESTADO VACÍO --}}
                             <tr>
 
-                                <td colspan="7">
+                                <td colspan="8">
 
                                     <div class="px-6 py-16 text-center">
 

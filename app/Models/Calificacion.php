@@ -8,8 +8,7 @@ class Calificacion extends Model
 {
     protected $table = 'calificacion';
 
-    protected $fillable = ['puntuacion','comentario',
-    'fecha','idUsuario','idEmpresa'];
+    protected $fillable = ['puntuacion','comentario','fecha','idUsuario','idEmpresa','tipoCalificador'];
 
     public function usuario()
     {
