@@ -26,7 +26,6 @@
         @php
             $links = [
             ['label' => 'Inicio',   'route' => 'dashboard.index',  'icon' => 'home'],
-            ['label' => 'Roles',       'route' => 'roles.index',      'icon' => 'shield-check'],
             ['label' => 'Categorías',  'route' => 'categorias.index', 'icon' => 'tag'],
             ['label' => 'Servicios',     'route' => 'servicios.index',    'icon' => 'chart-bar'],
             ['label' => 'Usuarios',    'route' => 'usuarios.index',      'icon' => 'user-group'],
@@ -36,6 +35,7 @@
             ['label' => 'Postulaciones', 'route' => 'postulacion.index',   'icon' => 'document'],
             ['label' => 'Oferta Servicios', 'route' => 'ofertaServicios.index',   'icon' => 'circle-stack'],
             ['label' => 'Calificacion', 'route' => 'calificacion.index',   'icon' => 'star'],
+            ['label' => 'seguridad', 'route' => 'seguridad.permisos.index',   'icon' => 'star'],
             ];
         @endphp
 

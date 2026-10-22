@@ -15,19 +15,36 @@ return new class extends Migration
             $table->id();
             $table->string('nombres');
             $table->string('apellidos');
-            $table->string('fotoPerfil')->nullable();
-            $table->date('fechaNacimiento');
-            $table->enum('tipoDocumento', ['CC', 'CE', 'PPT','PEP', 'PASAPORTE']);
-            $table->string('numeroDocumento')->unique();
-            $table->string('correoElectronico')->unique();
+            $table->string('email')->unique(); // Requerido para login
+            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('telefono');
-            $table->date('fechaRegistro');
-            $table->enum('estado', ['Activo', 'Inactivo']);
-            $table->unsignedBigInteger('idRol');
-            $table->foreign('idRol')->references('id')->on('roles');
+            $table->string('fotoPerfil')->nullable();
+            $table->date('fechaNacimiento')->nullable();
+            $table->enum('tipoDocumento', ['CC', 'CE', 'PPT', 'PEP', 'PASAPORTE'])->nullable();
+            $table->string('numeroDocumento')->unique()->nullable();
+            $table->string('telefono')->nullable();
+            $table->timestamp('fechaRegistro')->nullable();
+            $table->string('estado')->default('activo');
+            $table->rememberToken();
             $table->timestamps();
         });
+
+        Schema::create('password_reset_tokens', function (Blueprint $table) {
+            $table->string('email')->primary();
+            $table->string('token');
+            $table->timestamp('created_at')->nullable();
+        });
+
+        Schema::create('sessions', function (Blueprint $table) {
+            $table->string('id')->primary();
+            $table->foreignId('user_id')->nullable()->index();
+            $table->string('ip_address', 45)->nullable();
+            $table->text('user_agent')->nullable();
+            $table->longText('payload');
+            $table->integer('last_activity')->index();
+        });
+
+
     }
 
     /**
@@ -36,5 +53,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('usuarios');
+        Schema::dropIfExists('password_reset_tokens');
+        Schema::dropIfExists('sessions');
     }
 };

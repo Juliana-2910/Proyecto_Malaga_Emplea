@@ -13,7 +13,10 @@ use App\Http\Controllers\OfertaController;
 use App\Http\Controllers\PostulacionController;
 
 
-Route::get('/', [DashboardController::class, 'index'])->name('dashboard.index');
+
+Route::middleware('auth')->group(function () {
+
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
 
 Route::resource('roles', RolesController::class);
@@ -26,3 +29,8 @@ Route::resource('servicios', ServiciosController::class);
 Route::resource('postulacion', PostulacionController::class);
 Route::resource('calificacion', CalificacionController::class);
 Route::resource('ofertaServicios', OfertaServiciosController::class);
+
+
+
+
+});

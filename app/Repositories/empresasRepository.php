@@ -17,7 +17,7 @@ class empresasRepository{
     public function guardar(array $datos)
     {
         $datos['password'] = Hash::make($datos['password']);
-
+        
         Empresa::create($datos);
     }
 

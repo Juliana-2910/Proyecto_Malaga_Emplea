@@ -2,24 +2,47 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Concerns\TieneRolesActivos;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
-class Usuario extends Model
+class Usuario extends Authenticatable
 {
+    use HasFactory, Notifiable, TieneRolesActivos;
+
     protected $table = 'usuarios';
 
-    protected $fillable = ['nombres', 'apellidos', 'fotoPerfil', 'fechaNacimiento', 'tipoDocumento',
-    'numeroDocumento', 'correoElectronico', 'password', 'telefono', 'fechaRegistro',
-    'estado', 'idRol'];
+    protected $fillable = [
+        'nombres',
+        'apellidos',
+        'fotoPerfil',
+        'fechaNacimiento',
+        'tipoDocumento',
+        'numeroDocumento',
+        'email',
+        'password',
+        'telefono',
+        'fechaRegistro',
+        'estado'
+    ];
 
-    public function rol()
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+    protected function casts(): array
     {
-        return $this->belongsTo(Roles::class, 'idRol'); /*Tabla Hija con roles*/
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+        ];
     }
 
     public function hojaDeVida()
     {
-        return $this->hasMany(HojaDeVida::class, 'idUsuario'); /*Tabla padre con hoja de vida*/
+        return $this->hasMany(HojaDeVida::class, 'idUsuario');
     }
 
     public function postulaciones()
@@ -29,6 +52,7 @@ class Usuario extends Model
 
     public function calificacion()
     {
-        return $this->hasMany(Calificacion::class,'idUsuario');
+        return $this->hasMany(Calificacion::class, 'idUsuario');
     }
+
 }
