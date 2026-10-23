@@ -34,4 +34,12 @@ class ofertasRepository
 
         $oferta->update($datos);
     }
+
+    public function tienePostulaciones(int $id): bool
+    {
+        $oferta = Oferta::findOrFail($id);
+
+        return $oferta->postulaciones()->exists();
+    }
+
 }

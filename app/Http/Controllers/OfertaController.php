@@ -38,11 +38,18 @@ class OfertaController extends Controller
         return view('Ofertas.crear', compact('empresas', 'usuarios'));
     }
 
+
     public function store(OfertaStoreRequest $request)
     {
-        $this->ofertasService->guardar($request->all());
-        return redirect()->route('ofertas.index')->with('success', 'Oferta creada exitosamente.');
+        try {
+            $this->ofertasService->guardar($request->validated());
+
+            return redirect()->route('ofertas.index')->with('success', 'Oferta creada exitosamente.');
+        } catch (\Exception $e) {
+            return back()->withInput()->with('error', $e->getMessage());
+        }
     }
+
 
     public function show(Oferta $oferta)
     {
@@ -59,15 +66,26 @@ class OfertaController extends Controller
     }
 
 
+
     public function update(int $id, OfertaUpdateRequest $request)
     {
-        $this->ofertasService->actualizar($id, $request->all());
-        return redirect()->route('ofertas.index')->with('actualizar', 'Oferta actualizada exitosamente.');
+        try {
+            $this->ofertasService->actualizar($id, $request->validated());
+
+            return redirect()->route('ofertas.index')->with('actualizar', 'Oferta actualizada exitosamente.');
+        } catch (\Exception $e) {
+            return back()->withInput()->with('error', $e->getMessage());
+        }
     }
 
     public function destroy($id)
     {
-        $this->ofertasService->eliminar($id);
-        return redirect()->route('ofertas.index')->with('eliminar', 'Oferta eliminada exitosamente.');
+        try {
+            $this->ofertasService->eliminar($id);
+
+            return redirect()->route('ofertas.index')->with('eliminar', 'Oferta eliminada exitosamente.');
+        } catch (\Exception $e) {
+            return redirect()->route('ofertas.index')->with('error', $e->getMessage());
+        }
     }
 }

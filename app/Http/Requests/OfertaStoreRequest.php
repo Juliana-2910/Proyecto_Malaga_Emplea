@@ -27,7 +27,7 @@ class OfertaStoreRequest extends FormRequest
         'titulo' => 'required|string|max:150',
         'descripcion' => 'required|string',
         'requisitos' => 'required|string',
-        'salario' => 'required|numeric|min:5000',
+        'salario' => 'required|numeric',
         'tipoContrato' => 'required|in:tiempo completo,medio tiempo,horas',
         'ubicacion' => 'required|string|max:255',
         'fechaLimite' => 'required|date|after_or_equal:fechaPublicacion',
@@ -49,7 +49,6 @@ class OfertaStoreRequest extends FormRequest
 
         'salario.required' => 'El salario es obligatorio.',
         'salario.numeric' => 'El salario debe ser un valor numérico.',
-        'salario.min' => 'El salario o monto ofrecido debe ser igual o superior a $5.000 COP.',
 
         'tipoContrato.required' => 'El tipo de contrato es obligatorio.',
         'tipoContrato.in' => 'El tipo de contrato seleccionado no es válido.',
