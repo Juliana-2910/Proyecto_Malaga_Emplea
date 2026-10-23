@@ -70,4 +70,25 @@ class OfertaController extends Controller
         $this->ofertasService->eliminar($id);
         return redirect()->route('ofertas.index')->with('eliminar', 'Oferta eliminada exitosamente.');
     }
+
+    public function ofertasSobrePromedioPostulaciones()
+    {
+        $ofertas = $this->ofertasService->listarOfertasSobrePromedioPostulaciones();
+
+        return response()->json($ofertas);
+    }
+
+    public function ofertasConServicios()
+    {
+        $ofertas = $this->ofertasService->listarOfertasConServicios();
+
+        return response()->json($ofertas);
+    }
+
+    public function ofertasSinServicios()
+    {
+        $ofertas = $this->ofertasService->listarOfertasSinServicios();
+
+        return response()->json($ofertas);
+    }
 }

@@ -39,4 +39,14 @@ class calificacionService{
     {
         $this->calificacionRepository->actualizar($id, $datos);
     }
+
+    public function listarReputacionEmpresas()
+    {
+        return $this->calificacionRepository->listarReputacionEmpresas();
+    }
+
+    public function listarReputacionUsuarios()
+    {
+        return $this->calificacionRepository->listarReputacionUsuarios();
+    }
 }

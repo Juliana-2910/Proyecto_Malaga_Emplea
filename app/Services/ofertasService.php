@@ -37,4 +37,19 @@ class ofertasService
     {
         $this->ofertasrepository->actualizar($id, $datos);
     }
+
+    public function listarOfertasSobrePromedioPostulaciones()
+    {
+        return $this->ofertasrepository->listarOfertasSobrePromedioPostulaciones();
+    }
+
+    public function listarOfertasConServicios()
+    {
+        return $this->ofertasrepository->listarOfertasConServicios();
+    }
+
+    public function listarOfertasSinServicios()
+    {
+        return $this->ofertasrepository->listarOfertasSinServicios();
+    }
 }

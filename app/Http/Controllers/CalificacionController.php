@@ -72,4 +72,16 @@ class CalificacionController extends Controller
         $this->calificacionService->eliminar($id);
         return redirect()->route('calificacion.index')->with('eliminar','Calificacion eliminada correctamente');
     }
+
+    public function reputacionEmpresas()
+    {
+        $empresas = $this->calificacionService->listarReputacionEmpresas();
+        return response()->json($empresas);
+    }
+
+    public function reputacionUsuarios()
+    {
+        $usuarios = $this->calificacionService->listarReputacionUsuarios();
+        return response()->json($usuarios);
+    }
 }
