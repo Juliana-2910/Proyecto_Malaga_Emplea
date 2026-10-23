@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
-@section('title')
-    Crear oferta
-@endsection
+@section('title', 'Crear Oferta')
+
+@section('page-title', 'Panel Administrativo')
 
 @section('content')
 
@@ -36,16 +36,16 @@
                 {{-- Título --}}
                 <div>
                     <label for="titulo"
-                           class="mb-2 block text-sm font-semibold text-gray-700">
+                            class="mb-2 block text-sm font-semibold text-gray-700">
                         Título
                     </label>
 
                     <input type="text"
-                           name="titulo"
-                           id="titulo"
-                           value="{{ old('titulo') }}"
-                           placeholder="Ingrese el título de la oferta"
-                           class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
+                            name="titulo"
+                            id="titulo"
+                            value="{{ old('titulo') }}"
+                            placeholder="Ingrese el título de la oferta"
+                            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
 
                     @error('titulo')
                         <p class="mt-1 text-sm text-red-500">
@@ -58,16 +58,16 @@
                 {{-- Salario --}}
                 <div>
                     <label for="salario"
-                           class="mb-2 block text-sm font-semibold text-gray-700">
+                            class="mb-2 block text-sm font-semibold text-gray-700">
                         Salario
                     </label>
 
                     <input type="number"
-                           name="salario"
-                           id="salario"
-                           value="{{ old('salario') }}"
-                           placeholder="Ingrese el salario"
-                           class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
+                            name="salario"
+                            id="salario"
+                            value="{{ old('salario') }}"
+                            placeholder="Ingrese el salario"
+                            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
 
                     @error('salario')
                         <p class="mt-1 text-sm text-red-500">
@@ -80,15 +80,15 @@
                 {{-- Descripción --}}
                 <div class="md:col-span-2">
                     <label for="descripcion"
-                           class="mb-2 block text-sm font-semibold text-gray-700">
+                            class="mb-2 block text-sm font-semibold text-gray-700">
                         Descripción
                     </label>
 
                     <textarea name="descripcion"
-                              id="descripcion"
-                              rows="4"
-                              placeholder="Ingrese la descripción de la oferta"
-                              class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">{{ old('descripcion') }}</textarea>
+                            id="descripcion"
+                            rows="4"
+                            placeholder="Ingrese la descripción de la oferta"
+                            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">{{ old('descripcion') }}</textarea>
 
                     @error('descripcion')
                         <p class="mt-1 text-sm text-red-500">
@@ -101,15 +101,15 @@
                 {{-- Requisitos --}}
                 <div class="md:col-span-2">
                     <label for="requisitos"
-                           class="mb-2 block text-sm font-semibold text-gray-700">
+                        class="mb-2 block text-sm font-semibold text-gray-700">
                         Requisitos
                     </label>
 
                     <textarea name="requisitos"
-                              id="requisitos"
-                              rows="4"
-                              placeholder="Ingrese los requisitos de la oferta"
-                              class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">{{ old('requisitos') }}</textarea>
+                            id="requisitos"
+                            rows="4"
+                            placeholder="Ingrese los requisitos de la oferta"
+                            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">{{ old('requisitos') }}</textarea>
 
                     @error('requisitos')
                         <p class="mt-1 text-sm text-red-500">
@@ -122,7 +122,7 @@
                 {{-- Tipo de contrato --}}
                 <div>
                     <label for="tipoContrato"
-                           class="mb-2 block text-sm font-semibold text-gray-700">
+                            class="mb-2 block text-sm font-semibold text-gray-700">
                         Tipo de contrato
                     </label>
 
@@ -182,152 +182,148 @@
 
 
                 {{-- Fecha de publicación --}}
+
                 <div>
-                    <label for="fechaPublicacion"
-                           class="mb-2 block text-sm font-semibold text-gray-700">
-                        Fecha de publicación
+                    <label for="fecha"
+                        class="mb-2 block text-sm font-semibold text-gray-700">
+                        Fecha Publicacion
                     </label>
 
-                    <input type="date"
-                           name="fechaPublicacion"
-                           id="fechaPublicacion"
-                           value="{{ old('fechaPublicacion', date('Y-m-d')) }}"
-                           class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
-
-                    @error('fechaPublicacion')
-                        <p class="mt-1 text-sm text-red-500">
-                            {{ $message }}
-                        </p>
-                    @enderror
+                    <input
+                        type="text"
+                        id="fecha"
+                        value="{{ \Carbon\Carbon::now('America/Bogota')->format('d/m/Y') }}"
+                        readonly
+                        class="w-full cursor-not-allowed rounded-lg border border-gray-300 bg-gray-100 px-4 py-2.5 text-sm text-gray-600"
+                    >
                 </div>
 
 
                 {{-- Fecha límite --}}
                 <div>
                     <label for="fechaLimite"
-                           class="mb-2 block text-sm font-semibold text-gray-700">
+                        class="mb-2 block text-sm font-semibold text-gray-700">
                         Fecha límite
                     </label>
 
                     <input type="date"
-                           name="fechaLimite"
-                           id="fechaLimite"
-                           value="{{ old('fechaLimite') }}"
-                           class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
-
-                    @error('fechaLimite')
-                        <p class="mt-1 text-sm text-red-500">
-                            {{ $message }}
-                        </p>
-                    @enderror
+                        name="fechaLimite"
+                        id="fechaLimite"
+                        min="{{ \Carbon\Carbon::now('America/Bogota')->format('Y-m-d') }}"
+                        value="{{ old('fechaLimite') }}"
+                        required
+                        class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
                 </div>
 
 
-                {{-- Empresa --}}
-                {{-- Quién publica la oferta --}}
-        <div>
-            <label for="tipoPublicador"
-           class="mb-2 block text-sm font-semibold text-gray-700">
-        ¿Quién publica la oferta?
-            </label>
+                            {{-- Empresa --}}
+                            {{-- Quién publica la oferta --}}
+                    <div>
+                        <label for="tipoPublicador"
+                    class="mb-2 block text-sm font-semibold text-gray-700">
+                    ¿Quién publica la oferta?
+                        </label>
 
-            <select name="tipoPublicador"
-            id="tipoPublicador"
-            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
+                        <select name="tipoPublicador"
+                        id="tipoPublicador"
+                        class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
 
-              <option value="empresa"
-            {{ old('tipoPublicador', 'empresa') == 'empresa' ? 'selected' : '' }}>
-            Empresa
-             </option>
+                        <option value="empresa"
+                        {{ old('tipoPublicador', 'empresa') == 'empresa' ? 'selected' : '' }}>
+                        Empresa
+                        </option>
 
-                <option value="usuario"
-            {{ old('tipoPublicador') == 'usuario' ? 'selected' : '' }}>
-            Persona natural
-             </option>
+                            <option value="usuario"
+                        {{ old('tipoPublicador') == 'usuario' ? 'selected' : '' }}>
+                        Persona natural
+                        </option>
 
-         </select>
-        </div>
+                    </select>
+                    </div>
 
-            {{-- Empresa --}}
-        <div id="empresaContainer">
-            <label for="idEmpresa"
-           class="mb-2 block text-sm font-semibold text-gray-700">
-        Empresa
-            </label>
+                        {{-- Empresa --}}
+                    <div id="empresaContainer">
+                        <label for="idEmpresa"
+                    class="mb-2 block text-sm font-semibold text-gray-700">
+                    Empresa
+                        </label>
 
-            <select name="idEmpresa"
-            id="idEmpresa"
-            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
+                        <select name="idEmpresa"
+                        id="idEmpresa"
+                        class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
 
-                <option value="">
-            Seleccione una empresa
-                </option>
+                            <option value="">
+                        Seleccione una empresa
+                            </option>
 
-                @foreach ($empresas as $empresa)
+                            @foreach ($empresas as $empresa)
 
-            <option value="{{ $empresa->id }}"
-                {{ old('idEmpresa') == $empresa->id ? 'selected' : '' }}>
-                {{ $empresa->nombreEmpresa }}
-            </option>
+                        <option value="{{ $empresa->id }}"
+                            {{ old('idEmpresa') == $empresa->id ? 'selected' : '' }}>
+                            {{ $empresa->nombreEmpresa }}
+                        </option>
 
-                @endforeach
+                            @endforeach
 
-            </select>
+                        </select>
 
-         @error('idEmpresa')
-                <p class="mt-1 text-sm text-red-500">
-            {{ $message }}
-                </p>
-        @enderror
-            </div>
+                    @error('idEmpresa')
+                            <p class="mt-1 text-sm text-red-500">
+                        {{ $message }}
+                            </p>
+                    @enderror
+                        </div>
 
-            {{-- Persona natural --}}
-        <div id="usuarioContainer" class="hidden">
-            <label for="idUsuario"
-           class="mb-2 block text-sm font-semibold text-gray-700">
-        Persona natural
-            </label>
+                        {{-- Persona natural --}}
+                    <div id="usuarioContainer" class="hidden">
+                        <label for="idUsuario"
+                    class="mb-2 block text-sm font-semibold text-gray-700">
+                    Persona natural
+                        </label>
 
-            <select name="idUsuario"
-            id="idUsuario"
-            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
+                        <select name="idUsuario"
+                        id="idUsuario"
+                        class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
 
-                <option value="">
-            Seleccione una persona
-                </option>
+                            <option value="">
+                        Seleccione una persona
+                            </option>
 
-                @foreach ($usuarios as $usuario)
+                            @foreach ($usuarios as $usuario)
 
-            <option value="{{ $usuario->id }}"
-                {{ old('idUsuario') == $usuario->id ? 'selected' : '' }}>
-                {{ $usuario->nombres }} {{ $usuario->apellidos }}
-            </option>
+                        <option value="{{ $usuario->id }}"
+                            {{ old('idUsuario') == $usuario->id ? 'selected' : '' }}>
+                            {{ $usuario->nombres }} {{ $usuario->apellidos }}
+                        </option>
 
-                @endforeach
+                            @endforeach
 
-            </select>
+                        </select>
 
-            @error('idUsuario')
-        <p class="mt-1 text-sm text-red-500">
-            {{ $message }}
-        </p>
-            @enderror
-        </div>
+                        @error('idUsuario')
+                            <p class="mt-1 text-sm text-red-500">
+                                {{ $message }}
+                            </p>
+                        @enderror
 
-            {{-- Botones --}}
-            <div class="mt-8 flex justify-end gap-3">
+                    </div>
 
-                <a href="{{ route('ofertas.index') }}"
-                   class="rounded-lg bg-gray-500 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#333333]">
-                    Cancelar
-                </a>
+                </div>
 
-                <button type="submit"
-                        class="rounded-lg bg-[#4DB6E8] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#333333]">
-                    Guardar oferta
-                </button>
+                {{-- Botones --}}
+                <div class="mt-8 flex justify-end gap-3">
 
-            </div>
+                    <a href="{{ route('ofertas.index') }}"
+                        class="rounded-lg bg-gray-500 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#333333]">
+                        Cancelar
+                    </a>
+
+                    <button type="submit"
+                            class="rounded-lg bg-[#4DB6E8] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#333333]">
+                        Guardar oferta
+                    </button>
+
+                </div>
 
         </form>
 
@@ -336,7 +332,8 @@
 </div>
 
 </div>
-   {{-- JavaScript --}} 
+
+   {{-- JavaScript --}}
 <script>
     document.addEventListener('DOMContentLoaded', function () {
 

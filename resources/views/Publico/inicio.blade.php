@@ -8,10 +8,10 @@
     // Perfiles de registro. "tipo" viaja por la URL para preseleccionar el rol en el formulario.
     $perfiles = [
         [
-            'titulo' => 'Busco empleo',
+            'titulo' => 'Soy persona natural',
             'texto'  => 'Crea tu hoja de vida, explora vacantes y postúlate desde un solo lugar.',
             'boton'  => 'Explorar oportunidades',
-            'tipo'   => 'empleo',
+            'tipo'   => 'usuario',
             'icono'  => 'M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z',
         ],
         [
@@ -21,32 +21,25 @@
             'tipo'   => 'empresa',
             'icono'  => 'M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75',
         ],
-        [
-            'titulo' => 'Ofrezco un servicio',
-            'texto'  => 'Muestra tu oficio, recibe contactos y gana buenas calificaciones.',
-            'boton'  => 'Ofrecer mis servicios',
-            'tipo'   => 'servicio',
-            'icono'  => 'M21.75 6.75a4.5 4.5 0 01-4.884 4.484c-1.076-.091-2.264.071-2.95.904l-7.152 8.684a2.548 2.548 0 11-3.586-3.586l8.684-7.152c.833-.686.995-1.874.904-2.95a4.5 4.5 0 016.336-4.486l-3.276 3.276a3.004 3.004 0 002.25 2.25l3.276-3.276c.256.565.398 1.192.398 1.852z',
-        ],
     ];
 
     $beneficios = [
         'Todas las ofertas laborales con información detallada.',
-        'Servicios locales con sus respectivas calificaciones.',
+        'Calificaciones entre empresas y personas para generar confianza.',
         'Gestión de tu hoja de vida y postulaciones.',
-        'Publicar vacantes o tus propios servicios.',
+        'Publicación de vancantes para tu empresa o negocio.',
     ];
 
     $pasos = [
-        ['titulo' => 'Crea tu cuenta',        'texto' => 'Regístrate para buscar empleo, vincular tu empresa u ofrecer tus servicios.'],
-        ['titulo' => 'Completa tu perfil',    'texto' => 'Ingresa tus datos y adjunta tu hoja de vida o registra la información de tu empresa, según tu objetivo.'],
-        ['titulo' => 'Explora y conecta',     'texto' => 'Consulta ofertas laborales, descubre servicios, presenta postulaciones o publica oportunidades.'],
+        ['titulo' => 'Crea tu cuenta',        'texto' => 'Regístrate como persona o como empresa.'],
+        ['titulo' => 'Completa tu perfil',    'texto' => 'Ingresa tus datos y adjunta tu hoja de vida o registra la información de tu empresa.'],
+        ['titulo' => 'Explora y conecta',     'texto' => 'Consulta ofertas laborales, presenta postulaciones o publica oportunidades.'],
     ];
 
     $valores = [
-        ['titulo' => 'Oportunidades',      'texto' => 'Conecta con ofertas laborales y servicios disponibles en tu municipio'],
-        ['titulo' => 'Confianza',          'texto' => 'Calificaciones de quienes ya contrataron un servicio.'],
-        ['titulo' => 'Todo en un lugar',   'texto' => 'Hoja de vida, postulaciones y servicios en tu panel.'],
+        ['titulo' => 'Oportunidades',      'texto' => 'Conecta con ofertas laborales disponibles en tu municipio'],
+        ['titulo' => 'Confianza',          'texto' => 'Empresas y candidatos de tu región en un mismo lugar.'],
+        ['titulo' => 'Todo en un lugar',   'texto' => 'Hoja de vida, ofertas y postulaciones en tu panel.'],
     ];
 @endphp
 
@@ -71,7 +64,7 @@
                 </a>
 
                 <a href="{{ url('/registro') }}"
-                        class=" self-start rounded-full border-2 border-marca bg-marca px-4 py-2 text-[15px] font-bold text-tinta transition hover:border-carbon hover:bg-carbon hover:text-white">
+                        class="self-start rounded-full border-2 border-marca bg-marca px-4 py-2 text-[15px] font-bold text-tinta transition hover:border-carbon hover:bg-carbon hover:text-white">
                         Registrarse
                 </a>
             </div>
@@ -95,19 +88,15 @@
             </span>
 
             <h1 class="text-4xl font-extrabold leading-tight text-white sm:text-5xl lg:text-[56px]">
-                Tu próximo empleo o servicio comienza aquí
+                Tu próxima oportunidad de empleo comienza aquí
             </h1>
 
             <p class="max-w-xl text-lg leading-relaxed text-slate-200">
-                Crea tu cuenta y conecta con empresas, oportunidades de trabajo y personas que ofrecen servicios en tu municipio.
+                Crea tu cuenta, conecta con empresas y oportunidades de trabajo en tu municipio.
             </p>
 
+            <div class="flex flex-wrap gap-1">
 
-            <div class="flex flex-wrap gap-4">
-
-                <br>
-                <br>
-                <br>
 
             </div>
         </div>
@@ -150,7 +139,7 @@
             <p class="text-[17px] text-slate-500">Elige cómo quieres participar.</p>
         </div>
 
-        <div class="grid gap-5 sm:grid-cols-3 lg:grid-cols-3">
+        <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-2">
             @foreach ($perfiles as $perfil)
                 <article class="flex flex-col gap-3.5 rounded-2xl border border-slate-200 bg-white p-7 transition hover:shadow-lg">
                     <span class="flex size-[52px] items-center justify-center rounded-2xl bg-sky-50 text-marca-texto">
@@ -161,7 +150,7 @@
                     <h3 class="text-[21px] font-bold">{{ $perfil['titulo'] }}</h3>
                     <p class="leading-relaxed text-slate-500">{{ $perfil['texto'] }}</p>
                     <a href="{{ url('/registro?tipo=' . $perfil['tipo']) }}"
-                        class="mt-auto self-start rounded-xl border-2 border-marca bg-marca px-5 py-3 text-[15px] font-bold text-tinta transition hover:border-carbon hover:bg-carbon hover:text-white">
+                        class="self-start rounded-full border-2 border-marca bg-marca px-4 py-2 text-[15px] font-bold text-tinta transition hover:border-carbon hover:bg-carbon hover:text-white">
                         {{ $perfil['boton'] }}
                     </a>
                 </article>
@@ -181,10 +170,10 @@
         <div class="grid gap-8 md:grid-cols-3">
             @foreach ($pasos as $i => $paso)
                 <div class="flex flex-col gap-3.5">
-                    <span class="flex size-12 items-center justify-center rounded-full bg-marca text-xl font-extrabold text-tinta">
+                    <span class=" flex size-12 items-center justify-center rounded-full bg-marca text-xl font-extrabold text-tinta">
                         {{ $i + 1 }}
                     </span>
-                    <h3 class="text-xl font-bold">{{ $paso['titulo'] }}</h3>
+                    <h3 class=" text-xl font-bold">{{ $paso['titulo'] }}</h3>
                     <p class="leading-relaxed text-slate-500">{{ $paso['texto'] }}</p>
                 </div>
             @endforeach
@@ -198,7 +187,7 @@
         <div class="space-y-3.5">
             <h2 class="text-3xl font-extrabold text-noche sm:text-4xl">Conectamos oportunidades en Garcia Rovira</h2>
             <p class="text-[17px] leading-relaxed text-slate-600">
-                Málaga Emplea complementa los servicios de intermediación laboral existentes y facilita la conexión entre quienes buscan empleo, las empresas y quienes ofrecen servicios de la región.
+                Málaga Emplea complementa los servicios de intermediación laboral existentes y facilita la conexión entre quienes buscan empleo y las empresas de la región.
             </p>
         </div>
 

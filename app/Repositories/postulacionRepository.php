@@ -3,6 +3,8 @@
 namespace App\Repositories;
 
 use App\Models\Postulacion;
+use App\Models\Usuario;
+use App\Models\Oferta;
 
 class postulacionRepository
 {
@@ -31,5 +33,28 @@ class postulacionRepository
         $postulacion = Postulacion::findOrFail($id);
 
         $postulacion->update($datos);
+    }
+
+    public function buscarUsuario(int $id)
+    {
+        return Usuario::with('rol')->findOrFail($id);
+    }
+
+    public function buscarOferta(int $id)
+    {
+        return Oferta::findOrFail($id);
+    }
+
+    public function yaPostulado(
+        int $idUsuario,
+        int $idOferta,
+        ?int $idPostulacion = null
+    ): bool {
+        return Postulacion::where('idUsuario', $idUsuario)
+            ->where('idOferta', $idOferta)
+            ->when($idPostulacion !== null, function ($query) use ($idPostulacion) {
+                $query->where('id', '!=', $idPostulacion);
+            })
+            ->exists();
     }
 }

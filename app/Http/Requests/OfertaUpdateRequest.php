@@ -26,10 +26,9 @@ class OfertaUpdateRequest extends FormRequest
             'titulo' => 'required|string|max:150',
             'descripcion' => 'required|string',
             'requisitos' => 'required|string',
-            'salario' => 'required|numeric|min:0',
+            'salario' => 'required|numeric',
             'tipoContrato' => 'required|in:tiempo completo,medio tiempo,horas',
             'ubicacion' => 'required|string|max:255',
-            'fechaPublicacion' => 'required|date',
             'fechaLimite' => 'required|date|after_or_equal:fechaPublicacion',
             'idEmpresa' => 'nullable|exists:empresas,id|required_without:idUsuario',
             'idUsuario' => 'nullable|exists:usuarios,id|required_without:idEmpresa',
@@ -48,15 +47,11 @@ class OfertaUpdateRequest extends FormRequest
 
             'salario.required' => 'El salario es obligatorio.',
             'salario.numeric' => 'El salario debe ser un valor numérico.',
-            'salario.min' => 'El salario no puede ser negativo.',
 
             'tipoContrato.required' => 'El tipo de contrato es obligatorio.',
             'tipoContrato.in' => 'El tipo de contrato seleccionado no es válido.',
 
             'ubicacion.required' => 'La ubicación es obligatoria.',
-
-            'fechaPublicacion.required' => 'La fecha de publicación es obligatoria.',
-            'fechaPublicacion.date' => 'La fecha de publicación no es válida.',
 
             'fechaLimite.required' => 'La fecha límite es obligatoria.',
             'fechaLimite.date' => 'La fecha límite no es válida.',
