@@ -68,3 +68,18 @@ class ofertasService
         }
     }
 }
+    public function listarOfertasSobrePromedioPostulaciones()
+    {
+        return $this->ofertasrepository->listarOfertasSobrePromedioPostulaciones();
+    }
+
+    public function listarOfertasConServicios()
+    {
+        return $this->ofertasrepository->listarOfertasConServicios();
+    }
+
+    public function listarOfertasSinServicios()
+    {
+        return $this->ofertasrepository->listarOfertasSinServicios();
+    }
+}

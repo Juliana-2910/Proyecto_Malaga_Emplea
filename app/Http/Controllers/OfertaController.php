@@ -88,4 +88,25 @@ class OfertaController extends Controller
             return redirect()->route('ofertas.index')->with('error', $e->getMessage());
         }
     }
+
+    public function ofertasSobrePromedioPostulaciones()
+    {
+        $ofertas = $this->ofertasService->listarOfertasSobrePromedioPostulaciones();
+
+        return response()->json($ofertas);
+    }
+
+    public function ofertasConServicios()
+    {
+        $ofertas = $this->ofertasService->listarOfertasConServicios();
+
+        return response()->json($ofertas);
+    }
+
+    public function ofertasSinServicios()
+    {
+        $ofertas = $this->ofertasService->listarOfertasSinServicios();
+
+        return response()->json($ofertas);
+    }
 }

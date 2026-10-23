@@ -14,7 +14,18 @@ use App\Http\Controllers\OfertaController;
 use App\Http\Controllers\PostulacionController;
 
 
-Route::get('/adm', [DashboardController::class, 'index'])->name('dashboard.index');
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
+Route::get('/empresas-con-ofertas',[EmpresaController::class, 'empresasConOfertas'])->name('empresas.conOfertas');
+Route::get('/usuarios-con-postulaciones',[UsuarioController::class, 'usuariosConPostulaciones'])->name('usuarios.conPostulaciones');
+Route::get('/usuarios-sin-postulaciones',[UsuarioController::class, 'usuariosSinPostulaciones'])->name('usuarios.sinPostulaciones');
+Route::get('/ofertas-sobre-promedio-postulaciones', [OfertaController::class, 'ofertasSobrePromedioPostulaciones'])->name('ofertas.sobrePromedioPostulaciones');
+Route::get('/ofertas-con-servicios', [OfertaController::class, 'ofertasConServicios'])->name('ofertas.conServicios');
+Route::get('/ofertas-sin-servicios', [OfertaController::class, 'ofertasSinServicios'])->name('ofertas.sinServicios');
+Route::get('/reputacion-empresas', [CalificacionController::class, 'reputacionEmpresas'])->name('calificacion.reputacionEmpresas');
+Route::get('/reputacion-usuarios', [CalificacionController::class, 'reputacionUsuarios'])->name('calificacion.reputacionUsuarios');
+
+
+
 Route::resource('roles', RolesController::class);
 Route::resource('categorias', CategoriaController::class);
 Route::resource('empresas', EmpresaController::class);
