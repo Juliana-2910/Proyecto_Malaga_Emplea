@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
-@section('title')
-    Crear oferta
-@endsection
+@section('title', 'Crear Oferta')
+
+@section('page-title', 'Panel Administrativo')
 
 @section('content')
 
@@ -27,6 +27,43 @@
     {{-- Formulario --}}
     <div class="rounded-xl bg-white p-8 shadow">
 
+        @if (session('error'))
+
+            <div
+                class="mb-6 flex items-center justify-between rounded-xl border border-yellow-200 bg-yellow-50 px-4 py-3 text-sm text-yellow-700 shadow-sm"
+                x-data="{ show: true }"
+                x-show="show"
+                x-transition>
+
+                <div class="flex items-center gap-3">
+
+                    <div class="flex h-8 w-8 items-center justify-center rounded-full bg-yellow-100">
+
+                        @php($icon = 'exclamation-triangle')
+                        @include('layouts.partials.icons')
+
+                    </div>
+
+                    <span>
+                        {{ session('error') }}
+                    </span>
+
+                </div>
+
+                <button
+                    type="button"
+                    @click="show = false"
+                    class="ml-4 text-yellow-600 transition hover:text-yellow-900">
+
+                    @php($icon = 'x-mark')
+                    @include('layouts.partials.icons')
+
+                </button>
+
+            </div>
+
+        @endif
+
         <form action="{{ route('ofertas.store') }}" method="POST">
 
             @csrf
@@ -36,16 +73,16 @@
                 {{-- Título --}}
                 <div>
                     <label for="titulo"
-                           class="mb-2 block text-sm font-semibold text-gray-700">
+                            class="mb-2 block text-sm font-semibold text-gray-700">
                         Título
                     </label>
 
                     <input type="text"
-                           name="titulo"
-                           id="titulo"
-                           value="{{ old('titulo') }}"
-                           placeholder="Ingrese el título de la oferta"
-                           class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
+                            name="titulo"
+                            id="titulo"
+                            value="{{ old('titulo') }}"
+                            placeholder="Ingrese el título de la oferta"
+                            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
 
                     @error('titulo')
                         <p class="mt-1 text-sm text-red-500">
@@ -58,16 +95,16 @@
                 {{-- Salario --}}
                 <div>
                     <label for="salario"
-                           class="mb-2 block text-sm font-semibold text-gray-700">
+                            class="mb-2 block text-sm font-semibold text-gray-700">
                         Salario
                     </label>
 
                     <input type="number"
-                           name="salario"
-                           id="salario"
-                           value="{{ old('salario') }}"
-                           placeholder="Ingrese el salario"
-                           class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
+                            name="salario"
+                            id="salario"
+                            value="{{ old('salario') }}"
+                            placeholder="Ingrese el salario"
+                            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
 
                     @error('salario')
                         <p class="mt-1 text-sm text-red-500">
@@ -80,15 +117,15 @@
                 {{-- Descripción --}}
                 <div class="md:col-span-2">
                     <label for="descripcion"
-                           class="mb-2 block text-sm font-semibold text-gray-700">
+                            class="mb-2 block text-sm font-semibold text-gray-700">
                         Descripción
                     </label>
 
                     <textarea name="descripcion"
-                              id="descripcion"
-                              rows="4"
-                              placeholder="Ingrese la descripción de la oferta"
-                              class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">{{ old('descripcion') }}</textarea>
+                            id="descripcion"
+                            rows="4"
+                            placeholder="Ingrese la descripción de la oferta"
+                            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">{{ old('descripcion') }}</textarea>
 
                     @error('descripcion')
                         <p class="mt-1 text-sm text-red-500">
@@ -101,15 +138,15 @@
                 {{-- Requisitos --}}
                 <div class="md:col-span-2">
                     <label for="requisitos"
-                           class="mb-2 block text-sm font-semibold text-gray-700">
+                        class="mb-2 block text-sm font-semibold text-gray-700">
                         Requisitos
                     </label>
 
                     <textarea name="requisitos"
-                              id="requisitos"
-                              rows="4"
-                              placeholder="Ingrese los requisitos de la oferta"
-                              class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">{{ old('requisitos') }}</textarea>
+                            id="requisitos"
+                            rows="4"
+                            placeholder="Ingrese los requisitos de la oferta"
+                            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">{{ old('requisitos') }}</textarea>
 
                     @error('requisitos')
                         <p class="mt-1 text-sm text-red-500">
@@ -122,7 +159,7 @@
                 {{-- Tipo de contrato --}}
                 <div>
                     <label for="tipoContrato"
-                           class="mb-2 block text-sm font-semibold text-gray-700">
+                            class="mb-2 block text-sm font-semibold text-gray-700">
                         Tipo de contrato
                     </label>
 
@@ -182,44 +219,37 @@
 
 
                 {{-- Fecha de publicación --}}
+
                 <div>
-                    <label for="fechaPublicacion"
-                           class="mb-2 block text-sm font-semibold text-gray-700">
-                        Fecha de publicación
+                    <label for="fecha"
+                        class="mb-2 block text-sm font-semibold text-gray-700">
+                        Fecha Publicacion
                     </label>
 
-                    <input type="date"
-                           name="fechaPublicacion"
-                           id="fechaPublicacion"
-                           value="{{ old('fechaPublicacion', date('Y-m-d')) }}"
-                           class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
-
-                    @error('fechaPublicacion')
-                        <p class="mt-1 text-sm text-red-500">
-                            {{ $message }}
-                        </p>
-                    @enderror
+                    <input
+                        type="text"
+                        id="fecha"
+                        value="{{ \Carbon\Carbon::now('America/Bogota')->format('d/m/Y') }}"
+                        readonly
+                        class="w-full cursor-not-allowed rounded-lg border border-gray-300 bg-gray-100 px-4 py-2.5 text-sm text-gray-600"
+                    >
                 </div>
 
 
                 {{-- Fecha límite --}}
                 <div>
                     <label for="fechaLimite"
-                           class="mb-2 block text-sm font-semibold text-gray-700">
+                        class="mb-2 block text-sm font-semibold text-gray-700">
                         Fecha límite
                     </label>
 
                     <input type="date"
-                           name="fechaLimite"
-                           id="fechaLimite"
-                           value="{{ old('fechaLimite') }}"
-                           class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
-
-                    @error('fechaLimite')
-                        <p class="mt-1 text-sm text-red-500">
-                            {{ $message }}
-                        </p>
-                    @enderror
+                        name="fechaLimite"
+                        id="fechaLimite"
+                        min="{{ \Carbon\Carbon::now('America/Bogota')->format('Y-m-d') }}"
+                        value="{{ old('fechaLimite') }}"
+                        required
+                        class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
                 </div>
 
 
@@ -336,7 +366,7 @@
 </div>
 
 </div>
-   {{-- JavaScript --}} 
+   {{-- JavaScript --}}
 <script>
     document.addEventListener('DOMContentLoaded', function () {
 

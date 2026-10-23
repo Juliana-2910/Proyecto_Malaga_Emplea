@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Repositories\ofertasRepository;
+use Carbon\Carbon;
 
 class ofertasService
 {
@@ -20,6 +21,8 @@ class ofertasService
 
     public function guardar(array $datos)
     {
+        $datos['fechaPublicacion'] = Carbon::now('America/Bogota')->toDateString();
+
         $this->ofertasrepository->guardar($datos);
     }
 
@@ -35,6 +38,8 @@ class ofertasService
 
     public function actualizar(int $id, array $datos)
     {
+        unset($datos['fechaPublicacion']);
+
         $this->ofertasrepository->actualizar($id, $datos);
     }
 }

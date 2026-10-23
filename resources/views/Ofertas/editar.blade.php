@@ -1,9 +1,8 @@
-
 @extends('layouts.app')
 
-@section('title')
-    Editar oferta
-@endsection
+@section('title', 'Editar Oferta')
+
+@section('page-title', 'Panel Administrativo')
 
 @section('content')
 
@@ -27,6 +26,43 @@
 
     {{-- Formulario --}}
     <div class="rounded-xl bg-white p-8 shadow">
+
+        @if (session('error'))
+
+            <div
+                class="mb-6 flex items-center justify-between rounded-xl border border-yellow-200 bg-yellow-50 px-4 py-3 text-sm text-yellow-700 shadow-sm"
+                x-data="{ show: true }"
+                x-show="show"
+                x-transition>
+
+                <div class="flex items-center gap-3">
+
+                    <div class="flex h-8 w-8 items-center justify-center rounded-full bg-yellow-100">
+
+                        @php($icon = 'exclamation-triangle')
+                        @include('layouts.partials.icons')
+
+                    </div>
+
+                    <span>
+                        {{ session('error') }}
+                    </span>
+
+                </div>
+
+                <button
+                    type="button"
+                    @click="show = false"
+                    class="ml-4 text-yellow-600 transition hover:text-yellow-900">
+
+                    @php($icon = 'x-mark')
+                    @include('layouts.partials.icons')
+
+                </button>
+
+            </div>
+
+        @endif
 
         <form action="{{ route('ofertas.update', $oferta->id) }}" method="POST">
 
@@ -184,46 +220,37 @@
 
 
                 {{-- Fecha de publicación --}}
+
                 <div>
-                    <label for="fechaPublicacion"
-                           class="mb-2 block text-sm font-semibold text-gray-700">
-                        Fecha de publicación
+                    <label for="fecha"
+                        class="mb-2 block text-sm font-semibold text-gray-700">
+                        Fecha Publicacion
                     </label>
 
-                    <input type="date"
-                           name="fechaPublicacion"
-                           id="fechaPublicacion"
-                           value="{{ old('fechaPublicacion', $oferta->fechaPublicacion) }}"
-                           class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
-
-                    @error('fechaPublicacion')
-                        <p class="mt-1 text-sm text-red-500">
-                            {{ $message }}
-                        </p>
-                    @enderror
+                    <input
+                        type="text"
+                        id="fecha"
+                        value="{{ \Carbon\Carbon::now('America/Bogota')->format('d/m/Y') }}"
+                        readonly
+                        class="w-full cursor-not-allowed rounded-lg border border-gray-300 bg-gray-100 px-4 py-2.5 text-sm text-gray-600"
+                    >
                 </div>
-
 
                 {{-- Fecha límite --}}
                 <div>
                     <label for="fechaLimite"
-                           class="mb-2 block text-sm font-semibold text-gray-700">
+                        class="mb-2 block text-sm font-semibold text-gray-700">
                         Fecha límite
                     </label>
 
                     <input type="date"
-                           name="fechaLimite"
-                           id="fechaLimite"
-                           value="{{ old('fechaLimite', $oferta->fechaLimite) }}"
-                           class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
-
-                    @error('fechaLimite')
-                        <p class="mt-1 text-sm text-red-500">
-                            {{ $message }}
-                        </p>
-                    @enderror
+                        name="fechaLimite"
+                        id="fechaLimite"
+                        min="{{ \Carbon\Carbon::now('America/Bogota')->format('Y-m-d') }}"
+                        value="{{ old('fechaLimite', $oferta->fechaLimite ? \Carbon\Carbon::parse($oferta->fechaLimite)->format('Y-m-d') : '') }}"
+                        required
+                        class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
                 </div>
-
 
                 {{-- Empresa --}}
                 {{-- Quién publica la oferta --}}

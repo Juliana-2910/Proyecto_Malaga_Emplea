@@ -30,6 +30,8 @@ class ofertasRepository
     {
         $oferta = Oferta::findOrFail($id);
 
+        unset($datos['fechaPublicacion']);
+
         $oferta->update($datos);
     }
 }

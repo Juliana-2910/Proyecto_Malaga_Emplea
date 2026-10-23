@@ -25,6 +25,6 @@ class Oferta extends Model
 
     public function ofertaServicio()
     {
-        return $this->hasMany(OfertaServicio::class,'idOferta'); /*Relación con la tabla ofertaServicios*/
+        return $this->hasMany(OfertaServicios::class,'idOferta'); /*Relación con la tabla ofertaServicios*/
     }
 }
