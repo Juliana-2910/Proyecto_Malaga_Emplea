@@ -250,7 +250,7 @@
                 name="correoElectronico"
                 id="correoElectronico"
                 value="{{ old('correoElectronico') }}"
-                placeholder="ejemplo@correo.com"
+                placeholder="ejemplo@gmail.com"
                 class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
 
             @error('correoElectronico')

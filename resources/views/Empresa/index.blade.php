@@ -100,8 +100,7 @@
                                     >
 
                                 @else
-
-                                    @php($icon = 'building-office-2')
+                                    @php($icon = 'building-office-3')
                                     @include('layouts.partials.icons')
 
                                 @endif
@@ -394,6 +393,7 @@
     </div>
 
 </div>
+
 
 </div>
 

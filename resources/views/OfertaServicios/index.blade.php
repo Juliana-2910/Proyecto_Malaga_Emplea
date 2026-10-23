@@ -33,7 +33,7 @@
                 @php($icon = 'plus')
                 @include('layouts.partials.icons')
 
-                Crear relación
+                Nueva Relación
 
             </a>
 
@@ -226,7 +226,7 @@
                                         @php($icon = 'plus')
                                         @include('layouts.partials.icons')
 
-                                        Crear relación
+                                        Registrar Relación
                                     </a>
 
                                 </div>

@@ -33,7 +33,7 @@
                 @php($icon = 'plus')
                 @include('layouts.partials.icons')
 
-                Crear oferta
+                Nueva Oferta
 
             </a>
 
@@ -292,7 +292,7 @@
                                             @php($icon = 'plus')
                                             @include('layouts.partials.icons')
 
-                                            Crear oferta
+                                            Registrar Oferta
 
                                         </a>
 
