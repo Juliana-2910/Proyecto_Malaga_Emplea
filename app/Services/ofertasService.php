@@ -20,6 +20,11 @@ class ofertasService
         return $this->ofertasrepository->listarTodos();
     }
 
+    public function listarDisponiblesParaPostular()
+    {
+        return $this->ofertasrepository->listarDisponiblesParaPostular();
+    }
+
     public function guardar(array $datos)
     {
         $datos['fechaPublicacion'] = Carbon::now('America/Bogota')->toDateString();

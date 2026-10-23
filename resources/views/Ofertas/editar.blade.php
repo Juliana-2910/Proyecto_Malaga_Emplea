@@ -27,43 +27,6 @@
     {{-- Formulario --}}
     <div class="rounded-xl bg-white p-8 shadow">
 
-        @if (session('error'))
-
-            <div
-                class="mb-6 flex items-center justify-between rounded-xl border border-yellow-200 bg-yellow-50 px-4 py-3 text-sm text-yellow-700 shadow-sm"
-                x-data="{ show: true }"
-                x-show="show"
-                x-transition>
-
-                <div class="flex items-center gap-3">
-
-                    <div class="flex h-8 w-8 items-center justify-center rounded-full bg-yellow-100">
-
-                        @php($icon = 'exclamation-triangle')
-                        @include('layouts.partials.icons')
-
-                    </div>
-
-                    <span>
-                        {{ session('error') }}
-                    </span>
-
-                </div>
-
-                <button
-                    type="button"
-                    @click="show = false"
-                    class="ml-4 text-yellow-600 transition hover:text-yellow-900">
-
-                    @php($icon = 'x-mark')
-                    @include('layouts.partials.icons')
-
-                </button>
-
-            </div>
-
-        @endif
-
         <form action="{{ route('ofertas.update', $oferta->id) }}" method="POST">
 
             @csrf
@@ -74,16 +37,16 @@
                 {{-- Título --}}
                 <div>
                     <label for="titulo"
-                           class="mb-2 block text-sm font-semibold text-gray-700">
+                            class="mb-2 block text-sm font-semibold text-gray-700">
                         Título
                     </label>
 
-                    <input type="text"
-                           name="titulo"
-                           id="titulo"
-                           value="{{ old('titulo', $oferta->titulo) }}"
-                           placeholder="Ingrese el título de la oferta"
-                           class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
+                    <input  type="text"
+                            name="titulo"
+                            id="titulo"
+                            value="{{ old('titulo', $oferta->titulo) }}"
+                            placeholder="Ingrese el título de la oferta"
+                            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
 
                     @error('titulo')
                         <p class="mt-1 text-sm text-red-500">
@@ -95,17 +58,17 @@
 
                 {{-- Salario --}}
                 <div>
-                    <label for="salario"
-                           class="mb-2 block text-sm font-semibold text-gray-700">
-                        Salario
+                    <label  for="salario"
+                        class="mb-2 block text-sm font-semibold text-gray-700">
+                            Salario
                     </label>
 
                     <input type="number"
-                           name="salario"
-                           id="salario"
-                           value="{{ old('salario', $oferta->salario) }}"
-                           placeholder="Ingrese el salario"
-                           class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
+                            name="salario"
+                            id="salario"
+                            value="{{ old('salario', $oferta->salario) }}"
+                            placeholder="Ingrese el salario"
+                            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
 
                     @error('salario')
                         <p class="mt-1 text-sm text-red-500">
@@ -118,15 +81,15 @@
                 {{-- Descripción --}}
                 <div class="md:col-span-2">
                     <label for="descripcion"
-                           class="mb-2 block text-sm font-semibold text-gray-700">
-                        Descripción
+                        class="mb-2 block text-sm font-semibold text-gray-700">
+                            Descripción
                     </label>
 
                     <textarea name="descripcion"
-                              id="descripcion"
-                              rows="4"
-                              placeholder="Ingrese la descripción de la oferta"
-                              class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">{{ old('descripcion', $oferta->descripcion) }}</textarea>
+                            id="descripcion"
+                            rows="4"
+                            placeholder="Ingrese la descripción de la oferta"
+                            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">{{ old('descripcion', $oferta->descripcion) }}</textarea>
 
                     @error('descripcion')
                         <p class="mt-1 text-sm text-red-500">
@@ -139,15 +102,15 @@
                 {{-- Requisitos --}}
                 <div class="md:col-span-2">
                     <label for="requisitos"
-                           class="mb-2 block text-sm font-semibold text-gray-700">
-                        Requisitos
+                        class="mb-2 block text-sm font-semibold text-gray-700">
+                            Requisitos
                     </label>
 
                     <textarea name="requisitos"
-                              id="requisitos"
-                              rows="4"
-                              placeholder="Ingrese los requisitos de la oferta"
-                              class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">{{ old('requisitos', $oferta->requisitos) }}</textarea>
+                            id="requisitos"
+                            rows="4"
+                            placeholder="Ingrese los requisitos de la oferta"
+                            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">{{ old('requisitos', $oferta->requisitos) }}</textarea>
 
                     @error('requisitos')
                         <p class="mt-1 text-sm text-red-500">
@@ -160,8 +123,8 @@
                 {{-- Tipo de contrato --}}
                 <div>
                     <label for="tipoContrato"
-                           class="mb-2 block text-sm font-semibold text-gray-700">
-                        Tipo de contrato
+                        class="mb-2 block text-sm font-semibold text-gray-700">
+                            Tipo de contrato
                     </label>
 
                     <select name="tipoContrato"
@@ -200,16 +163,16 @@
                 {{-- Ubicación --}}
                 <div>
                     <label for="ubicacion"
-                           class="mb-2 block text-sm font-semibold text-gray-700">
-                        Ubicación
+                        class="mb-2 block text-sm font-semibold text-gray-700">
+                            Ubicación
                     </label>
 
                     <input type="text"
-                           name="ubicacion"
-                           id="ubicacion"
-                           value="{{ old('ubicacion', $oferta->ubicacion) }}"
-                           placeholder="Ingrese la ubicación"
-                           class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
+                        name="ubicacion"
+                        id="ubicacion"
+                        value="{{ old('ubicacion', $oferta->ubicacion) }}"
+                        placeholder="Ingrese la ubicación"
+                        class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
 
                     @error('ubicacion')
                         <p class="mt-1 text-sm text-red-500">
@@ -254,100 +217,104 @@
 
                 {{-- Empresa --}}
                 {{-- Quién publica la oferta --}}
-<div>
-    <label for="tipoPublicador"
-           class="mb-2 block text-sm font-semibold text-gray-700">
-        ¿Quién publica la oferta?
-    </label>
 
-    <select name="tipoPublicador"
-            id="tipoPublicador"
-            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
+                <div>
+                    <label for="tipoPublicador"
+                        class="mb-2 block text-sm font-semibold text-gray-700">
+                        ¿Quién publica la oferta?
+                    </label>
 
-        <option value="empresa"
-            {{ old('tipoPublicador', $oferta->idEmpresa ? 'empresa' : 'usuario') == 'empresa' ? 'selected' : '' }}>
-            Empresa
-        </option>
+                    <select name="tipoPublicador"
+                            id="tipoPublicador"
+                            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
 
-        <option value="usuario"
-            {{ old('tipoPublicador', $oferta->idEmpresa ? 'empresa' : 'usuario') == 'usuario' ? 'selected' : '' }}>
-            Persona natural
-        </option>
+                        <option value="empresa"
+                            {{ old('tipoPublicador', $oferta->idEmpresa ? 'empresa' : 'usuario') == 'empresa' ? 'selected' : '' }}>
+                            Empresa
+                        </option>
 
-    </select>
-</div>
+                        <option value="usuario"
+                            {{ old('tipoPublicador', $oferta->idEmpresa ? 'empresa' : 'usuario') == 'usuario' ? 'selected' : '' }}>
+                            Persona natural
+                        </option>
 
-
-{{-- Empresa --}}
-<div id="empresaContainer">
-
-    <label for="idEmpresa"
-           class="mb-2 block text-sm font-semibold text-gray-700">
-        Empresa
-    </label>
-
-    <select name="idEmpresa"
-            id="idEmpresa"
-            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
-
-        <option value="">
-            Seleccione una empresa
-        </option>
-
-        @foreach ($empresas as $empresa)
-
-            <option value="{{ $empresa->id }}"
-                {{ old('idEmpresa', $oferta->idEmpresa) == $empresa->id ? 'selected' : '' }}>
-                {{ $empresa->nombreEmpresa }}
-            </option>
-
-        @endforeach
-
-    </select>
-
-    @error('idEmpresa')
-        <p class="mt-1 text-sm text-red-500">
-            {{ $message }}
-        </p>
-    @enderror
-
-</div>
+                    </select>
+                </div>
 
 
-{{-- Persona natural --}}
-<div id="usuarioContainer" class="hidden">
+                {{-- Empresa --}}
+                <div id="empresaContainer">
 
-    <label for="idUsuario"
-           class="mb-2 block text-sm font-semibold text-gray-700">
-        Persona natural
-    </label>
+                    <label for="idEmpresa"
+                        class="mb-2 block text-sm font-semibold text-gray-700">
+                        Empresa
+                    </label>
 
-    <select name="idUsuario"
-            id="idUsuario"
-            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
+                    <select name="idEmpresa"
+                            id="idEmpresa"
+                            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
 
-        <option value="">
-            Seleccione una persona
-        </option>
+                        <option value="">
+                            Seleccione una empresa
+                        </option>
 
-        @foreach ($usuarios as $usuario)
+                        @foreach ($empresas as $empresa)
 
-            <option value="{{ $usuario->id }}"
-                {{ old('idUsuario', $oferta->idUsuario) == $usuario->id ? 'selected' : '' }}>
-                {{ $usuario->nombres }} {{ $usuario->apellidos }}
-            </option>
+                            <option value="{{ $empresa->id }}"
+                                {{ old('idEmpresa', $oferta->idEmpresa) == $empresa->id ? 'selected' : '' }}>
+                                {{ $empresa->nombreEmpresa }}
+                            </option>
 
-        @endforeach
+                        @endforeach
 
-    </select>
+                    </select>
 
-    @error('idUsuario')
-        <p class="mt-1 text-sm text-red-500">
-            {{ $message }}
-        </p>
-    @enderror
+                    @error('idEmpresa')
+                        <p class="mt-1 text-sm text-red-500">
+                            {{ $message }}
+                        </p>
+                    @enderror
 
-</div>
+                </div>
+
+
+                {{-- Persona natural --}}
+
+                <div id="usuarioContainer" class="hidden">
+
+                    <label for="idUsuario"
+                        class="mb-2 block text-sm font-semibold text-gray-700">
+                        Persona natural
+                    </label>
+
+                    <select name="idUsuario"
+                            id="idUsuario"
+                            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
+
+                        <option value="">
+                            Seleccione una persona
+                        </option>
+
+                        @foreach ($usuarios as $usuario)
+
+                            <option value="{{ $usuario->id }}"
+                                {{ old('idUsuario', $oferta->idUsuario) == $usuario->id ? 'selected' : '' }}>
+                                {{ $usuario->nombres }} {{ $usuario->apellidos }}
+                            </option>
+
+                        @endforeach
+
+                    </select>
+
+                    @error('idUsuario')
+                        <p class="mt-1 text-sm text-red-500">
+                            {{ $message }}
+                        </p>
+                    @enderror
+
+                </div>
+
+            </div>
 
 
             {{-- Botones --}}

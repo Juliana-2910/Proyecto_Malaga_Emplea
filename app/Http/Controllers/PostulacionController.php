@@ -38,7 +38,7 @@ class PostulacionController extends Controller
     public function create()
     {
         $usuarios = $this->usuariosService->listarTodos();
-        $ofertas = $this->ofertasService->listarTodos();
+        $ofertas = $this->ofertasService->listarDisponiblesParaPostular();
         return view('Postulacion.crear', compact('usuarios', 'ofertas'));
     }
 
@@ -73,14 +73,10 @@ class PostulacionController extends Controller
         try {
             $this->postulacionService->actualizar($id, $request->validated());
         } catch (\Exception $e) {
-            return back()
-                ->withInput()
-                ->with('error', $e->getMessage());
+            return back()->withInput()->with('error', $e->getMessage());
         }
 
-        return redirect()
-            ->route('postulacion.index')
-            ->with('actualizar', 'Postulación actualizada exitosamente.');
+        return redirect()->route('postulacion.index')->with('actualizar', 'Postulación actualizada exitosamente.');
     }
 
     public function destroy($id)

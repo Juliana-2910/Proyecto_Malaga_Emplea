@@ -1,4 +1,3 @@
-
 @extends('layouts.app')
 
 @section('title', 'Ofertas')
@@ -39,7 +38,6 @@
 
         </div>
 
-
         {{-- TARJETA PRINCIPAL --}}
         <div class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-[0_10px_35px_rgba(77,182,232,0.20)]">
 
@@ -51,7 +49,6 @@
                 </h2>
 
             </div>
-
 
             {{-- TABLA --}}
             <div class="overflow-x-auto">
@@ -94,7 +91,6 @@
 
                     </thead>
 
-
                     <tbody class="divide-y divide-gray-200">
 
                         @forelse ($ofertas as $oferta)
@@ -108,14 +104,22 @@
 
                                 </td>
 
+                            {{-- TÍTULO Y ESTADO DE LA OFERTA --}}
+                            <td class="border-r border-gray-100 px-6 py-5 text-sm font-medium text-gray-600">
+                                <div class="flex flex-col items-center gap-2">
+                                    <span>{{ $oferta->titulo }}</span>
 
-                                {{-- TÍTULO --}}
-                                <td class="border-r border-gray-100 px-6 py-5 text-sm font-medium text-gray-600">
-
-                                    {{ $oferta->titulo }}
-
-                                </td>
-
+                                    @if (\Carbon\Carbon::parse($oferta->fechaLimite)->toDateString() < now('America/Bogota')->toDateString())
+                                        <span class="inline-flex rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-700">
+                                            Vencida
+                                        </span>
+                                    @else
+                                        <span class="inline-flex rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">
+                                            Vigente
+                                        </span>
+                                    @endif
+                                </div>
+                            </td>
 
                                 {{-- SALARIO --}}
                                 <td class="border-r border-gray-100 px-6 py-5 text-sm font-medium text-gray-600">
@@ -124,7 +128,6 @@
 
                                 </td>
 
-
                                 {{-- TIPO DE CONTRATO --}}
                                 <td class="border-r border-gray-100 px-6 py-5 text-sm font-medium text-gray-600">
 
@@ -132,14 +135,12 @@
 
                                 </td>
 
-
                                 {{-- UBICACIÓN --}}
                                 <td class="border-r border-gray-100 px-6 py-5 text-sm font-medium text-gray-600">
 
                                     {{ $oferta->ubicacion }}
 
                                 </td>
-
 
                                 {{-- PUBLICADO POR --}}
                                  <td class="border-r border-gray-100 px-6 py-5 text-sm font-medium text-gray-600">
@@ -151,7 +152,6 @@
                                 @endif
 
                     </td>
-
 
                                 {{-- ACCIONES --}}
                                 <td class="px-6 py-5">
@@ -168,7 +168,6 @@
                                             @include('layouts.partials.icons')
 
                                         </a>
-
 
                                         {{-- ELIMINAR --}}
                                         <button
@@ -187,7 +186,6 @@
                                 </td>
 
                             </tr>
-
 
                             {{-- MODAL ELIMINAR --}}
                             <x-modal
@@ -220,7 +218,6 @@
 
                                 </div>
 
-
                                 <x-slot:footer>
 
                                     <x-button
@@ -230,7 +227,6 @@
                                         Cancelar
 
                                     </x-button>
-
 
                                     <form
                                         action="{{ route('ofertas.destroy', $oferta->id) }}"
@@ -253,7 +249,6 @@
 
                             </x-modal>
 
-
                         @empty
 
                             {{-- ESTADO VACÍO --}}
@@ -270,20 +265,17 @@
 
                                         </div>
 
-
                                         <h3 class="text-lg font-semibold text-gray-800">
 
                                             No hay ofertas laborales registradas
 
                                         </h3>
 
-
                                         <p class="mx-auto mt-2 max-w-md text-sm text-gray-500">
 
                                             Todavía no existen ofertas laborales registradas en el sistema.
 
                                         </p>
-
 
                                         <a
                                             href="{{ route('ofertas.create') }}"
@@ -312,7 +304,6 @@
 
         </div>
 
-
         {{-- CONTADOR --}}
         @if ($ofertas->count() > 0)
 
@@ -331,7 +322,6 @@
                         : 'ofertas laborales registradas' }}
 
                 </p>
-
 
                 <div class="hidden items-center gap-2 text-xs text-gray-400 sm:flex">
 

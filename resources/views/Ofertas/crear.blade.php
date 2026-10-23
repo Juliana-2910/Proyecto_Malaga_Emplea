@@ -27,43 +27,6 @@
     {{-- Formulario --}}
     <div class="rounded-xl bg-white p-8 shadow">
 
-        @if (session('error'))
-
-            <div
-                class="mb-6 flex items-center justify-between rounded-xl border border-yellow-200 bg-yellow-50 px-4 py-3 text-sm text-yellow-700 shadow-sm"
-                x-data="{ show: true }"
-                x-show="show"
-                x-transition>
-
-                <div class="flex items-center gap-3">
-
-                    <div class="flex h-8 w-8 items-center justify-center rounded-full bg-yellow-100">
-
-                        @php($icon = 'exclamation-triangle')
-                        @include('layouts.partials.icons')
-
-                    </div>
-
-                    <span>
-                        {{ session('error') }}
-                    </span>
-
-                </div>
-
-                <button
-                    type="button"
-                    @click="show = false"
-                    class="ml-4 text-yellow-600 transition hover:text-yellow-900">
-
-                    @php($icon = 'x-mark')
-                    @include('layouts.partials.icons')
-
-                </button>
-
-            </div>
-
-        @endif
-
         <form action="{{ route('ofertas.store') }}" method="POST">
 
             @csrf
@@ -253,111 +216,114 @@
                 </div>
 
 
-                {{-- Empresa --}}
-                {{-- Quién publica la oferta --}}
-        <div>
-            <label for="tipoPublicador"
-           class="mb-2 block text-sm font-semibold text-gray-700">
-        ¿Quién publica la oferta?
-            </label>
+                            {{-- Empresa --}}
+                            {{-- Quién publica la oferta --}}
+                    <div>
+                        <label for="tipoPublicador"
+                    class="mb-2 block text-sm font-semibold text-gray-700">
+                    ¿Quién publica la oferta?
+                        </label>
 
-            <select name="tipoPublicador"
-            id="tipoPublicador"
-            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
+                        <select name="tipoPublicador"
+                        id="tipoPublicador"
+                        class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
 
-              <option value="empresa"
-            {{ old('tipoPublicador', 'empresa') == 'empresa' ? 'selected' : '' }}>
-            Empresa
-             </option>
+                        <option value="empresa"
+                        {{ old('tipoPublicador', 'empresa') == 'empresa' ? 'selected' : '' }}>
+                        Empresa
+                        </option>
 
-                <option value="usuario"
-            {{ old('tipoPublicador') == 'usuario' ? 'selected' : '' }}>
-            Persona natural
-             </option>
+                            <option value="usuario"
+                        {{ old('tipoPublicador') == 'usuario' ? 'selected' : '' }}>
+                        Persona natural
+                        </option>
 
-         </select>
-        </div>
+                    </select>
+                    </div>
 
-            {{-- Empresa --}}
-        <div id="empresaContainer">
-            <label for="idEmpresa"
-           class="mb-2 block text-sm font-semibold text-gray-700">
-        Empresa
-            </label>
+                        {{-- Empresa --}}
+                    <div id="empresaContainer">
+                        <label for="idEmpresa"
+                    class="mb-2 block text-sm font-semibold text-gray-700">
+                    Empresa
+                        </label>
 
-            <select name="idEmpresa"
-            id="idEmpresa"
-            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
+                        <select name="idEmpresa"
+                        id="idEmpresa"
+                        class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
 
-                <option value="">
-            Seleccione una empresa
-                </option>
+                            <option value="">
+                        Seleccione una empresa
+                            </option>
 
-                @foreach ($empresas as $empresa)
+                            @foreach ($empresas as $empresa)
 
-            <option value="{{ $empresa->id }}"
-                {{ old('idEmpresa') == $empresa->id ? 'selected' : '' }}>
-                {{ $empresa->nombreEmpresa }}
-            </option>
+                        <option value="{{ $empresa->id }}"
+                            {{ old('idEmpresa') == $empresa->id ? 'selected' : '' }}>
+                            {{ $empresa->nombreEmpresa }}
+                        </option>
 
-                @endforeach
+                            @endforeach
 
-            </select>
+                        </select>
 
-         @error('idEmpresa')
-                <p class="mt-1 text-sm text-red-500">
-            {{ $message }}
-                </p>
-        @enderror
-            </div>
+                    @error('idEmpresa')
+                            <p class="mt-1 text-sm text-red-500">
+                        {{ $message }}
+                            </p>
+                    @enderror
+                        </div>
 
-            {{-- Persona natural --}}
-        <div id="usuarioContainer" class="hidden">
-            <label for="idUsuario"
-           class="mb-2 block text-sm font-semibold text-gray-700">
-        Persona natural
-            </label>
+                        {{-- Persona natural --}}
+                    <div id="usuarioContainer" class="hidden">
+                        <label for="idUsuario"
+                    class="mb-2 block text-sm font-semibold text-gray-700">
+                    Persona natural
+                        </label>
 
-            <select name="idUsuario"
-            id="idUsuario"
-            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
+                        <select name="idUsuario"
+                        id="idUsuario"
+                        class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
 
-                <option value="">
-            Seleccione una persona
-                </option>
+                            <option value="">
+                        Seleccione una persona
+                            </option>
 
-                @foreach ($usuarios as $usuario)
+                            @foreach ($usuarios as $usuario)
 
-            <option value="{{ $usuario->id }}"
-                {{ old('idUsuario') == $usuario->id ? 'selected' : '' }}>
-                {{ $usuario->nombres }} {{ $usuario->apellidos }}
-            </option>
+                        <option value="{{ $usuario->id }}"
+                            {{ old('idUsuario') == $usuario->id ? 'selected' : '' }}>
+                            {{ $usuario->nombres }} {{ $usuario->apellidos }}
+                        </option>
 
-                @endforeach
+                            @endforeach
 
-            </select>
+                        </select>
 
-            @error('idUsuario')
-        <p class="mt-1 text-sm text-red-500">
-            {{ $message }}
-        </p>
-            @enderror
-        </div>
+                        @error('idUsuario')
+                            <p class="mt-1 text-sm text-red-500">
+                                {{ $message }}
+                            </p>
+                        @enderror
 
-            {{-- Botones --}}
-            <div class="mt-8 flex justify-end gap-3">
+                    </div>
 
-                <a href="{{ route('ofertas.index') }}"
-                   class="rounded-lg bg-gray-500 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#333333]">
-                    Cancelar
-                </a>
+                </div>
 
-                <button type="submit"
-                        class="rounded-lg bg-[#4DB6E8] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#333333]">
-                    Guardar oferta
-                </button>
+                {{-- Botones --}}
+                <div class="mt-8 flex justify-end gap-3">
 
-            </div>
+                    <a href="{{ route('ofertas.index') }}"
+                        class="rounded-lg bg-gray-500 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#333333]">
+                        Cancelar
+                    </a>
+
+                    <button type="submit"
+                            class="rounded-lg bg-[#4DB6E8] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#333333]">
+                        Guardar oferta
+                    </button>
+
+                </div>
 
         </form>
 
@@ -366,6 +332,7 @@
 </div>
 
 </div>
+
    {{-- JavaScript --}}
 <script>
     document.addEventListener('DOMContentLoaded', function () {

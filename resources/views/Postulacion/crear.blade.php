@@ -27,43 +27,6 @@
     {{-- Formulario --}}
     <div class="rounded-xl bg-white p-8 shadow">
 
-        @if (session('error'))
-
-            <div
-                class="mb-6 flex items-center justify-between rounded-xl border border-yellow-200 bg-yellow-50 px-4 py-3 text-sm text-yellow-700 shadow-sm"
-                x-data="{ show: true }"
-                x-show="show"
-                x-transition>
-
-                <div class="flex items-center gap-3">
-
-                    <div class="flex h-8 w-8 items-center justify-center rounded-full bg-yellow-100">
-
-                        @php($icon = 'exclamation-triangle')
-                        @include('layouts.partials.icons')
-
-                    </div>
-
-                    <span>
-                        {{ session('error') }}
-                    </span>
-
-                </div>
-
-                <button
-                    type="button"
-                    @click="show = false"
-                    class="ml-4 text-yellow-600 transition hover:text-yellow-900">
-
-                    @php($icon = 'x-mark')
-                    @include('layouts.partials.icons')
-
-                </button>
-
-            </div>
-
-        @endif
-
         <form action="{{ route('postulacion.store') }}" method="POST">
 
             @csrf

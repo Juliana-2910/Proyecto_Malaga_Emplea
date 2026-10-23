@@ -42,4 +42,13 @@ class ofertasRepository
         return $oferta->postulaciones()->exists();
     }
 
+    public function listarDisponiblesParaPostular()
+    {
+        return Oferta::whereDate(
+            'fechaLimite',
+            '>=',
+            now('America/Bogota')->toDateString()
+        )->get();
+    }
+
 }
