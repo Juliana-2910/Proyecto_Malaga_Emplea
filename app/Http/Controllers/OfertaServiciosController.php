@@ -48,7 +48,7 @@ class OfertaServiciosController extends Controller
         return redirect()->route('ofertaServicios.index')->with('success','Oferta Servicio creada exitosamente');
     }
 
-    public function show()
+    public function show(OfertaServicios $ofertaServicios)
     {
         //
     }

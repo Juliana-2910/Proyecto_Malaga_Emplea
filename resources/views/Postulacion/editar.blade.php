@@ -27,6 +27,43 @@
     {{-- Formulario --}}
     <div class="rounded-xl bg-white p-8 shadow">
 
+        @if (session('error'))
+
+            <div
+                class="mb-6 flex items-center justify-between rounded-xl border border-yellow-200 bg-yellow-50 px-4 py-3 text-sm text-yellow-700 shadow-sm"
+                x-data="{ show: true }"
+                x-show="show"
+                x-transition>
+
+                <div class="flex items-center gap-3">
+
+                    <div class="flex h-8 w-8 items-center justify-center rounded-full bg-yellow-100">
+
+                        @php($icon = 'exclamation-triangle')
+                        @include('layouts.partials.icons')
+
+                    </div>
+
+                    <span>
+                        {{ session('error') }}
+                    </span>
+
+                </div>
+
+                <button
+                    type="button"
+                    @click="show = false"
+                    class="ml-4 text-yellow-600 transition hover:text-yellow-900">
+
+                    @php($icon = 'x-mark')
+                    @include('layouts.partials.icons')
+
+                </button>
+
+            </div>
+
+        @endif
+
         <form action="{{ route('postulacion.update', $postulacion->id) }}" method="POST">
 
             @csrf
@@ -37,61 +74,33 @@
                 {{-- Fecha --}}
                 <div>
                     <label for="fecha"
-                           class="mb-2 block text-sm font-semibold text-gray-700">
+                        class="mb-2 block text-sm font-semibold text-gray-700">
                         Fecha
                     </label>
 
-                    <input type="date"
-                           name="fecha"
-                           id="fecha"
-                           value="{{ old('fecha', $postulacion->fecha) }}"
-                           class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
-
-                    @error('fecha')
-                        <p class="mt-1 text-sm text-red-500">
-                            {{ $message }}
-                        </p>
-                    @enderror
+                    <input
+                        type="text"
+                        id="fecha"
+                        value="{{ \Carbon\Carbon::parse($postulacion->fecha)->format('d/m/Y') }}"
+                        readonly
+                        class="w-full cursor-not-allowed rounded-lg border border-gray-300 bg-gray-100 px-4 py-2.5 text-sm text-gray-600"
+                    >
                 </div>
-
 
                 {{-- Estado --}}
                 <div>
                     <label for="estado"
-                           class="mb-2 block text-sm font-semibold text-gray-700">
+                        class="mb-2 block text-sm font-semibold text-gray-700">
                         Estado
                     </label>
 
-                    <select name="estado"
-                            id="estado"
-                            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
-
-                        <option value="">
-                            Seleccione un estado
-                        </option>
-
-                        <option value="Enviado"
-                            {{ old('estado', $postulacion->estado) == 'Enviado' ? 'selected' : '' }}>
-                            Enviado
-                        </option>
-
-                        <option value="Aceptado"
-                            {{ old('estado', $postulacion->estado) == 'Aceptado' ? 'selected' : '' }}>
-                            Aceptado
-                        </option>
-
-                        <option value="Rechazado"
-                            {{ old('estado', $postulacion->estado) == 'Rechazado' ? 'selected' : '' }}>
-                            Rechazado
-                        </option>
-
-                    </select>
-
-                    @error('estado')
-                        <p class="mt-1 text-sm text-red-500">
-                            {{ $message }}
-                        </p>
-                    @enderror
+                    <input
+                        type="text"
+                        id="estado"
+                        value="{{ $postulacion->estado }}"
+                        readonly
+                        class="w-full cursor-not-allowed rounded-lg border border-gray-300 bg-gray-100 px-4 py-2.5 text-sm text-gray-600"
+                    >
                 </div>
 
 

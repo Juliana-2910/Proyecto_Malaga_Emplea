@@ -23,10 +23,10 @@ class PostulacionStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'fecha' => 'required|date',
-            'estado' => 'required|in:Enviado,Aceptado,Rechazado',
             'idUsuario' => 'required|exists:usuarios,id',
             'idOferta' => 'required|exists:ofertas,id',
         ];
     }
+
+
 }

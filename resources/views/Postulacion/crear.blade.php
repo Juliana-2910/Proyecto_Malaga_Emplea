@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
-@section('title')
-    Crear postulación
-@endsection
+@section('title', 'Crear Postulación')
+
+@section('page-title', 'Panel Administrativo')
 
 @section('content')
 
@@ -14,7 +14,7 @@
     <div class="mb-6">
 
         <h1 class="text-3xl font-bold text-gray-800">
-            Crear postulación
+            Crear Postulación
         </h1>
 
         <p class="mt-1 text-sm text-gray-500">
@@ -27,6 +27,43 @@
     {{-- Formulario --}}
     <div class="rounded-xl bg-white p-8 shadow">
 
+        @if (session('error'))
+
+            <div
+                class="mb-6 flex items-center justify-between rounded-xl border border-yellow-200 bg-yellow-50 px-4 py-3 text-sm text-yellow-700 shadow-sm"
+                x-data="{ show: true }"
+                x-show="show"
+                x-transition>
+
+                <div class="flex items-center gap-3">
+
+                    <div class="flex h-8 w-8 items-center justify-center rounded-full bg-yellow-100">
+
+                        @php($icon = 'exclamation-triangle')
+                        @include('layouts.partials.icons')
+
+                    </div>
+
+                    <span>
+                        {{ session('error') }}
+                    </span>
+
+                </div>
+
+                <button
+                    type="button"
+                    @click="show = false"
+                    class="ml-4 text-yellow-600 transition hover:text-yellow-900">
+
+                    @php($icon = 'x-mark')
+                    @include('layouts.partials.icons')
+
+                </button>
+
+            </div>
+
+        @endif
+
         <form action="{{ route('postulacion.store') }}" method="POST">
 
             @csrf
@@ -36,68 +73,39 @@
                 {{-- Fecha --}}
                 <div>
                     <label for="fecha"
-                           class="mb-2 block text-sm font-semibold text-gray-700">
+                        class="mb-2 block text-sm font-semibold text-gray-700">
                         Fecha
                     </label>
 
-                    <input type="date"
-                           name="fecha"
-                           id="fecha"
-                           value="{{ old('fecha') }}"
-                           class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
-
-                    @error('fecha')
-                        <p class="mt-1 text-sm text-red-500">
-                            {{ $message }}
-                        </p>
-                    @enderror
+                    <input
+                        type="text"
+                        id="fecha"
+                        value="{{ \Carbon\Carbon::now('America/Bogota')->format('d/m/Y') }}"
+                        readonly
+                        class="w-full cursor-not-allowed rounded-lg border border-gray-300 bg-gray-100 px-4 py-2.5 text-sm text-gray-600"
+                    >
                 </div>
-
 
                 {{-- Estado --}}
                 <div>
                     <label for="estado"
-                           class="mb-2 block text-sm font-semibold text-gray-700">
+                        class="mb-2 block text-sm font-semibold text-gray-700">
                         Estado
                     </label>
 
-                    <select name="estado"
-                            id="estado"
-                            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
-
-                        <option value="">
-                            Seleccione un estado
-                        </option>
-
-                        <option value="Enviado"
-                            {{ old('estado') == 'Enviado' ? 'selected' : '' }}>
-                            Enviado
-                        </option>
-
-                        <option value="Aceptado"
-                            {{ old('estado') == 'Aceptado' ? 'selected' : '' }}>
-                            Aceptado
-                        </option>
-
-                        <option value="Rechazado"
-                            {{ old('estado') == 'Rechazado' ? 'selected' : '' }}>
-                            Rechazado
-                        </option>
-
-                    </select>
-
-                    @error('estado')
-                        <p class="mt-1 text-sm text-red-500">
-                            {{ $message }}
-                        </p>
-                    @enderror
+                    <input
+                        type="text"
+                        id="estado"
+                        value="Enviado"
+                        readonly
+                        class="w-full cursor-not-allowed rounded-lg border border-gray-300 bg-gray-100 px-4 py-2.5 text-sm text-gray-600"
+                    >
                 </div>
-
 
                 {{-- Usuario --}}
                 <div>
                     <label for="idUsuario"
-                           class="mb-2 block text-sm font-semibold text-gray-700">
+                        class="mb-2 block text-sm font-semibold text-gray-700">
                         Usuario
                     </label>
 
@@ -131,7 +139,7 @@
                 {{-- Oferta --}}
                 <div>
                     <label for="idOferta"
-                           class="mb-2 block text-sm font-semibold text-gray-700">
+                        class="mb-2 block text-sm font-semibold text-gray-700">
                         Oferta
                     </label>
 
@@ -169,13 +177,13 @@
             <div class="mt-8 flex justify-end gap-3">
 
                 <a href="{{ route('postulacion.index') }}"
-                   class="rounded-lg bg-gray-500 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#333333]">
+                    class="rounded-lg bg-gray-500 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#333333]">
                     Cancelar
                 </a>
 
                 <button type="submit"
                         class="rounded-lg bg-[#4DB6E8] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#333333]">
-                    Crear postulación
+                        Crear postulación
                 </button>
 
             </div>

@@ -45,7 +45,12 @@ class PostulacionController extends Controller
 
     public function store(PostulacionStoreRequest $request)
     {
-        $this->postulacionService->guardar($request->all());
+        try {
+            $this->postulacionService->guardar($request->all());
+        } catch (\Exception $e) {
+            return back()->withInput()->with('error', $e->getMessage());
+        }
+
         return redirect()->route('postulacion.index')->with('success', 'Postulación creada exitosamente.');
     }
 
@@ -65,9 +70,17 @@ class PostulacionController extends Controller
 
     public function update(int $id, PostulacionUpdateRequest $request)
     {
-        $this->postulacionService->actualizar($id, $request->all());
+        try {
+            $this->postulacionService->actualizar($id, $request->validated());
+        } catch (\Exception $e) {
+            return back()
+                ->withInput()
+                ->with('error', $e->getMessage());
+        }
 
-        return redirect()->route('postulacion.index')->with('actualizar', 'Postulación actualizada exitosamente.');
+        return redirect()
+            ->route('postulacion.index')
+            ->with('actualizar', 'Postulación actualizada exitosamente.');
     }
 
     public function destroy($id)
