@@ -57,4 +57,11 @@ class postulacionRepository
             })
             ->exists();
     }
+
+    public function tienePostulacionesEnCurso(int $idUsuario): bool
+    {
+        return Postulacion::where('idUsuario', $idUsuario)
+            ->whereIn('estado', ['Enviado', 'Aceptado'])
+            ->exists();
+    }
 }

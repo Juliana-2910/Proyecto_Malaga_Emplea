@@ -172,8 +172,7 @@
                             name="archivoCV"
                             id="archivoCV"
                             accept=".pdf"
-                            class="hidden"
-                            required>
+                            class="hidden">
 
                         <div class="rounded-xl border border-gray-200 bg-gray-50 p-3">
 
@@ -197,7 +196,7 @@
                                     </p>
 
                                     <p class="text-xs text-gray-500">
-                                        Selecciona un archivo en formato PDF
+                                        Selecciona un archivo en formato PDF, tamaño maximo: 5 MB. "subirlo es opcional"
                                     </p>
 
                                 </div>

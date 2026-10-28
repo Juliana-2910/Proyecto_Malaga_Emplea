@@ -34,7 +34,7 @@ class usuariosService{
     {
     return $this->usuariosRepository->listarUsuariosConPostulaciones();
     }
-    
+
     public function listarUsuariosSinPostulaciones()
     {
     return $this->usuariosRepository->listarUsuariosSinPostulaciones();
@@ -52,7 +52,7 @@ class usuariosService{
             $foto = $datos['fotoPerfil'];
             $nombreFoto = time() . '_' . $foto->getClientOriginalName();
             $ruta = $foto->storeAs(
-                'usuarios/fotos',
+                'usuarios',
                 $nombreFoto,
                 'public'
             ); // Guardar foto de perfil
@@ -94,7 +94,7 @@ class usuariosService{
             $foto = $datos['fotoPerfil'];
             $nombreFoto = time() . '_' . $foto->getClientOriginalName();
             $ruta = $foto->storeAs(
-                'usuarios/fotos',
+                'usuarios',
                 $nombreFoto,
                 'public'
             );

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->text('perfilProfesional');
             $table->text('experienciaLaboral');
             $table->timestamp('fechaActualizacion');
-            $table->string('archivoCV', 255);
+            $table->string('archivoCV', 255)->nullable();
             $table->unsignedBigInteger('idUsuario');
             $table->foreign('idUsuario')->references('id')->on('usuarios');
             $table->timestamps();

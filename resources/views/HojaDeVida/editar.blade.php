@@ -257,6 +257,7 @@
 
 
                     <p class="mt-2 text-xs text-gray-500">
+                        Formato PDF, Tamaño máximo: 5 MB. <br>
                         Si no seleccionas un nuevo archivo, se conservará el documento actual.
                     </p>
 

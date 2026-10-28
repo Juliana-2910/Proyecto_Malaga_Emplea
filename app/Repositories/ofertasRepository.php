@@ -52,7 +52,7 @@ class ofertasRepository
         )->get();
     }
 
-}
+
     // Subconsulta: ofertas con más postulaciones que el promedio
     public function listarOfertasSobrePromedioPostulaciones()
     {

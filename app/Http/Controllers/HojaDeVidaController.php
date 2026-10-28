@@ -63,7 +63,11 @@ class HojaDeVidaController extends Controller
 
     public function destroy(int $id)
     {
-        $this->hojaDeVidaService->eliminar($id);
+        try {
+            $this->hojaDeVidaService->eliminar($id);
+        } catch(\Exception $e){
+            return back()->withInput()->with('error', $e->getMessage());
+        }
         return redirect()->route('hojaDeVida.index')->with('eliminar', 'Hoja de vida eliminada exitosamente.');
     }
 }

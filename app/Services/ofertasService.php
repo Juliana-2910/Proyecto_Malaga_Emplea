@@ -67,7 +67,7 @@ class ofertasService
             );
         }
     }
-}
+
     public function listarOfertasSobrePromedioPostulaciones()
     {
         return $this->ofertasrepository->listarOfertasSobrePromedioPostulaciones();
