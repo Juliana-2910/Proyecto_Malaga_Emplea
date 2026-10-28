@@ -26,6 +26,8 @@ class hojaDeVidaService
 
     public function guardar(array $datos)
     {
+        $this->validarHojaDeVidaUnica((int) $datos['idUsuario']);
+
         $archivo = $datos['archivoCV'] ?? null;
 
         unset($datos['archivoCV']);
@@ -124,5 +126,12 @@ class hojaDeVidaService
         return $ruta;
     }
 
-
+    private function validarHojaDeVidaUnica(int $idUsuario): void
+    {
+        if ($this->hojaDeVidaRepository->existePorUsuario($idUsuario)) {
+            throw new Exception(
+                'Este usuario ya tiene una hoja de vida registrada. Puede editar la existente.'
+            );
+        }
+    }
 }

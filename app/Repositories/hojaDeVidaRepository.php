@@ -32,4 +32,9 @@ class hojaDeVidaRepository{
         $hojaDeVida = HojaDeVida::findOrFail($id);
         $hojaDeVida->update($datos);
     }
+
+    public function existePorUsuario(int $idUsuario): bool
+    {
+        return HojaDeVida::where('idUsuario', $idUsuario)->exists();
+    }
 }
