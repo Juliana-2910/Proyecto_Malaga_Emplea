@@ -201,7 +201,7 @@
                                     </div>
 
                                     <p class="text-[10px] font-bold uppercase tracking-wide text-gray-500">
-                                        Perfil Profesional
+                                        Perfil Personal
                                     </p>
 
                                 </div>
