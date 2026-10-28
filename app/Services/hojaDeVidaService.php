@@ -3,15 +3,20 @@
 namespace App\Services;
 
 use App\Repositories\hojaDeVidaRepository;
+use App\Repositories\postulacionRepository;
+use Exception;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
 class hojaDeVidaService
 {
     private hojaDeVidaRepository $hojaDeVidaRepository;
+    private postulacionRepository $postulacionRepository;
 
-    public function __construct(hojaDeVidaRepository $hojaDeVidaRepository)
+    public function __construct(hojaDeVidaRepository $hojaDeVidaRepository, postulacionRepository $postulacionRepository)
     {
         $this->hojaDeVidaRepository = $hojaDeVidaRepository;
+        $this->postulacionRepository = $postulacionRepository;
     }
 
     public function listarTodos()
@@ -21,44 +26,19 @@ class hojaDeVidaService
 
     public function guardar(array $datos)
     {
-        if (isset($datos['archivoCV'])) {
-            $archivo = $datos['archivoCV'];
-            $datos['archivoCV'] = 'pendiente'; // Guardamos temporalmente un valor para poder crear el registro
-            $hojaDeVida = $this->hojaDeVidaRepository->guardar($datos); // Crear la hoja de vida y obtener su ID
-            $nombreOriginal = pathinfo(
-                $archivo->getClientOriginalName(),
-                PATHINFO_FILENAME
-            ); // Obtener nombre original del archivo
-            $extension = $archivo->getClientOriginalExtension(); // Obtener extensión
-            $nombreArchivo = $nombreOriginal . '_' . $hojaDeVida->id . '.' . $extension; // Crear nombre único con ID
-            $ruta = $archivo->storeAs(
-                'hojasDeVida',
-                $nombreArchivo,
-                'public'
-            ); // Guardar el archivo
-            $this->hojaDeVidaRepository->actualizar(
-                $hojaDeVida->id,
-                [
-                    'archivoCV' => $ruta
-                ]
-            ); // Actualizamos la ruta del archivo en la base de datos
-
-            return;
-        }
-
-        $this->hojaDeVidaRepository->guardar($datos);
+        $this->validarHojaDeVidaUnica((int) $datos['idUsuario']);
+        $archivo = $this->extraerArchivo($datos);
+        $hojaDeVida = $this->hojaDeVidaRepository->guardar($datos);
+        $this->asociarArchivo($archivo, $hojaDeVida->id);
+        return $hojaDeVida;
     }
 
     public function eliminar(int $id)
     {
-        $hojaDeVida = $this->hojaDeVidaRepository->buscarPorId($id); // Obtener la hoja de vida antes de eliminarla
-        if ($hojaDeVida->archivoCV) {
-
-            Storage::disk('public')->delete(
-                $hojaDeVida->archivoCV
-            );
-        } // Eliminar archivo del storage si existe
-        $this->hojaDeVidaRepository->eliminar($id); // Eliminar registro de la base de datos
+        $hojaDeVida = $this->hojaDeVidaRepository->buscarPorId($id);
+        $this->validarQueNoTengaPostulacionesEnCurso($hojaDeVida->idUsuario);
+        $this->hojaDeVidaRepository->eliminar($id);
+        $this->eliminarArchivo($hojaDeVida->archivoCV);
     }
 
     public function buscarPorId(int $id)
@@ -68,27 +48,75 @@ class hojaDeVidaService
 
     public function actualizar(int $id, array $datos)
     {
-        $hojaDeVida = $this->hojaDeVidaRepository->buscarPorId($id); // Buscar hoja de vida actual
-        if (isset($datos['archivoCV'])) {
-            $archivo = $datos['archivoCV'];
-            if ($hojaDeVida->archivoCV) {
-                Storage::disk('public')->delete(
-                    $hojaDeVida->archivoCV
-                ); // Eliminar archivo anterior
-            }
-            $nombreOriginal = pathinfo(
-                $archivo->getClientOriginalName(),
-                PATHINFO_FILENAME
-            ); // Obtener nombre original
-            $extension = $archivo->getClientOriginalExtension(); // Obtener extensión
-            $nombreArchivo = $nombreOriginal . '_' . $hojaDeVida->id . '.' . $extension; // Crear nombre: nombreOriginal_ID.extension
-            $ruta = $archivo->storeAs(
-                'hojasDeVida',
-                $nombreArchivo,
-                'public'
-            ); // Guardar nuevo archivo
-            $datos['archivoCV'] = $ruta; // Guardar la ruta en los datos
+        $hojaDeVida = $this->hojaDeVidaRepository->buscarPorId($id);
+        $archivoAnterior = $hojaDeVida->archivoCV;
+        $archivo = $this->extraerArchivo($datos);
+
+        if (!$archivo) {$this->hojaDeVidaRepository->actualizar($id, $datos);
+            return;
         }
-        $this->hojaDeVidaRepository->actualizar($id, $datos); // Actualizar la hoja de vida
+
+        $this->reemplazarArchivo($id, $datos, $archivo,$archivoAnterior);
+    }
+
+    private function extraerArchivo(array &$datos): ?UploadedFile
+    {
+        $archivo = $datos['archivoCV'] ?? null;
+        unset($datos['archivoCV']);
+        return $archivo instanceof UploadedFile ? $archivo : null;
+    }
+
+    private function asociarArchivo(?UploadedFile $archivo, int $id): void
+    {
+        if (!$archivo) {
+            return;
+        }
+
+        $ruta = $this->guardarArchivo($archivo, $id);
+        $this->hojaDeVidaRepository->actualizar($id, ['archivoCV' => $ruta]);
+    }
+
+    private function reemplazarArchivo(int $id, array $datos, UploadedFile $archivo, ?string $archivoAnterior): void
+    {
+        $rutaNueva = $this->guardarArchivo($archivo, $id);
+
+        try {
+            $datos['archivoCV'] = $rutaNueva;
+            $this->hojaDeVidaRepository->actualizar($id, $datos);
+        } catch (\Throwable $e) {$this->eliminarArchivo($rutaNueva); throw $e;}
+
+        $this->eliminarArchivo($archivoAnterior);
+    }
+
+    private function validarHojaDeVidaUnica(int $idUsuario): void
+    {
+        if ($this->hojaDeVidaRepository->existePorUsuario($idUsuario)) {
+            throw new Exception(
+                'Este usuario ya tiene una hoja de vida registrada. Puede editar la existente.'
+            );
+        }
+    }
+
+    private function validarQueNoTengaPostulacionesEnCurso(int $idUsuario): void
+    {
+        if ($this->postulacionRepository->tienePostulacionesEnCurso($idUsuario)){
+            throw new Exception(
+                'No se puede eliminar la hoja de vida porque el usuario tiene postulaciones en curso.'
+            );
+        }
+    }
+
+    private function guardarArchivo(UploadedFile $archivo, int $id): string
+    {
+        $nombreOriginal = pathinfo( $archivo->getClientOriginalName(), PATHINFO_FILENAME);
+        $nombreSeguro = preg_replace('/[^A-Za-z0-9_-]/', '_',$nombreOriginal);
+        $nombreArchivo = $nombreSeguro . '_' . $id . '_' . uniqid() . '.pdf';
+        return $archivo->storeAs('hojasDeVida', $nombreArchivo, 'public'
+        );
+    }
+
+    private function eliminarArchivo(?string $ruta): void
+    {
+        if ($ruta) {Storage::disk('public')->delete($ruta);}
     }
 }

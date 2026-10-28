@@ -107,7 +107,7 @@
 
                         <label for="nivelEducativo"
                             class="mb-2 block text-sm font-semibold text-gray-700">
-                            Nivel educativo
+                            Nivel Educativo
                         </label>
 
                         <select name="nivelEducativo"
@@ -257,6 +257,7 @@
 
 
                     <p class="mt-2 text-xs text-gray-500">
+                        Formato PDF, Tamaño máximo: 5 MB. <br>
                         Si no seleccionas un nuevo archivo, se conservará el documento actual.
                     </p>
 
@@ -275,13 +276,13 @@
 
                     <label for="perfilProfesional"
                         class="mb-2 block text-sm font-semibold text-gray-700">
-                        Perfil profesional
+                        Perfil Personal
                     </label>
 
                     <textarea name="perfilProfesional"
                         id="perfilProfesional"
                         rows="4"
-                        placeholder="Describa el perfil profesional"
+                        placeholder="Describa el perfil personal"
                         class="w-full resize-none rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-700 transition focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]"
                         required>{{ old('perfilProfesional', $hojaDeVida->perfilProfesional) }}</textarea>
 
@@ -299,7 +300,7 @@
 
                     <label for="experienciaLaboral"
                         class="mb-2 block text-sm font-semibold text-gray-700">
-                        Experiencia laboral
+                        Experiencia Laboral
                     </label>
 
                     <textarea name="experienciaLaboral"

@@ -36,7 +36,11 @@ class HojaDeVidaController extends Controller
     {
         $datos = $request->validated();
         $datos['fechaActualizacion'] = now('America/Bogota');
-        $this->hojaDeVidaService->guardar($datos);
+        try {
+            $this->hojaDeVidaService->guardar($datos);
+        } catch(\Exception $e){
+            return back()->withInput()->with('error', $e->getMessage());
+        }
         return redirect()->route('hojaDeVida.index')->with('success', 'Hoja de vida creada exitosamente.');
     }
 
@@ -63,7 +67,11 @@ class HojaDeVidaController extends Controller
 
     public function destroy(int $id)
     {
-        $this->hojaDeVidaService->eliminar($id);
+        try {
+            $this->hojaDeVidaService->eliminar($id);
+        } catch(\Exception $e){
+            return back()->withInput()->with('error', $e->getMessage());
+        }
         return redirect()->route('hojaDeVida.index')->with('eliminar', 'Hoja de vida eliminada exitosamente.');
     }
 }
