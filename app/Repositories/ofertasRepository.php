@@ -109,4 +109,77 @@ class ofertasRepository
     ");
 }
 
+/* ===== Vista "Ofertas con sesión" (usuario) ===== */
+
+    public function listarActivas(array $filtros, int $porPagina)
+    {
+        $consulta = Oferta::with(['empresa', 'usuario'])
+            ->whereDate('fechaLimite', '>=', today())
+            ->when($filtros['q'] ?? null, fn ($q, $v) => $q->where('titulo', 'like', "%{$v}%"))
+            ->when($filtros['contrato'] ?? null, fn ($q, $v) => $q->where('tipoContrato', $v))
+            ->when(($filtros['publica'] ?? null) === 'empresas', fn ($q) => $q->whereNotNull('idEmpresa'))
+            ->when(($filtros['publica'] ?? null) === 'personas', fn ($q) => $q->whereNotNull('idUsuario'))
+            ->when($filtros['categoria'] ?? null, function ($q, $idCategoria) {
+                $q->whereIn('id', \App\Models\OfertaServicios::query()
+                    ->select('idOferta')
+                    ->whereHas('servicio', fn ($s) => $s->where('idCategoria', $idCategoria)));
+            });
+
+        match ($filtros['orden'] ?? 'recientes') {
+            'antiguas' => $consulta->orderBy('fechaPublicacion')->orderBy('id'),
+            'vencen'   => $consulta->orderBy('fechaLimite')->orderBy('id'),
+            default    => $consulta->orderByDesc('fechaPublicacion')->orderByDesc('id'),
+        };
+
+        return $consulta->paginate($porPagina)->withQueryString();
+    }
+
+    /** Devuelve [idOferta => nombre de la categoría]. */
+    public function categoriasPorOferta(array $idsOfertas): array
+    {
+        return \App\Models\OfertaServicios::with('servicio.categoria')
+            ->whereIn('idOferta', $idsOfertas)
+            ->get()
+            ->groupBy('idOferta')
+            ->map(fn ($filas) => optional($filas->first()->servicio?->categoria)->nombre)
+            ->all();
+    }
+
+    public function listarCategorias()
+    {
+        return \App\Models\Categoria::orderBy('nombre')->get(['id', 'nombre']);
+    }
+
+    public function idsOfertasPostuladas(int $idUsuario): array
+    {
+        return \App\Models\Postulacion::where('idUsuario', $idUsuario)->pluck('idOferta')->all();
+    }
+
+    /** Devuelve ['Enviado' => n, 'Aceptado' => n, 'Rechazado' => n]. */
+    public function contarPostulacionesPorEstado(int $idUsuario): array
+    {
+        return \App\Models\Postulacion::where('idUsuario', $idUsuario)
+            ->selectRaw('estado, COUNT(*) as total')
+            ->groupBy('estado')
+            ->pluck('total', 'estado')
+            ->all();
+    }
+
+    public function contarPostulantesPorRevisar(int $idUsuario): int
+    {
+        return \App\Models\Postulacion::where('estado', 'Enviado')
+            ->whereHas('oferta', fn ($q) => $q->where('idUsuario', $idUsuario))
+            ->count();
+    }
+
+    public function hojaDeVidaDe(int $idUsuario)
+    {
+        return \App\Models\HojaDeVida::where('idUsuario', $idUsuario)->latest('id')->first();
+    }
+
+    /** TEMPORAL: mientras no exista el login se usa el primer usuario registrado. */
+    public function usuarioDePrueba()
+    {
+        return \App\Models\Usuario::first();
+    }
 }
