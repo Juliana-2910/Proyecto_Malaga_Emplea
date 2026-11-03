@@ -29,12 +29,12 @@ class AuditarRutas extends Command
 
             $middleware = $router->gatherRouteMiddleware($ruta);
 
-            if ($this->tiene($middleware, [RedirectIfAuthenticated::class])) {
+            if ($this->tiene($middleware, [RedirectIfAuthenticated::class, 'guest'])) {
                 continue;
             }
 
-            $conSesion = $this->tiene($middleware, [Authenticate::class]);
-            $conPermiso = $this->tiene($middleware, [Authorize::class, AutorizarModulo::class]);
+            $conSesion = $this->tiene($middleware, [Authenticate::class, 'auth']);
+            $conPermiso = $this->tiene($middleware, [Authorize::class, AutorizarModulo::class, 'can', 'modulo']);
             $protegida = $conSesion && $conPermiso;
 
             if (! $protegida) {

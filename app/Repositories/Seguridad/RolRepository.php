@@ -3,13 +3,26 @@
 namespace App\Repositories\Seguridad;
 
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 
 class RolRepository
 {
     public function listar(): Collection
     {
-        return Role::with('permissions')->withCount('users')->orderBy('name')->get();
+        $roles = Role::with('permissions')->orderBy('name')->get();
+        $columna = $this->columnaDelRol();
+
+        $conteos = DB::table(config('permission.table_names.model_has_roles'))
+            ->select($columna, DB::raw('count(*) as total'))
+            ->groupBy($columna)
+            ->pluck('total', $columna);
+
+        foreach ($roles as $rol) {
+            $rol->users_count = $conteos[$rol->getKey()] ?? 0;
+        }
+
+        return $roles;
     }
 
     public function listarNombres(): array
@@ -48,11 +61,18 @@ class RolRepository
 
     public function contarUsuarios(Role $rol): int
     {
-        return $rol->users()->count();
+        return DB::table(config('permission.table_names.model_has_roles'))
+            ->where($this->columnaDelRol(), $rol->getKey())
+            ->count();
     }
 
     public function buscarPorNombre(string $nombre): ?Role
     {
         return Role::where('name', $nombre)->where('guard_name', config('seguridad.guard'))->first();
+    }
+
+    private function columnaDelRol(): string
+    {
+        return config('permission.column_names.role_pivot_key') ?? 'role_id';
     }
 }

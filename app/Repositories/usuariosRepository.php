@@ -22,7 +22,7 @@ class usuariosRepository{
 
     public function guardar(array $datos)
     {
-        
+
         Usuario::create($datos);
     }
 
@@ -44,4 +44,6 @@ class usuariosRepository{
         $usuario = Usuario::findOrFail($id);
         $usuario->update($datos);
     }
+
+    
 }

@@ -18,7 +18,10 @@ return new class extends Migration
             $table->string('nit')->unique();
             $table->string('direccion');
             $table->enum('estado',['activo','inactivo']);
-            $table->string('correoElectronico')->unique();
+
+            $table->string('email')->unique(); 
+            $table->timestamp('email_verified_at')->nullable();
+
             $table->string('password');
             $table->timestamps();
         });

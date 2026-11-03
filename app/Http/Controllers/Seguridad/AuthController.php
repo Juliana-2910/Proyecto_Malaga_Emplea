@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Seguridad;
 
 use App\Http\Controllers\Controller;
 use App\Services\Seguridad\AuthService;
+use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class AuthController extends Controller
@@ -19,21 +21,29 @@ class AuthController extends Controller
 
     public function login(Request $request): RedirectResponse
     {
+        $tipos = array_keys(config('seguridad.login') ?? ['usuario' => true]);
+
         $credenciales = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required', 'string'],
+            'tipo' => ['nullable', Rule::in($tipos)],
         ]);
 
-        $autenticado = $this->authService->autenticar(
-            $credenciales['email'],
-            $credenciales['password'],
-            $request->boolean('remember')
-        );
+        try {
+            $autenticado = $this->authService->autenticar(
+                $credenciales['email'],
+                $credenciales['password'],
+                $request->boolean('remember'),
+                $credenciales['tipo'] ?? 'usuario'
+            );
+        } catch (Exception $e) {
+            return back()->withErrors(['email' => $e->getMessage()])->onlyInput('email', 'tipo');
+        }
 
         if (! $autenticado) {
             return back()
                 ->withErrors(['email' => 'Las credenciales no coinciden con nuestros registros.'])
-                ->onlyInput('email');
+                ->onlyInput('email', 'tipo');
         }
 
         $request->session()->regenerate();

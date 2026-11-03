@@ -7,7 +7,26 @@ return [
 
     'permiso_admin' => 'gestionar seguridad',
 
-    'roles_protegidos' => ['administrador'],
+    'roles_protegidos' => ['administrador', 'empresa'],
+
+    'rol_empresa' => 'empresa',
+
+    'login' => [
+    'usuario' => [
+        'guard' => 'web',
+        'modelo' => App\Models\Usuario::class,
+        'columna_email' => 'email',
+        'columna_estado' => 'estado',
+        'valor_activo' => 'activo',
+    ],
+    'empresa' => [
+        'guard' => 'empresa',
+        'modelo' => App\Models\Empresa::class,
+        'columna_email' => 'correoElectronico',
+        'columna_estado' => 'estado',
+        'valor_activo' => 'activo',
+    ],
+],
 
     'roles_no_desactivables' => ['administrador'],
 

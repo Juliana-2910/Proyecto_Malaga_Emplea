@@ -14,23 +14,18 @@ use App\Http\Controllers\PostulacionController;
 
 
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth:web,empresa')->group(function () {
 
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
-
-Route::resource('roles', RolesController::class);
-Route::resource('categorias', CategoriaController::class);
-Route::resource('empresas', EmpresaController::class);
-Route::resource('usuarios', UsuarioController::class);
-Route::resource('ofertas', OfertaController::class);
-Route::resource('hojaDeVida', HojaDeVidaController::class);
-Route::resource('servicios', ServiciosController::class);
-Route::resource('postulacion', PostulacionController::class);
-Route::resource('calificacion', CalificacionController::class);
-Route::resource('ofertaServicios', OfertaServiciosController::class);
-
-
-
-
+    Route::resource('roles', RolesController::class)->middleware('can:gestionar seguridad');
+    Route::resource('categorias', CategoriaController::class)->middleware('modulo:categorias');
+    Route::resource('empresas', EmpresaController::class)->middleware('modulo:empresas');
+    Route::resource('usuarios', UsuarioController::class)->middleware('modulo:usuarios');
+    Route::resource('ofertas', OfertaController::class)->middleware('modulo:ofertas');
+    Route::resource('hojaDeVida', HojaDeVidaController::class)->middleware('modulo:hojadevida');
+    Route::resource('servicios', ServiciosController::class)->middleware('modulo:servicios');
+    Route::resource('postulacion', PostulacionController::class)->middleware('modulo:postulacion');
+    Route::resource('calificacion', CalificacionController::class)->middleware('modulo:calificacion');
+    Route::resource('ofertaServicios', OfertaServiciosController::class)->middleware('modulo:ofertaservicios');
 });

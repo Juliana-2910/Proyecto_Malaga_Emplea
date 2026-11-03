@@ -7,16 +7,19 @@ use App\Http\Controllers\Seguridad\RolController;
 use App\Http\Controllers\Seguridad\UsuarioRolController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware('web')->group(function () {
+$guards = collect(config('seguridad.login') ?? [])->pluck('guard')->unique()->implode(',')
+    ?: config('seguridad.guard');
 
-    Route::middleware('guest')->group(function () {
+Route::middleware('web')->group(function () use ($guards) {
+
+    Route::middleware('guest:' . $guards)->group(function () {
         Route::get('/', [AuthController::class, 'showLoginForm'])->name('login');
         Route::post('/login', [AuthController::class, 'login'])
             ->middleware('throttle:5,1')
             ->name('login.store');
     });
 
-    Route::middleware('auth')->group(function () {
+    Route::middleware('auth:' . $guards)->group(function () {
         Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
         Route::prefix('seguridad')

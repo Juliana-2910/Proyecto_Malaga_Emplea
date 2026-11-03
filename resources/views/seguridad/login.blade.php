@@ -18,6 +18,20 @@
                 <form action="{{ route('login.store') }}" method="POST" class="space-y-4">
                     @csrf
 
+                    @if (config('seguridad.login'))
+    <div>
+        <span class="block text-sm font-medium text-slate-700 mb-1">Soy</span>
+        <div class="flex gap-6 text-sm">
+            @foreach (array_keys(config('seguridad.login')) as $tipo)
+                <label class="flex items-center gap-2">
+                    <input type="radio" name="tipo" value="{{ $tipo }}" @checked(old('tipo', array_key_first(config('seguridad.login'))) === $tipo)>
+                    {{ ucfirst($tipo) }}
+                </label>
+            @endforeach
+        </div>
+    </div>
+@endif
+
                     <div>
                         <label for="email" class="block text-sm font-medium text-slate-700 mb-1">Correo electrónico</label>
                         <input type="email" name="email" id="email" value="{{ old('email') }}" required autofocus autocomplete="email"
