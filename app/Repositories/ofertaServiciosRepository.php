@@ -13,7 +13,7 @@ class ofertaServiciosRepository
 
     public function guardar(array $datos)
     {
-        OfertaServicios::create($datos);
+        return OfertaServicios::create($datos);
     }
 
     public function eliminar(int $id)
@@ -31,5 +31,10 @@ class ofertaServiciosRepository
         $postulacion = OfertaServicios::findOrFail($id);
 
         $postulacion->update($datos);
+    }
+
+    public function actualizarPorOferta(int $idOferta, int $idServicio)
+    {
+        return OfertaServicios::updateOrCreate(['idOferta' => $idOferta],['idServicio' => $idServicio]);
     }
 }

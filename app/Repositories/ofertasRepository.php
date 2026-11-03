@@ -14,7 +14,7 @@ class ofertasRepository
 
     public function guardar(array $datos)
     {
-        Oferta::create($datos);
+        return Oferta::create($datos);
     }
 
     public function eliminar(int $id)
@@ -24,7 +24,7 @@ class ofertasRepository
 
     public function buscarporid(int $id)
     {
-        return Oferta::findOrFail($id);
+        return Oferta::with(['ofertaServicio.servicio.categoria'])->findOrFail($id);
     }
 
     public function actualizar(int $id, array $datos)

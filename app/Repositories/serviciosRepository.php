@@ -12,6 +12,13 @@ class serviciosRepository{
         return $servicios;
     }
 
+    public function listarPorCategoria(int $idCategoria)
+    {
+        return Servicios::where('idCategoria', $idCategoria)
+            ->orderBy('nombre')
+            ->get();
+    }
+
     public function guardar(array $datos)
     {
         Servicios::create($datos);

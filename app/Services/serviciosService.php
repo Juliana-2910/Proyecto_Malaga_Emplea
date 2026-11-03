@@ -18,6 +18,11 @@ class serviciosService{
         return $this->serviciosRepository->listarTodos();
     }
 
+    public function listarPorCategoria(int $idCategoria)
+    {
+        return $this->serviciosRepository->listarPorCategoria($idCategoria);
+    }
+
     public function guardar(array $datos)
     {
         $this->serviciosRepository->guardar($datos);
