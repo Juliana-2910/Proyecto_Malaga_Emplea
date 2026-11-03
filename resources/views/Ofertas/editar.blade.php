@@ -34,6 +34,56 @@
 
             <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
 
+            {{-- Categoría --}}
+            <div>
+                <label for="idCategoria"
+                    class="mb-2 block text-sm font-semibold text-gray-700">
+                    Categoría
+                </label>
+
+                <select name="idCategoria"
+                    id="idCategoria"
+                    required
+                    class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
+
+                    <option value="">Seleccione una categoría</option>
+
+                    @foreach ($categorias as $categoria)
+                        <option value="{{ $categoria->id }}"
+                            {{ old('idCategoria', $oferta->ofertaServicio->first()?->servicio?->idCategoria) == $categoria->id ? 'selected' : '' }}>
+                            {{ $categoria->nombre }}
+                        </option>
+                    @endforeach
+
+                </select>
+
+                @error('idCategoria')
+                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                @enderror
+            </div>
+
+
+            {{-- Servicio --}}
+            <div>
+                <label for="idServicio"
+                    class="mb-2 block text-sm font-semibold text-gray-700">
+                    Servicio
+                </label>
+
+                <select name="idServicio"
+                    id="idServicio"
+                    required
+                    class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
+
+                    <option value="">Seleccione primero una categoría</option>
+
+                </select>
+
+                @error('idServicio')
+                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                @enderror
+            </div>
+
                 {{-- Título --}}
                 <div>
                     <label for="titulo"
@@ -79,7 +129,7 @@
 
 
                 {{-- Descripción --}}
-                <div class="md:col-span-2">
+                <div>
                     <label for="descripcion"
                         class="mb-2 block text-sm font-semibold text-gray-700">
                             Descripción
@@ -100,7 +150,7 @@
 
 
                 {{-- Requisitos --}}
-                <div class="md:col-span-2">
+                <div>
                     <label for="requisitos"
                         class="mb-2 block text-sm font-semibold text-gray-700">
                             Requisitos
@@ -372,6 +422,71 @@
         tipoPublicador.addEventListener('change', mostrarPublicador);
 
         mostrarPublicador();
+
+        // Servicios asociados a cada categoría //
+        const servicios = @json($servicios->map(fn($servicio) => [
+            'id' => $servicio->id,
+            'nombre' => $servicio->nombre,
+            'idCategoria' => $servicio->idCategoria
+        ])->values());
+
+        const categoriaSelect = document.getElementById('idCategoria');
+        const servicioSelect = document.getElementById('idServicio');
+
+        const categoriaActual = @json($oferta->ofertaServicio->first()?->servicio?->idCategoria);
+        const servicioActual = @json($oferta->ofertaServicio->first()?->idServicio);
+
+        const categoriaAnterior = @json(old('idCategoria', $oferta->ofertaServicio->first()?->servicio?->idCategoria));
+        const servicioAnterior = @json(old('idServicio', $oferta->ofertaServicio->first()?->idServicio));
+
+        function mostrarServicios() {
+
+            const idCategoria = categoriaSelect.value;
+
+            servicioSelect.innerHTML = '';
+            servicioSelect.disabled = true;
+
+            const opcionInicial = document.createElement('option');
+
+            opcionInicial.value = '';
+            opcionInicial.textContent = idCategoria
+                ? 'Seleccione un servicio'
+                : 'Seleccione primero una categoría';
+
+            servicioSelect.appendChild(opcionInicial);
+
+            if (!idCategoria) return;
+
+            const serviciosCategoria = servicios.filter(
+                servicio => servicio.idCategoria == idCategoria
+            );
+
+            serviciosCategoria.forEach(servicio => {
+
+                const opcion = document.createElement('option');
+
+                opcion.value = servicio.id;
+                opcion.textContent = servicio.nombre;
+
+                if (String(servicio.id) === String(servicioAnterior)) {
+                    opcion.selected = true;
+                }
+
+                servicioSelect.appendChild(opcion);
+            });
+
+            servicioSelect.disabled = false;
+        }
+
+        if (categoriaAnterior) {
+            categoriaSelect.value = categoriaAnterior;
+        }
+
+        categoriaSelect.addEventListener('change', function () {
+            mostrarServicios();
+        });
+
+        mostrarServicios();
     });
 </script>
 

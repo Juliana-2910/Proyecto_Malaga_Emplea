@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Oferta;
 use App\Services\ofertasService;
 use App\Services\usuariosService;
+use App\Services\categoriasService;
+use App\Services\serviciosService;
 use App\Http\Requests\OfertaStoreRequest;
 use App\Http\Requests\OfertaUpdateRequest;
 use App\Services\empresasServices;
@@ -15,12 +17,16 @@ class OfertaController extends Controller
     private usuariosService $usuariosService;
     private ofertasService $ofertasService;
     private empresasServices $empresasServices;
+    private categoriasService $categoriasService;
+    private serviciosService $serviciosService;
 
-    public function __construct(ofertasService $ofertasService, empresasServices $empresasServices, usuariosService $usuariosService)
+    public function __construct(ofertasService $ofertasService, empresasServices $empresasServices, usuariosService $usuariosService, categoriasService $categoriasService, serviciosService $serviciosService)
     {
         $this->ofertasService = $ofertasService;
         $this->empresasServices = $empresasServices;
         $this->usuariosService = $usuariosService;
+        $this->categoriasService = $categoriasService;
+        $this->serviciosService = $serviciosService;
     }
 
     public function index()
@@ -34,8 +40,10 @@ class OfertaController extends Controller
     {
         $empresas = $this->empresasServices->listarTodos();
         $usuarios = $this->usuariosService->listarUsuarios();
+        $categorias = $this->categoriasService->listarTodos();
+        $servicios = $this->serviciosService->listarTodos();
 
-        return view('Ofertas.crear', compact('empresas', 'usuarios'));
+        return view('Ofertas.crear', compact('empresas', 'usuarios', 'categorias', 'servicios'));
     }
 
 
@@ -61,8 +69,10 @@ class OfertaController extends Controller
         $oferta = $this->ofertasService->buscarporid($id);
         $empresas = $this->empresasServices->listarTodos();
         $usuarios = $this->usuariosService->listarUsuarios();
+        $categorias = $this->categoriasService->listarTodos();
+        $servicios = $this->serviciosService->listarTodos();
 
-        return view('Ofertas.editar', compact('oferta', 'empresas', 'usuarios'));
+        return view('Ofertas.editar', compact('oferta', 'empresas', 'usuarios', 'categorias', 'servicios'));
     }
 
 

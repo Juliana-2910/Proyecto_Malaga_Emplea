@@ -23,6 +23,8 @@ class OfertaUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'idCategoria' => 'required|exists:categorias,id',
+            'idServicio' => 'required|exists:servicios,id',
             'titulo' => 'required|string|max:150',
             'descripcion' => 'required|string',
             'requisitos' => 'required|string',
@@ -38,6 +40,13 @@ class OfertaUpdateRequest extends FormRequest
     public function messages(): array
     {
         return [
+
+            'idCategoria.required' => 'Debe seleccionar una categoria.',
+            'idCategoria.exists' => 'La categoría seleccionada no existe.',
+
+            'idServicio.required' => 'Debe seleccionar un servicio.',
+            'idServicio.exists' => 'El servicio seleccionado no existe.',
+
             'titulo.required' => 'El título de la oferta es obligatorio.',
             'titulo.max' => 'El título no puede superar los 150 caracteres.',
 

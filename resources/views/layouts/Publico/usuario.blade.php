@@ -29,12 +29,12 @@
     <header class="border-b border-slate-200 bg-white">
         <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-6 gap-y-3 px-6 py-2.5">
 
-            <a href="{{ url('/inicio') }}" class="flex items-center gap-3 text-xl font-extrabold text-noche">
+            <a class="flex items-center gap-3 text-xl font-extrabold text-noche">
                 <img src="{{ asset('images/Logo Malaga Emplea.png') }}" alt="Logo de Málaga Emplea" class="size-14 object-contain">
                 Málaga Emplea
             </a>
 
-            <nav class="flex flex-wrap gap-x-7 text-[15px] font-semibold">
+            <nav class="hidden items-center gap-7 text-[15px] font-semibold md:flex">
                 <a href="{{ url('/empleos') }}" class="border-b-[3px] border-marca py-3 text-marca-texto">Ofertas</a>
                 <a href="{{ url('/mis-postulaciones') }}" class="py-3 transition hover:text-marca-texto">Mis postulaciones</a>
                 <a href="{{ url('/mis-ofertas') }}" class="py-3 transition hover:text-marca-texto">Mis ofertas</a>

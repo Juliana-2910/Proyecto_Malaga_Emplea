@@ -44,5 +44,5 @@ Route::resource('ofertaServicios', OfertaServiciosController::class);
 
 Route::get('/', [HomeController::class, 'index'])->name('Publico.inicio');
 Route::get('/empleos', [OfertaPublicaController::class, 'index'])->name('Publico.ofertas');
-
+Route::post('/empleos/{id}/postular', [OfertaPublicaController::class, 'postular'])->whereNumber('id')->name('Publico.postular');
 
