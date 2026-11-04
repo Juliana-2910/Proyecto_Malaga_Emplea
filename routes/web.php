@@ -17,32 +17,38 @@ use App\Http\Controllers\PostulacionController;
 
 
 
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
-Route::get('/empresas-con-ofertas',[EmpresaController::class, 'empresasConOfertas'])->name('empresas.conOfertas');
-Route::get('/usuarios-con-postulaciones',[UsuarioController::class, 'usuariosConPostulaciones'])->name('usuarios.conPostulaciones');
-Route::get('/usuarios-sin-postulaciones',[UsuarioController::class, 'usuariosSinPostulaciones'])->name('usuarios.sinPostulaciones');
-Route::get('/ofertas-sobre-promedio-postulaciones', [OfertaController::class, 'ofertasSobrePromedioPostulaciones'])->name('ofertas.sobrePromedioPostulaciones');
-Route::get('/ofertas-con-servicios', [OfertaController::class, 'ofertasConServicios'])->name('ofertas.conServicios');
-Route::get('/ofertas-sin-servicios', [OfertaController::class, 'ofertasSinServicios'])->name('ofertas.sinServicios');
-Route::get('/reputacion-empresas', [CalificacionController::class, 'reputacionEmpresas'])->name('calificacion.reputacionEmpresas');
-Route::get('/reputacion-usuarios', [CalificacionController::class, 'reputacionUsuarios'])->name('calificacion.reputacionUsuarios');
+
+Route::middleware('auth:web,empresa')->group(function () {
+
+
+    Route::get('/', [HomeController::class, 'index'])->name('Publico.inicio');
+    Route::get('/empleos', [OfertaPublicaController::class, 'index'])->name('Publico.ofertas');
+    Route::post('/empleos/{id}/postular', [OfertaPublicaController::class, 'postular'])->whereNumber('id')->name('Publico.postular');
+
+
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
+
+    Route::resource('roles', RolesController::class)->middleware('can:gestionar seguridad');
+    Route::resource('categorias', CategoriaController::class)->middleware('modulo:categorias');
+    Route::resource('empresas', EmpresaController::class)->middleware('modulo:empresas');
+    Route::resource('usuarios', UsuarioController::class)->middleware('modulo:usuarios');
+    Route::resource('ofertas', OfertaController::class)->middleware('modulo:ofertas');
+    Route::resource('hojaDeVida', HojaDeVidaController::class)->middleware('modulo:hojadevida');
+    Route::resource('servicios', ServiciosController::class)->middleware('modulo:servicios');
+    Route::resource('postulacion', PostulacionController::class)->middleware('modulo:postulacion');
+    Route::resource('calificacion', CalificacionController::class)->middleware('modulo:calificacion');
+    Route::resource('ofertaServicios', OfertaServiciosController::class)->middleware('modulo:ofertaservicios');
+
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
+    Route::get('/empresas-con-ofertas',[EmpresaController::class, 'empresasConOfertas'])->name('empresas.conOfertas');
+    Route::get('/usuarios-con-postulaciones',[UsuarioController::class, 'usuariosConPostulaciones'])->name('usuarios.conPostulaciones');
+    Route::get('/usuarios-sin-postulaciones',[UsuarioController::class, 'usuariosSinPostulaciones'])->name('usuarios.sinPostulaciones');
+    Route::get('/ofertas-sobre-promedio-postulaciones', [OfertaController::class, 'ofertasSobrePromedioPostulaciones'])->name('ofertas.sobrePromedioPostulaciones');
+    Route::get('/ofertas-con-servicios', [OfertaController::class, 'ofertasConServicios'])->name('ofertas.conServicios');
+    Route::get('/ofertas-sin-servicios', [OfertaController::class, 'ofertasSinServicios'])->name('ofertas.sinServicios');
+    Route::get('/reputacion-empresas', [CalificacionController::class, 'reputacionEmpresas'])->name('calificacion.reputacionEmpresas');
+    Route::get('/reputacion-usuarios', [CalificacionController::class, 'reputacionUsuarios'])->name('calificacion.reputacionUsuarios');
 
 
 
-Route::resource('roles', RolesController::class);
-Route::resource('categorias', CategoriaController::class);
-Route::resource('empresas', EmpresaController::class);
-Route::resource('usuarios', UsuarioController::class);
-Route::resource('ofertas', OfertaController::class);
-Route::resource('hojaDeVida', HojaDeVidaController::class);
-Route::resource('servicios', ServiciosController::class);
-Route::resource('postulacion', PostulacionController::class);
-Route::resource('calificacion', CalificacionController::class);
-Route::resource('ofertaServicios', OfertaServiciosController::class);
-
-
-
-Route::get('/', [HomeController::class, 'index'])->name('Publico.inicio');
-Route::get('/empleos', [OfertaPublicaController::class, 'index'])->name('Publico.ofertas');
-Route::post('/empleos/{id}/postular', [OfertaPublicaController::class, 'postular'])->whereNumber('id')->name('Publico.postular');
-
+});
