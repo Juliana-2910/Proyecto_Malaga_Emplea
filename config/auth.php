@@ -42,10 +42,11 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+
         'empresa' => [
             'driver' => 'session',
             'provider' => 'empresas',
-    ],
+        ],
     ],
 
     /*
@@ -72,9 +73,14 @@ return [
         ],
 
         'empresas' => [
-        'driver' => 'eloquent',
-        'model' => App\Models\Empresa::class,
-    ],
+            'driver' => 'eloquent',
+            'model' => App\Models\Empresa::class,
+        ],
+
+        // 'users' => [
+        //     'driver' => 'database',
+        //     'table' => 'users',
+        // ],
     ],
 
     /*

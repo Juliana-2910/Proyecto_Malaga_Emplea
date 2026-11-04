@@ -13,6 +13,15 @@ class UsuarioRepository
         return config('auth.providers.users.model');
     }
 
+    public function buscarPorEmail(string $email, string $tipo = 'usuario'): ?Authenticatable
+    {
+        $cuenta = config("seguridad.login.$tipo");
+
+        $modelo = $cuenta['modelo'] ?? $this->modelo();
+        $columna = $cuenta['columna_email'] ?? 'email';
+
+        return $modelo::where($columna, $email)->first();
+    }
 
     public function buscarPorId(int|string $id): Authenticatable
     {
@@ -56,18 +65,4 @@ class UsuarioRepository
         $usuario->rolesConInactivos()->sync($ids);
         $usuario->unsetRelation('roles');
     }
-
-
-    public function buscarPorEmail(string $email, string $tipo = 'usuario'): ?Authenticatable
-    {
-        $cuenta = config("seguridad.login.$tipo");
-
-        $modelo = $cuenta['modelo'] ?? $this->modelo();
-        $columna = $cuenta['columna_email'] ?? 'email';
-
-        return $modelo::where($columna, $email)->first();
-    }
-
-
-
 }
