@@ -6,6 +6,7 @@ use App\Repositories\ofertasRepository;
 use App\Repositories\ofertaServiciosRepository;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use InvalidArgumentException;
 use Exception;
 
 class ofertasService
@@ -45,13 +46,19 @@ class ofertasService
 
     public function eliminar(int $id)
     {
-        if ($this->ofertasrepository->tienePostulaciones($id)) {
-            throw new Exception(
-                'No se puede eliminar esta oferta porque tiene postulaciones relacionadas.'
-            );
-        }
+        return DB::transaction(function () use ($id) {
 
-        $this->ofertasrepository->eliminar($id);
+            // Verificar si la oferta tiene postulaciones.
+            if ($this->ofertasrepository->tienePostulaciones($id)) {
+                throw new Exception('No se puede eliminar esta oferta porque tiene postulaciones relacionadas.');
+            }
+
+            // Eliminar las relaciones con los servicios.
+            $this->ofertasrepository->eliminarServiciosPorOferta($id);
+
+            // Eliminar la oferta.
+            $this->ofertasrepository->eliminar($id);
+        });
     }
 
     public function buscarporid(int $id)
@@ -117,12 +124,13 @@ class ofertasService
         $ofertas = $this->ofertasrepository->listarActivas($filtros, self::POR_PAGINA);
 
         $categoriasPorOferta = $this->ofertasrepository->categoriasPorOferta($ofertas->pluck('id')->all());
-        $postuladas = $idUsuario ? $this->ofertasrepository->idsOfertasPostuladas($idUsuario) : [];
+        $postulaciones = $idUsuario ? $this->ofertasrepository->postulacionesPorOferta($idUsuario) : [];
 
-        $ofertas->through(function ($oferta) use ($categoriasPorOferta, $postuladas) {
+        $ofertas->through(function ($oferta) use ($categoriasPorOferta, $postulaciones) {
             $oferta->publicador = $this->nombrePublicador($oferta);
             $oferta->categoria = $categoriasPorOferta[$oferta->id] ?? null;
-            $oferta->postulado = in_array($oferta->id, $postuladas, true);
+            $oferta->postulacion = $postulaciones[$oferta->id] ?? null;
+            $oferta->postulado = $oferta->postulacion !== null;
             return $oferta;
         });
 
@@ -148,19 +156,19 @@ class ofertasService
     private function validarFiltros(array $filtros): void
     {
         if (! empty($filtros['contrato']) && ! in_array($filtros['contrato'], self::CONTRATOS, true)) {
-            throw new \InvalidArgumentException('El tipo de contrato seleccionado no es válido.');
+            throw new InvalidArgumentException('El tipo de contrato seleccionado no es válido.');
         }
 
         if (! empty($filtros['publica']) && ! in_array($filtros['publica'], self::PUBLICA, true)) {
-            throw new \InvalidArgumentException('La opción "Publicada por" no es válida.');
+            throw new InvalidArgumentException('La opción "Publicada por" no es válida.');
         }
 
         if (! empty($filtros['orden']) && ! in_array($filtros['orden'], self::ORDENES, true)) {
-            throw new \InvalidArgumentException('El orden seleccionado no es válido.');
+            throw new InvalidArgumentException('El orden seleccionado no es válido.');
         }
 
         if (! empty($filtros['categoria']) && ! ctype_digit((string) $filtros['categoria'])) {
-            throw new \InvalidArgumentException('La categoría seleccionada no es válida.');
+            throw new InvalidArgumentException('La categoría seleccionada no es válida.');
         }
     }
 

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Repositories\postulacionRepository;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Exception;
 use Carbon\Carbon;
 
@@ -137,6 +138,35 @@ class postulacionService
             throw new Exception(
                 'No puedes postularte a una oferta que tú publicaste.'
             );
+        }
+    }
+
+    /* ===== Cancelar postulación (usuario) ===== */
+    public function cancelar(int $idPostulacion, int $idUsuario)
+    {
+        try {
+            $postulacion = $this->postulacionrepository->buscarporid($idPostulacion);
+        } catch (ModelNotFoundException $e) {
+            throw new Exception('La postulación no existe o ya fue cancelada.');
+        }
+
+        $this->validarPostulacionEsDeLaPersona($postulacion, $idUsuario);
+        $this->validarPostulacionSigueEnviada($postulacion);
+
+        $this->postulacionrepository->eliminar($idPostulacion);
+    }
+
+    private function validarPostulacionEsDeLaPersona($postulacion, int $idUsuario)
+    {
+        if ((int) $postulacion->idUsuario !== $idUsuario) {
+            throw new Exception('No puedes cancelar una postulación que no es tuya.');
+        }
+    }
+
+    private function validarPostulacionSigueEnviada($postulacion)
+    {
+        if ($postulacion->estado !== $this->obtenerEstadoInicial()) {
+            throw new Exception('Solo puedes cancelar postulaciones que aún están en estado Enviado.');
         }
     }
 }

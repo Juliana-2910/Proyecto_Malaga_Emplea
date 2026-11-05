@@ -50,4 +50,18 @@ class OfertaPublicaController extends Controller
             return redirect('/empleos')->with('error', $e->getMessage());
         }
     }
+
+        public function cancelarPostulacion(Request $request, int $id)
+    {
+        // TEMPORAL: con el login, el idUsuario sale de la sesión y no del formulario.
+        $request->validate(['idUsuario' => 'required|exists:usuarios,id']);
+
+        try {
+            $this->postulacionService->cancelar($id, (int) $request->input('idUsuario'));
+
+            return redirect('/empleos')->with('eliminar', 'Tu postulación fue cancelada correctamente.');
+        } catch (Exception $e) {
+            return redirect('/empleos')->with('error', $e->getMessage());
+        }
+    }
 }
