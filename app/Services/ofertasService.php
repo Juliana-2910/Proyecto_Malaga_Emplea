@@ -150,7 +150,8 @@ class ofertasService
             ],
             'postulantesPorRevisar' => $idUsuario ? $this->ofertasrepository->contarPostulantesPorRevisar($idUsuario) : 0,
             'hojaDeVidaProgreso'    => $idUsuario ? $this->progresoHojaDeVida($idUsuario) : 0,
-        ];
+            'hojaDeVida' => $this->ofertasrepository->hojaDeVidaDe($idUsuario),
+            ];
     }
 
     private function validarFiltros(array $filtros): void

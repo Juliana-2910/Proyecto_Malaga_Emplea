@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Services\ofertasService;
 use App\Services\postulacionService;
+use App\Http\Requests\HojaDeVidaStoreRequest;
+use App\Services\hojaDeVidaService;
 use Exception;
 use Illuminate\Http\Request;
 use InvalidArgumentException;
@@ -12,11 +14,13 @@ class OfertaPublicaController extends Controller
 {
     private ofertasService $ofertasService;
     private postulacionService $postulacionService;
+    private hojaDeVidaService $hojaDeVidaService;
 
-    public function __construct(ofertasService $ofertasService, postulacionService $postulacionService)
+    public function __construct(ofertasService $ofertasService, postulacionService $postulacionService, hojaDeVidaService $hojaDeVidaService)
     {
         $this->ofertasService = $ofertasService;
         $this->postulacionService = $postulacionService;
+        $this->hojaDeVidaService = $hojaDeVidaService;
     }
 
     public function index(Request $request)
@@ -63,5 +67,18 @@ class OfertaPublicaController extends Controller
         } catch (Exception $e) {
             return redirect('/empleos')->with('error', $e->getMessage());
         }
+    }
+
+    public function guardarHojaDeVida(HojaDeVidaStoreRequest $request)
+    {
+        $datos = $request->validated();
+        $datos['fechaActualizacion'] = now('America/Bogota');
+
+        try {
+            $this->hojaDeVidaService->guardarOActualizar($datos);
+        } catch (\Exception $e) {
+            return redirect()->route('Publico.ofertas')->with('error', $e->getMessage());
+        }
+        return redirect()->route('Publico.ofertas')->with('success', 'Tu hoja de vida se guardó correctamente.');
     }
 }
