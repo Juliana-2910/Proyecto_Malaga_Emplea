@@ -112,6 +112,8 @@ class ofertasService
     private const PUBLICA = ['empresas', 'personas'];
     private const ORDENES = ['recientes', 'antiguas', 'vencen'];
     private const POR_PAGINA = 10;
+    private const ESTADOS_POSTULACION = ['Enviado', 'Aceptado', 'Rechazado'];
+    private const ORDENES_POSTULACION = ['recientes', 'antiguas'];
 
     public function datosListadoUsuario(array $filtros): array
     {
@@ -200,5 +202,51 @@ class ofertasService
         $llenos = collect($campos)->filter(fn ($campo) => filled($hoja->{$campo}))->count();
 
         return (int) round($llenos / count($campos) * 100);
+    }
+
+    /** "Mis postulaciones" **/
+
+    public function datosMisPostulaciones(array $filtros): array
+    {
+        $this->validarFiltrosPostulaciones($filtros);
+
+        // TEMPORAL: cuando exista el login, el usuario sale de auth().
+        $usuario = $this->ofertasrepository->usuarioDePrueba();
+        $idUsuario = $usuario?->id;
+
+        $postulaciones = $this->ofertasrepository->listarPostulacionesDeUsuario($idUsuario ?? 0, $filtros, self::POR_PAGINA);
+
+        $categorias = $this->ofertasrepository->categoriasPorOferta($postulaciones->pluck('idOferta')->all());
+
+        $postulaciones->through(function ($postulacion) use ($categorias) {
+            $postulacion->oferta->publicador = $this->nombrePublicador($postulacion->oferta);
+            $postulacion->oferta->categoria = $categorias[$postulacion->idOferta] ?? null;
+            return $postulacion;
+        });
+
+        $porEstado = $idUsuario ? $this->ofertasrepository->contarPostulacionesPorEstado($idUsuario) : [];
+
+        return [
+            'nombre'        => $usuario?->nombres ?? 'Usuario',
+            'idUsuario'     => $idUsuario, // TEMPORAL: con el login sale de la sesión
+            'postulaciones' => $postulaciones,
+            'conteos'       => [
+                'todas'     => array_sum($porEstado),
+                'Enviado'   => $porEstado['Enviado'] ?? 0,
+                'Aceptado'  => $porEstado['Aceptado'] ?? 0,
+                'Rechazado' => $porEstado['Rechazado'] ?? 0,
+            ],
+        ];
+    }
+
+    private function validarFiltrosPostulaciones(array $filtros): void
+    {
+        if (! empty($filtros['estado']) && ! in_array($filtros['estado'], self::ESTADOS_POSTULACION, true)) {
+            throw new InvalidArgumentException('El estado seleccionado no es válido.');
+        }
+
+        if (! empty($filtros['orden']) && ! in_array($filtros['orden'], self::ORDENES_POSTULACION, true)) {
+            throw new InvalidArgumentException('El orden seleccionado no es válido.');
+        }
     }
 }

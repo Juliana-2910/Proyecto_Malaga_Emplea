@@ -252,25 +252,10 @@
                     <label class="flex items-center gap-2.5 text-sm font-semibold text-slate-500">
                         Ordenar por
 
-                        <select name="orden"
-                                form="filtros-ofertas"
-                                class="{{ $campo }} min-h-11 py-2.5"
-                                onchange="this.form.submit()">
-
-                            <option value="recientes"
-                                @selected(request('orden', 'recientes') === 'recientes')>
-                                Más recientes
-                            </option>
-
-                            <option value="antiguas"
-                                @selected(request('orden') === 'antiguas')>
-                                Más antiguas
-                            </option>
-
-                            <option value="vencen"
-                                @selected(request('orden') === 'vencen')>
-                                Vencen primero
-                            </option>
+                        <select name="orden" form="filtros-ofertas" class="{{ $campo }} min-h-11 py-2.5" onchange="this.form.submit()">
+                            <option value="recientes" @selected(request('orden', 'recientes') === 'recientes')>Más recientes</option>
+                            <option value="antiguas" @selected(request('orden') === 'antiguas')>Más antiguas</option>
+                            <option value="vencen" @selected(request('orden') === 'vencen')>Vencen primero</option>
                         </select>
                     </label>
                 </div>
@@ -300,7 +285,7 @@
                             ];
                         @endphp
 
-                        <div class="size-14 shrink-0 overflow-hidden rounded-full border-2 border-[#EAF6FD] bg-[#EAF6FD]">
+                        <div class="size-14 shrink-0 overflow-hidden rounded-full border-2 border-black bg-[#EAF6FD]">
 
                             @if ($publicador?->fotoPerfil)
                                 <img

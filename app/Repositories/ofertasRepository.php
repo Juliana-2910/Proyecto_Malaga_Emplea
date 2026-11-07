@@ -210,4 +210,19 @@ class ofertasRepository
     {
         return Servicios::orderBy('nombre')->get(['id', 'nombre', 'idCategoria']);
     }
+
+    /** "Mis postulaciones" **/
+    public function listarPostulacionesDeUsuario(int $idUsuario, array $filtros, int $porPagina)
+    {
+        $consulta = Postulacion::with(['oferta.empresa', 'oferta.usuario'])
+            ->where('idUsuario', $idUsuario)
+            ->when($filtros['estado'] ?? null, fn ($q, $estado) => $q->where('estado', $estado));
+
+        match ($filtros['orden'] ?? 'recientes') {
+            'antiguas' => $consulta->orderBy('fecha')->orderBy('id'),
+            default    => $consulta->orderByDesc('fecha')->orderByDesc('id'),
+        };
+
+        return $consulta->paginate($porPagina)->withQueryString();
+    }
 }

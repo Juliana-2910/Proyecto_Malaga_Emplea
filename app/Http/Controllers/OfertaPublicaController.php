@@ -56,7 +56,7 @@ class OfertaPublicaController extends Controller
         }
     }
 
-        public function cancelarPostulacion(Request $request, int $id)
+    public function cancelarPostulacion(Request $request, int $id)
     {
         // TEMPORAL: con el login, el idUsuario sale de la sesión y no del formulario.
         $request->validate(['idUsuario' => 'required|exists:usuarios,id']);
@@ -64,9 +64,9 @@ class OfertaPublicaController extends Controller
         try {
             $this->postulacionService->cancelar($id, (int) $request->input('idUsuario'));
 
-            return redirect('/empleos')->with('eliminar', 'Tu postulación fue cancelada correctamente.');
+            return back()->with('eliminar', 'Tu postulación fue cancelada correctamente.');
         } catch (Exception $e) {
-            return redirect('/empleos')->with('error', $e->getMessage());
+            return back()->with('error', $e->getMessage());
         }
     }
 
@@ -91,5 +91,19 @@ class OfertaPublicaController extends Controller
             return redirect()->route('Publico.ofertas')->withInput()->with('errorModal', $e->getMessage())->with('abrirCrearOferta', true);
         }
         return redirect()->route('Publico.ofertas')->with('success', 'Tu oferta se publicó correctamente.');
+    }
+
+    public function misPostulaciones(Request $request)
+    {
+        try {
+            $datos = $this->ofertasService->datosMisPostulaciones(
+                $request->only(['estado', 'orden'])
+            );
+
+            return view('Publico.postulaciones', $datos);
+        } catch (InvalidArgumentException $e) {
+            // Solo filtros inválidos: se vuelve a la lista sin filtros.
+            return redirect('/mis-postulaciones')->with('error', $e->getMessage());
+        }
     }
 }
