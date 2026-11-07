@@ -80,6 +80,7 @@ class postulacionService
         $this->postulacionrepository->actualizar($id, [
             'idUsuario' => $usuario->id,
             'idOferta'  => $oferta->id,
+            'estado'     => $datos['estado'] 
         ]);
     }
 
