@@ -6,6 +6,7 @@ use App\Services\ofertasService;
 use App\Services\postulacionService;
 use App\Http\Requests\HojaDeVidaStoreRequest;
 use App\Services\hojaDeVidaService;
+use App\Http\Requests\OfertaStoreRequest;
 use Exception;
 use Illuminate\Http\Request;
 use InvalidArgumentException;
@@ -80,5 +81,15 @@ class OfertaPublicaController extends Controller
             return redirect()->route('Publico.ofertas')->with('error', $e->getMessage());
         }
         return redirect()->route('Publico.ofertas')->with('success', 'Tu hoja de vida se guardó correctamente.');
+    }
+
+    public function guardarOferta(OfertaStoreRequest $request) // Es un modal creado aparte //
+    {
+        try { // Se reutiliza ofertasService::guardar (pone la fecha de publicación, valida el salario mínimo y llena la tabla intermedia ofertaServicios) //
+            $this->ofertasService->guardar($request->validated());
+        } catch (Exception $e) {
+            return redirect()->route('Publico.ofertas')->withInput()->with('errorModal', $e->getMessage())->with('abrirCrearOferta', true);
+        }
+        return redirect()->route('Publico.ofertas')->with('successModal', 'Tu oferta se publicó correctamente.');
     }
 }

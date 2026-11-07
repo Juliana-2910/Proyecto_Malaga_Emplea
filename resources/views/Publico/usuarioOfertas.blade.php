@@ -20,56 +20,7 @@
 <section class="bg-[#EAF6FD] px-6 pb-12 pt-10">
     <div class="mx-auto flex max-w-6xl flex-col gap-7">
 
-        {{-- AVISO DE ÉXITO --}}
-        @if (session('success'))
-            <div role="alert"
-                style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 16px;border-radius:12px;border:1px solid #BBF7D0;background:#F0FDF4;color:#15803D;font-size:14px;box-shadow:0 1px 2px rgba(0,0,0,0.05)">
-                <div style="display:flex;align-items:center;gap:12px">
-                    <span style="width:32px;height:32px;border-radius:999px;background:#DCFCE7;display:flex;align-items:center;justify-content:center;flex:0 0 auto">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="size-6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 12.75l6 6 9-13.5" /></svg>
-                    </span>
-                    <span>{{ session('success') }}</span>
-                </div>
-                <button type="button" aria-label="Cerrar aviso" onclick="this.closest('[role=alert]').remove()"
-                        style="border:none;background:transparent;color:#16A34A;cursor:pointer;display:flex;padding:4px">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="size-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 18 6M6 6l12 12" /></svg>
-                </button>
-            </div>
-        @endif
-
-        {{-- AVISO AMARILLO: Restricciones de postulación --}}
-        @if (session('error'))
-            <div role="alert"
-                style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 16px;border-radius:12px;border:1px solid #FEF08A;background:#FEFCE8;color:#A16207;font-size:14px;box-shadow:0 1px 2px rgba(0,0,0,0.05)">
-                <div style="display:flex;align-items:center;gap:12px">
-                    <span style="width:32px;height:32px;border-radius:999px;background:#FEF9C3;display:flex;align-items:center;justify-content:center;flex:0 0 auto">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="size-6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" /></svg>
-                    </span>
-                    <span>{{ session('error') }}</span>
-                </div>
-                <button type="button" aria-label="Cerrar aviso" onclick="this.closest('[role=alert]').remove()"
-                        style="border:none;background:transparent;color:#CA8A04;cursor:pointer;display:flex;padding:4px">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="size-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 18 6M6 6l12 12" /></svg>
-                </button>
-            </div>
-        @endif
-
-        {{-- MENSAJE DE ELIMINACIÓN --}}
-        @if (session('eliminar'))
-            <div role="alert"
-                style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 16px;border-radius:12px;border:1px solid #FECACA;background:#FEF2F2;color:#B42318;font-size:14px;box-shadow:0 1px 2px rgba(0,0,0,0.05)">
-                <div style="display:flex;align-items:center;gap:12px">
-                    <span style="width:32px;height:32px;border-radius:999px;background:#FEE2E2;display:flex;align-items:center;justify-content:center;flex:0 0 auto">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-4 w-4"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M9.5 4h5a1 1 0 011 1v2h-7V5a1 1 0 011-1z" /></svg>
-                    </span>
-                    <span>{{ session('eliminar') }}</span>
-                </div>
-                <button type="button" aria-label="Cerrar aviso" onclick="this.closest('[role=alert]').remove()"
-                        style="border:none;background:transparent;color:#B42318;cursor:pointer;display:flex;padding:4px">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="size-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 18 6M6 6l12 12" /></svg>
-                </button>
-            </div>
-        @endif
+        @include('layouts.Publico.avisosPaginas')
 
         <div class="flex flex-col gap-2">
             <span class="text-base font-bold text-marca-texto">
@@ -149,14 +100,10 @@
                 </p>
 
                 <div class="flex flex-wrap items-center gap-3">
-                    <a href="{{ url('/crear-oferta') }}" class="{{ $btnPrimario }}">
-                        <svg class="size-[18px]" fill="none" viewBox="0 0 24 24"
-                            stroke-width="2" stroke="currentColor" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M12 4.5v15m7.5-7.5h-15" />
-                        </svg>
+                    <button type="button" data-abrir-crear-oferta class="{{ $btnPrimario }} cursor-pointer">
+                        <svg class="size-[18px]" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round"d="M12 4.5v15m7.5-7.5h-15" /></svg>
                         Publicar una oferta
-                    </a>
+                    </button>
 
                     <a href="{{ url('/mis-ofertas') }}"
                         class="inline-flex items-center justify-center rounded-xl border-2 border-white px-5 py-3 text-[15px] font-bold text-white transition hover:border-carbon hover:bg-carbon">
@@ -171,6 +118,8 @@
         </div>
     </div>
 </section>
+
+    @include('layouts.Publico.crearOferta')
 
             {{-- AVISO HOJA DE VIDA --}}
             @if (! $esEmpresa && $hojaDeVidaProgreso < 100)
@@ -224,7 +173,7 @@
             ];
 
             $campoHv = 'font-family:inherit;font-size:15px;padding:12px 14px;border:1.5px solid #CBD2D9;border-radius:10px;color:#1F2933;background:#FFFFFF;width:100%;box-sizing:border-box';
-            $labelHv = 'display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:700;color:#52606D';
+            $labelHv = 'display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:500;color:#52606D';
             $errorHv = 'font-size:12px;font-weight:600;color:#B42318';
 
             $urlArchivoHv = !empty($hojaDeVida?->archivoCV)
@@ -316,7 +265,7 @@
 
                                 <input type="text" name="ubicacion" data-hv-campo maxlength="255"
                                     placeholder="Ej.: Málaga, Santander"
-                                    value="{{ old('ubicacion', $hojaDeVida->ubicacion ?? '') }}"
+                                    value="{{ $errors->any() ? old('ubicacion') : ($hojaDeVida->ubicacion ?? '') }}"
                                     style="{{ $campoHv }}">
 
                                 @error('ubicacion')
@@ -839,7 +788,7 @@
     <div id="modal-postulacion" hidden
         style="display:none;position:fixed;top:0;right:0;bottom:0;left:0;z-index:50;align-items:center;justify-content:center;padding:16px;box-sizing:border-box;background:rgba(18,48,63,0.6)">
         <div role="dialog" aria-modal="true" aria-labelledby="mp-titulo"
-            style="width:100%;max-width:650px;max-height:100%;display:flex;flex-direction:column;overflow:hidden;border-radius:20px;background:#FFFFFF;box-shadow:0 24px 64px rgba(18,48,63,0.35);font-family:inherit">
+            style="width:100%;max-width:660px;max-height:100%;display:flex;flex-direction:column;overflow:hidden;border-radius:20px;background:#FFFFFF;box-shadow:0 24px 64px rgba(18,48,63,0.35);font-family:inherit">
 
             {{-- Encabezado --}}
             <div style="display:flex;align-items:flex-start;gap:16px;padding:28px 28px 20px;border-bottom:1px solid #E3E8EF">
@@ -888,6 +837,7 @@
                         <span style="font-size:15px;font-weight:800;color:#52606D;letter-spacing:0.04em">La oferta vence el</span>
                         <span id="mp-vence" style="font-size:15px;font-weight:400;color:#12303F"></span>
                     </div>
+                    
                 </div>
 
                 {{-- Resumen de la oferta --}}
@@ -993,7 +943,7 @@
     </div>
 
         @push('scripts')
-        <scrip>
+        <script>
 
             // Modal de ver oferta y postularse //
 
@@ -1483,6 +1433,6 @@
 
             })();
 
-        </scrip>
+        </script>
     @endpush
 @endsection

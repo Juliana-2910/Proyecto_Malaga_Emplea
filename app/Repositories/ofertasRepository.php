@@ -7,6 +7,7 @@ use App\Models\OfertaServicios;
 use App\Models\Categoria;
 use App\Models\Postulacion;
 use App\Models\HojaDeVida;
+use App\Models\Servicios;
 use App\Models\Usuario;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -203,5 +204,10 @@ class ofertasRepository
     public function eliminarServiciosPorOferta(int $id): void
     {
         OfertaServicios::where('idOferta', $id)->delete();
+    }
+
+    public function listarServicios()
+    {
+        return Servicios::orderBy('nombre')->get(['id', 'nombre', 'idCategoria']);
     }
 }

@@ -143,6 +143,7 @@ class ofertasService
             'totalOfertas'          => $ofertas->total(),
             'ofertas'               => $ofertas,
             'categorias'            => $this->ofertasrepository->listarCategorias(),
+            'servicios'             => $this->ofertasrepository->listarServicios(),
             'resumenPostulaciones'  => [
                 'enviadas'   => $porEstado['Enviado'] ?? 0,
                 'aceptadas'  => $porEstado['Aceptado'] ?? 0,
