@@ -90,6 +90,6 @@ class OfertaPublicaController extends Controller
         } catch (Exception $e) {
             return redirect()->route('Publico.ofertas')->withInput()->with('errorModal', $e->getMessage())->with('abrirCrearOferta', true);
         }
-        return redirect()->route('Publico.ofertas')->with('successModal', 'Tu oferta se publicó correctamente.');
+        return redirect()->route('Publico.ofertas')->with('success', 'Tu oferta se publicó correctamente.');
     }
 }
