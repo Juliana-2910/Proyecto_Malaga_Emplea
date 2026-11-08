@@ -100,7 +100,7 @@ class OfertaPublicaController extends Controller
                 $request->only(['estado', 'orden'])
             );
 
-            return view('Publico.postulaciones', $datos);
+            return view('Publico.usuarioPostulaciones', $datos);
         } catch (InvalidArgumentException $e) {
             // Solo filtros inválidos: se vuelve a la lista sin filtros.
             return redirect('/mis-postulaciones')->with('error', $e->getMessage());

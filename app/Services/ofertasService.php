@@ -112,7 +112,7 @@ class ofertasService
     private const PUBLICA = ['empresas', 'personas'];
     private const ORDENES = ['recientes', 'antiguas', 'vencen'];
     private const POR_PAGINA = 10;
-    private const ESTADOS_POSTULACION = ['Enviado', 'Aceptado', 'Rechazado'];
+    private const ESTADOS_POSTULACION = ['Enviado', 'Aceptado', 'Rechazado','Contratado'];
     private const ORDENES_POSTULACION = ['recientes', 'antiguas'];
 
     public function datosListadoUsuario(array $filtros): array
@@ -150,6 +150,7 @@ class ofertasService
                 'enviadas'   => $porEstado['Enviado'] ?? 0,
                 'aceptadas'  => $porEstado['Aceptado'] ?? 0,
                 'rechazadas' => $porEstado['Rechazado'] ?? 0,
+                'contratadas' => $porEstado['Contratado'] ?? 0,
             ],
             'postulantesPorRevisar' => $idUsuario ? $this->ofertasrepository->contarPostulantesPorRevisar($idUsuario) : 0,
             'hojaDeVidaProgreso'    => $idUsuario ? $this->progresoHojaDeVida($idUsuario) : 0,
@@ -227,14 +228,15 @@ class ofertasService
         $porEstado = $idUsuario ? $this->ofertasrepository->contarPostulacionesPorEstado($idUsuario) : [];
 
         return [
-            'nombre'        => $usuario?->nombres ?? 'Usuario',
-            'idUsuario'     => $idUsuario, // TEMPORAL: con el login sale de la sesión
-            'postulaciones' => $postulaciones,
-            'conteos'       => [
-                'todas'     => array_sum($porEstado),
-                'Enviado'   => $porEstado['Enviado'] ?? 0,
-                'Aceptado'  => $porEstado['Aceptado'] ?? 0,
-                'Rechazado' => $porEstado['Rechazado'] ?? 0,
+            'nombre'         => $usuario?->nombres ?? 'Usuario',
+            'idUsuario'      => $idUsuario, // TEMPORAL: con el login sale de la sesión
+            'postulaciones'  => $postulaciones,
+            'conteos'        => [
+                'todas'      => array_sum($porEstado),
+                'Enviado'    => $porEstado['Enviado'] ?? 0,
+                'Aceptado'   => $porEstado['Aceptado'] ?? 0,
+                'Rechazado'  => $porEstado['Rechazado'] ?? 0,
+                'Contratado' => $porEstado['Contratado'] ?? 0
             ],
         ];
     }

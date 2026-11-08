@@ -121,7 +121,8 @@ class ofertasRepository
     public function listarActivas(array $filtros, int $porPagina)
     {
         $consulta = Oferta::with(['empresa', 'usuario'])
-            ->whereDate('fechaLimite', '>=', now('America/Bogota')->toDateString())
+            ->whereDate('fechaLimite', '>=', now('America/Bogota')->toDateString()) //Ofertas activas (no vencidas) //
+            ->whereDoesntHave('postulaciones', function ($q) {$q->where('estado', 'Contratado');}) //Ocultar ofertas que ya tienen un postulante contratado //
             ->when($filtros['q'] ?? null, fn ($q, $v) => $q->where('titulo', 'like', "%{$v}%"))
             ->when($filtros['contrato'] ?? null, fn ($q, $v) => $q->where('tipoContrato', $v))
             ->when(($filtros['publica'] ?? null) === 'empresas', fn ($q) => $q->whereNotNull('idEmpresa'))
@@ -162,7 +163,7 @@ class ofertasRepository
         return Postulacion::where('idUsuario', $idUsuario)->pluck('idOferta')->all();
     }
 
-    /** Devuelve ['Enviado' => n, 'Aceptado' => n, 'Rechazado' => n]. */
+    /** Devuelve ['Enviado' => n, 'Aceptado' => n, 'Rechazado' => n, 'Contratado' => n]. */
     public function contarPostulacionesPorEstado(int $idUsuario): array
     {
         return Postulacion::where('idUsuario', $idUsuario)

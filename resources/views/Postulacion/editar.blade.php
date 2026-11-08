@@ -78,6 +78,11 @@
                             Rechazado
                         </option>
 
+                        <option value="Contratado"
+                            {{ old('estado', $postulacion->estado) === 'Contratado' ? 'selected' : '' }}>
+                            Contratado
+                        </option>
+
                     </select>
 
                     @error('estado')

@@ -77,10 +77,15 @@ class postulacionService
 
         $this->validarNoEsDuenoDeLaOferta($usuario, $oferta);
 
+        $this->validarCambioEstado(
+        $postulacion->estado,
+        $datos['estado']
+    );
+
         $this->postulacionrepository->actualizar($id, [
             'idUsuario' => $usuario->id,
             'idOferta'  => $oferta->id,
-            'estado'     => $datos['estado'] 
+            'estado'     => $datos['estado']
         ]);
     }
 
@@ -128,6 +133,27 @@ class postulacionService
     private function obtenerEstadoInicial(): string
     {
         return 'Enviado';
+    }
+
+    private function validarCambioEstado(string $estadoActual, string $nuevoEstado
+    ) {
+        if ($estadoActual === $nuevoEstado) {
+            return;
+        }
+
+        $estadosPermitidos = [
+            'Enviado' => ['Aceptado', 'Rechazado'],
+            'Aceptado' => ['Contratado', 'Rechazado'],
+            'Rechazado' => [],
+            'Contratado' => [],
+        ];
+
+        if (!in_array($nuevoEstado, $estadosPermitidos[$estadoActual] ?? [], true)) {
+            throw new Exception(
+                'No se permite cambiar el estado de '
+                . $estadoActual . ' a ' . $nuevoEstado . '.'
+            );
+        }
     }
 
     private function validarNoEsDuenoDeLaOferta($usuario, $oferta)

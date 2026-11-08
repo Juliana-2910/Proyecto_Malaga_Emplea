@@ -9,6 +9,7 @@
         'tiempo completo' => 'Tiempo completo',
         'medio tiempo'    => 'Medio tiempo',
         'horas'           => 'Por horas',
+
     ];
 
     $etiqueta = 'rounded-full bg-fondo px-3 py-1 text-[13px] font-semibold text-slate-600';
@@ -17,19 +18,21 @@
 
     // Colores de cada estado
     $estados = [
-        'Enviado'   => ['texto' => 'Enviada',   'fondo' => 'bg-amber-100', 'color' => 'text-amber-900', 'punto' => 'bg-amber-500'],
-        'Aceptado'  => ['texto' => 'Aceptada',  'fondo' => 'bg-green-100', 'color' => 'text-green-900', 'punto' => 'bg-green-600'],
-        'Rechazado' => ['texto' => 'Rechazada', 'fondo' => 'bg-red-100',   'color' => 'text-red-900',   'punto' => 'bg-red-600'],
+        'Enviado'    => ['texto' => 'Enviada',    'fondo' => 'bg-amber-100', 'color' => 'text-amber-900', 'punto' => 'bg-amber-500'],
+        'Aceptado'   => ['texto' => 'Aceptada',   'fondo' => 'bg-green-100', 'color' => 'text-green-900', 'punto' => 'bg-green-600'],
+        'Rechazado'  => ['texto' => 'Rechazada',  'fondo' => 'bg-red-100',   'color' => 'text-red-900',   'punto' => 'bg-red-600'],
+        'Contratado' => ['texto' => 'Contratada', 'fondo' => 'bg-sky-100',   'color' => 'text-sky-900',   'punto' => 'bg-sky-600'],
     ];
 
     // Pestañas de filtro: valor => [texto, cantidad, colores del contador]
     $pestanas = [
-        ''          => ['Todas',      $conteos['todas'],     null],
-        'Enviado'   => ['Enviadas',   $conteos['Enviado'],   'bg-amber-100 text-amber-900'],
-        'Aceptado'  => ['Aceptadas',  $conteos['Aceptado'],  'bg-green-100 text-green-900'],
-        'Rechazado' => ['Rechazadas', $conteos['Rechazado'], 'bg-red-100 text-red-900'],
-    ];
-    $puntos = ['Enviado' => 'bg-amber-500', 'Aceptado' => 'bg-green-600', 'Rechazado' => 'bg-red-600'];
+        ''           => ['Todas',       $conteos['todas'],     null],
+        'Enviado'    => ['Enviadas',    $conteos['Enviado'],   'bg-amber-100 text-amber-900'],
+        'Aceptado'   => ['Aceptadas',   $conteos['Aceptado'],  'bg-green-100 text-green-900'],
+        'Rechazado'  => ['Rechazadas',  $conteos['Rechazado'], 'bg-red-100 text-red-900'],
+        'Contratado' => ['Contratadas', $conteos['Contratado'], 'bg-sky-100 text-sky-700']
+        ];
+    $puntos = ['Enviado' => 'bg-amber-500', 'Aceptado' => 'bg-green-600', 'Rechazado' => 'bg-red-600', 'Contratado' => 'bg-sky-600'];
     $estadoActual = request('estado', '');
 @endphp
 
@@ -179,7 +182,9 @@
                             Ver mi postulación
                         </button>
 
-                        {{-- CALIFICAR (solo a empresas, en postulaciones aceptadas): se agrega cuando diseñemos el modal --}}
+                        @if ($postulacion->estado === 'Contratado')
+                        {{-- Botón Calificar --}}
+                        @endif
                     </div>
                 </div>
             </article>
