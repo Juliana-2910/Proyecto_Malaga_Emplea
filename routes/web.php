@@ -16,15 +16,17 @@ use App\Http\Controllers\OfertaController;
 use App\Http\Controllers\PostulacionController;
 
 
+    Route::get('/', [HomeController::class, 'index'])->name('Publico.inicio');
 
 
 Route::middleware('auth:web,empresa')->group(function () {
-
-
-    Route::get('/', [HomeController::class, 'index'])->name('Publico.inicio');
+    
     Route::get('/empleos', [OfertaPublicaController::class, 'index'])->name('Publico.ofertas');
     Route::post('/empleos/{id}/postular', [OfertaPublicaController::class, 'postular'])->whereNumber('id')->name('Publico.postular');
-
+    Route::delete('/empleos/postulaciones/{id}', [OfertaPublicaController::class, 'cancelarPostulacion'])->whereNumber('id')->name('Publico.cancelarPostulacion');
+    Route::post('/empleos/hoja-de-vida', [OfertaPublicaController::class, 'guardarHojaDeVida'])->name('Publico.guardarHojaDeVida');
+    Route::post('/empleos/publicar', [OfertaPublicaController::class, 'guardarOferta'])->name('Publico.guardarOferta');
+    Route::get('/mis-postulaciones', [OfertaPublicaController::class, 'misPostulaciones'])->name('Publico.postulaciones');
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
@@ -38,8 +40,7 @@ Route::middleware('auth:web,empresa')->group(function () {
     Route::resource('postulacion', PostulacionController::class)->middleware('modulo:postulacion');
     Route::resource('calificacion', CalificacionController::class)->middleware('modulo:calificacion');
     Route::resource('ofertaServicios', OfertaServiciosController::class)->middleware('modulo:ofertaservicios');
-
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
+  
     Route::get('/empresas-con-ofertas',[EmpresaController::class, 'empresasConOfertas'])->name('empresas.conOfertas');
     Route::get('/usuarios-con-postulaciones',[UsuarioController::class, 'usuariosConPostulaciones'])->name('usuarios.conPostulaciones');
     Route::get('/usuarios-sin-postulaciones',[UsuarioController::class, 'usuariosSinPostulaciones'])->name('usuarios.sinPostulaciones');

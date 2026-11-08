@@ -17,7 +17,7 @@ return new class extends Migration
             $table->text('descripcion');
             $table->text('requisitos');
             $table->decimal('salario', 12, 2);
-            $table->enum('tipoContrato', ['tiempo completo', 'medio tiempo', 'horas']);
+            $table->enum('tipoContrato', ['tiempo completo', 'medio tiempo', 'horas', 'porcentaje']);
             $table->string('ubicacion', 255);
             $table->date('fechaPublicacion');
             $table->date('fechaLimite');
@@ -33,7 +33,7 @@ return new class extends Migration
              ->on('usuarios');
 
             $table->timestamps();
-    
+
         });
     }
 

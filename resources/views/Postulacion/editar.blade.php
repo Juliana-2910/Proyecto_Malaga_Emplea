@@ -57,20 +57,47 @@
                         Estado
                     </label>
 
-                    <input
-                        type="text"
+                    <select
+                        name="estado"
                         id="estado"
-                        value="{{ $postulacion->estado }}"
-                        readonly
-                        class="w-full cursor-not-allowed rounded-lg border border-gray-300 bg-gray-100 px-4 py-2.5 text-sm text-gray-600"
-                    >
+                        required
+                        class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
+
+                        <option value="Enviado"
+                            {{ old('estado', $postulacion->estado) === 'Enviado' ? 'selected' : '' }}>
+                            Enviado
+                        </option>
+
+                        <option value="Aceptado"
+                            {{ old('estado', $postulacion->estado) === 'Aceptado' ? 'selected' : '' }}>
+                            Aceptado
+                        </option>
+
+                        <option value="Rechazado"
+                            {{ old('estado', $postulacion->estado) === 'Rechazado' ? 'selected' : '' }}>
+                            Rechazado
+                        </option>
+
+                        <option value="Contratado"
+                            {{ old('estado', $postulacion->estado) === 'Contratado' ? 'selected' : '' }}>
+                            Contratado
+                        </option>
+
+                    </select>
+
+                    @error('estado')
+                        <p class="mt-1 text-sm text-red-500">
+                            {{ $message }}
+                        </p>
+                    @enderror
                 </div>
+
 
 
                 {{-- Usuario --}}
                 <div>
                     <label for="idUsuario"
-                           class="mb-2 block text-sm font-semibold text-gray-700">
+                            class="mb-2 block text-sm font-semibold text-gray-700">
                         Usuario
                     </label>
 
@@ -104,7 +131,7 @@
                 {{-- Oferta --}}
                 <div>
                     <label for="idOferta"
-                           class="mb-2 block text-sm font-semibold text-gray-700">
+                            class="mb-2 block text-sm font-semibold text-gray-700">
                         Oferta
                     </label>
 
@@ -142,7 +169,7 @@
             <div class="mt-8 flex justify-end gap-3">
 
                 <a href="{{ route('postulacion.index') }}"
-                   class="rounded-lg bg-gray-500 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#333333]">
+                    class="rounded-lg bg-gray-500 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#333333]">
                     Cancelar
                 </a>
 

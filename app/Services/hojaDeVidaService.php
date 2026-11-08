@@ -59,6 +59,18 @@ class hojaDeVidaService
         $this->reemplazarArchivo($id, $datos, $archivo,$archivoAnterior);
     }
 
+    public function guardarOActualizar(array $datos): void
+    {
+        $existente = $this->hojaDeVidaRepository->buscarPorUsuario((int) $datos['idUsuario']);
+
+        if ($existente) {
+            $this->actualizar($existente->id, $datos);
+            return;
+        }
+
+        $this->guardar($datos);
+    }
+
     private function extraerArchivo(array &$datos): ?UploadedFile
     {
         $archivo = $datos['archivoCV'] ?? null;
