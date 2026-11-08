@@ -77,7 +77,7 @@
             <div style="margin:0;display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:12px;padding:18px 28px;border-top:1px solid #E3E8EF;background:#FFFFFF">
                 <button type="button" data-cerrar-postulacion class="{{ $btnSecundario }} cursor-pointer">Cerrar</button>
                 <button type="button" id="mp-btn-cancelar" data-abrir-confirmacion
-                        style="font-family:inherit;font-weight:700;font-size:15px;padding:12px 24px;min-height:46px;border-radius:12px;border:2px solid #B42318;background:#B42318;color:#FFFFFF;cursor:pointer"
+                        style="font-family:inherit;font-weight:700;font-size:15px;padding:12px 16px;min-height:46px;border-radius:9999px;border:2px solid #B42318;background:#B42318;color:#FFFFFF;cursor:pointer"
                         onmouseover="this.style.background='#8F1D14';this.style.borderColor='#8F1D14'"
                         onmouseout="this.style.background='#B42318';this.style.borderColor='#B42318'">
 
@@ -145,7 +145,7 @@
                 </button>
 
                 <button type="submit"
-                    style="font-family:inherit;font-weight:700;font-size:15px;padding:12px 24px;min-height:46px;border-radius:12px;border:2px solid #B42318;background:#B42318;color:#FFFFFF;cursor:pointer"
+                    style="font-family:inherit;font-weight:700;font-size:15px;padding:12px 16px;min-height:46px;border-radius:9999px;border:2px solid #B42318;background:#B42318;color:#FFFFFF;cursor:pointer"
                     onmouseover="this.style.background='#8F1D14';this.style.borderColor='#8F1D14'"
                     onmouseout="this.style.background='#B42318';this.style.borderColor='#B42318'">
                     Confirmar
