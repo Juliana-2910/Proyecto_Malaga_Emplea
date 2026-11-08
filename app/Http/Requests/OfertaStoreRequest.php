@@ -44,7 +44,7 @@ class OfertaStoreRequest extends FormRequest
         'descripcion' => 'required|string',
         'requisitos' => 'required|string',
         'salario' => 'required|numeric',
-        'tipoContrato' => 'required|in:tiempo completo,medio tiempo,horas',
+        'tipoContrato' => 'required|in:tiempo completo,medio tiempo,horas,porcentaje',
         'ubicacion' => 'required|string|max:255',
         'fechaLimite' => 'required|date|after_or_equal:fechaPublicacion',
         'idEmpresa' => 'nullable|exists:empresas,id|required_without:idUsuario',

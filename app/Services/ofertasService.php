@@ -108,7 +108,7 @@ class ofertasService
 
 /* ===== Vista "Ofertas con sesión" (usuario) ===== */
 
-    private const CONTRATOS = ['tiempo completo', 'medio tiempo', 'horas'];
+    private const CONTRATOS = ['tiempo completo', 'medio tiempo', 'horas', 'porcentaje'];
     private const PUBLICA = ['empresas', 'personas'];
     private const ORDENES = ['recientes', 'antiguas', 'vencen'];
     private const POR_PAGINA = 10;

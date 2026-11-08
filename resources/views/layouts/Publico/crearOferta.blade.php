@@ -128,7 +128,7 @@
 
                     <div style="background:#EAF6FD;border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:10px;font-size:13px;line-height:1.45;color:#12303F">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1A75A8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:0 0 auto"><path d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"/></svg>
-                        <span>Se publicará hoy<strong>{{ now('America/Bogota')->format('d/m/Y') }}</strong>.</span>
+                        <span>Se publicará hoy <strong>{{ now('America/Bogota')->format('d/m/Y') }}</strong>.</span>
                     </div>
                 </div>
             </div>

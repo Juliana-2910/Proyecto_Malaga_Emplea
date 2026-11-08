@@ -9,6 +9,7 @@
         'tiempo completo' => 'Tiempo completo',
         'medio tiempo'    => 'Medio tiempo',
         'horas'           => 'Por horas',
+        'porcentaje'      => 'Por porcentaje',
     ];
 
     $etiqueta = 'rounded-full bg-fondo px-3 py-1 text-[13px] font-semibold text-slate-600';
