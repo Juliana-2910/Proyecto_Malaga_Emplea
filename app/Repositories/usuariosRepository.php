@@ -9,20 +9,21 @@ class usuariosRepository{
 
     public function listarTodos()
     {
-        return Usuario::with('rol')->get();
+        return Usuario::with('roles')->get();
     }
 
     public function listarUsuarios()
     {
-    return Usuario::with('rol')
-        ->whereHas('rol', function ($query) {
-            $query->where('rol', 'usuario');
-        })
-        ->get();
+        return Usuario::with('roles')
+            ->whereHas('roles', function ($query) {
+                $query->where('name', 'usuario'); // Cambiado 'roles' por 'name'
+            })
+            ->get();
     }
 
     public function guardar(array $datos)
     {
+
         Usuario::create($datos);
     }
 
@@ -59,7 +60,7 @@ class usuariosRepository{
         ");
     }
 
-    
+
     // Subconsulta: usuarios que no han realizado postulaciones
     public function listarUsuariosSinPostulaciones()
     {
@@ -76,3 +77,5 @@ class usuariosRepository{
 
 }
 
+
+}
