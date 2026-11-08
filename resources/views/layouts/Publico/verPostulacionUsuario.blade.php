@@ -158,7 +158,7 @@
 
     @push('scripts')
         <script>
-                        // Modal de ver mi postulación y cancelar postulación//
+        // Modal de ver mi postulación y cancelar postulación//
 
             (function () {
                 const modal = document.getElementById('modal-postulacion');
@@ -180,6 +180,11 @@
                         fondo: '#FEE2E2', circulo: '#FECACA', color: '#7F1D1D', punto: '#DC2626',
                         mensaje: 'Esta vez no fuiste seleccionado/a. ¡Sigue intentando!',
                         icono: '<path d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />'
+                    },
+                    Contratado: {
+                        fondo: '#E0F2FE', circulo: '#BAE6FD', color: '#075985', punto: '#0284C7',
+                        mensaje: '¡Felicitaciones! Has sido contratado/a. Ahora puedes calificar tu experiencia.',
+                        icono: '<rect x="3" y="7" width="18" height="14" rx="2" /><path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2M3 12h18M10 12v2h4v-2" />'
                     }
                 };
 

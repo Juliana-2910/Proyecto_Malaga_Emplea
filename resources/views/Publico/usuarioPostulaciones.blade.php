@@ -209,4 +209,7 @@
 
 {{-- MODAL VER MI POSTULACIÓN Y CANCELAR --}}
 @include('layouts.Publico.verPostulacionUsuario')
+
+{{-- MODAL CALIFICAR --}}
+@include('layouts.Publico.calificar')
 @endsection
