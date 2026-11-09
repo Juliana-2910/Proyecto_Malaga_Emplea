@@ -54,6 +54,7 @@
 
 
             {{-- TABLA --}}
+
             <div class="overflow-x-auto">
 
                 <table class="w-full text-center text-gray-600">
@@ -72,11 +73,11 @@
                                 Usuario
                             </th>
 
-                            {{-- EMPRESA --}}
+                            {{-- PUBLICADOR --}}
                             <th class="border-r border-gray-600 px-6 py-4 text-sm font-semibold">
-                                Empresa
+                                Publicador
                             </th>
-                            
+
                             {{-- TIPO DE CALIFICADOR --}}
                             <th class="border-r border-gray-600 px-6 py-4 text-sm font-semibold">
                                 Quién califica
@@ -123,18 +124,21 @@
 
                                 {{-- USUARIO --}}
                                 <td class="border-r border-gray-100 px-6 py-5 text-sm font-medium text-gray-600">
-
-                                    {{ $calificacion->usuario->nombres ?? 'Sin usuario' }}
-                                    {{ $calificacion->usuario->apellidos ?? '' }}
-
+                                    {{ $calificacion->postulacion->usuario->nombres ?? 'Sin usuario' }}
+                                    {{ $calificacion->postulacion->usuario->apellidos ?? '' }}
                                 </td>
 
 
-                                {{-- EMPRESA --}}
+                                {{-- PUBLICADOR --}}
                                 <td class="border-r border-gray-100 px-6 py-5 text-sm font-medium text-gray-600">
-
-                                    {{ $calificacion->empresa->nombreEmpresa ?? 'Sin empresa' }}
-
+                                    @if ($calificacion->postulacion->oferta->empresa)
+                                        {{ $calificacion->postulacion->oferta->empresa->nombreEmpresa }}
+                                    @elseif ($calificacion->postulacion->oferta->usuario)
+                                        {{ $calificacion->postulacion->oferta->usuario->nombres }}
+                                        {{ $calificacion->postulacion->oferta->usuario->apellidos }}
+                                    @else
+                                        Sin publicador
+                                    @endif
                                 </td>
 
                                 {{-- TIPO DE CALIFICADOR --}}
@@ -147,7 +151,7 @@
                                         Sin especificar
                                      @endif
                                 </td>
-                                
+
                                 {{-- PUNTUACIÓN --}}
                                 <td class="border-r border-gray-100 px-6 py-5">
 
@@ -249,12 +253,24 @@
 
                                     <p class="text-sm leading-6 text-gray-500">
 
-                                        ¿Seguro que deseas eliminar la calificación de
+                                        ¿Seguro que deseas eliminar la calificación que recibió:
 
                                         <strong class="text-gray-800">
+                                            @if ($calificacion->tipoCalificador === 'usuario')
 
-                                            {{ $calificacion->usuario->nombres ?? 'este usuario' }}
+                                                {{ $calificacion->empresaCalificada->nombreEmpresa
+                                                    ?? (
+                                                        ($calificacion->usuarioCalificado->nombres ?? '') . ' ' .
+                                                        ($calificacion->usuarioCalificado->apellidos ?? '')
+                                                    )
+                                                }}
 
+                                            @else
+
+                                                {{ ($calificacion->usuarioCalificado->nombres ?? '') . ' ' .
+                                                ($calificacion->usuarioCalificado->apellidos ?? '') }}
+
+                                            @endif
                                         </strong>?
 
                                         <br>

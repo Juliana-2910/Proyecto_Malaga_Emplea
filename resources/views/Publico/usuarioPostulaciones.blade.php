@@ -1,4 +1,4 @@
-@extends('layouts.Publico.usuario')
+@extends('layouts.Publico.Usuario.usuario')
 
 @section('title', 'Mis postulaciones')
 
@@ -14,6 +14,7 @@
 
     $etiqueta = 'rounded-full bg-fondo px-3 py-1 text-[13px] font-semibold text-slate-600';
     $campo = 'rounded-[10px] border-[1.5px] border-slate-300 bg-white px-3.5 py-3 text-[15px] text-slate-800';
+    $btnPrimario = 'inline-flex items-center justify-center gap-2 rounded-full border-2 border-marca bg-marca px-4 py-3 text-[15px] font-bold text-tinta transition hover:border-carbon hover:bg-carbon hover:text-white';
     $btnSecundario = 'inline-flex items-center justify-center rounded-full border-2 border-slate-800 bg-white px-4 py-3 text-[15px] font-bold text-slate-800 transition hover:border-carbon hover:bg-carbon hover:text-white';
 
     // Colores de cada estado
@@ -126,12 +127,21 @@
                     'ubicacion'   => $oferta->ubicacion,
                     'vence'       => \Carbon\Carbon::parse($oferta->fechaLimite)->format('d/m/Y'),
                     'descripcion' => $oferta->descripcion,
-                    'postulacion' => [
+                        'postulacion' => [
                         'id'     => $postulacion->id,
                         'estado' => $postulacion->estado,
                         'fecha'  => \Carbon\Carbon::parse($postulacion->fecha)->format('d/m/Y'),
-                    ],
-                ];
+                        ],
+                    ];
+                    // Datos del modal "Calificar"
+                $datosCalificar = [
+                        'id'     => $postulacion->id,
+                        'nombre' => $oferta->publicador,
+                        'tipo'   => $oferta->idEmpresa ? 'Empresa' : 'Persona natural',
+                        'titulo' => $oferta->titulo,
+                        'foto'   => $publicador?->fotoPerfil ? asset('storage/' . $publicador->fotoPerfil) : null,
+                    ];
+
             @endphp
 
             <article class="flex flex-wrap items-center gap-5 rounded-2xl border border-slate-200 bg-white p-6 transition hover:shadow-lg hover:shadow-noche/10">
@@ -159,8 +169,11 @@
                         @endif
 
                         <span class="{{ $etiqueta }}">{{ $contratos[$oferta->tipoContrato] ?? $oferta->tipoContrato }}</span>
-
                         <span class="{{ $etiqueta }}">${{ number_format($oferta->salario, 0, ',', '.') }}</span>
+                        <span class="inline-flex items-center gap-2 rounded-full {{ $estado['fondo'] }} px-3.5 py-1.5 text-[13px] font-bold {{ $estado['color'] }}">
+                            <span class="size-2 rounded-full {{ $estado['punto'] }}"></span>
+                                {{ $estado['texto'] }}
+                        </span>
                     </div>
 
                     <div class="flex flex-wrap gap-x-5 gap-y-1.5 text-sm text-slate-500">
@@ -169,21 +182,43 @@
                     </div>
                 </div>
 
-                {{-- Estado + acciones --}}
+                {{-- Acciones --}}
                 <div class="flex flex-col items-end gap-3">
-                    <span class="inline-flex items-center gap-2 rounded-full {{ $estado['fondo'] }} px-3.5 py-1.5 text-[13px] font-bold {{ $estado['color'] }}">
-                        <span class="size-2 rounded-full {{ $estado['punto'] }}"></span>
-                        {{ $estado['texto'] }}
-                    </span>
 
-                    <div class="flex flex-wrap justify-end gap-2.5">
+                    <div class="flex flex-wrap items-center justify-end gap-2.5">
+
+                        {{-- Calificación ya enviada: chip con estrellas --}}
+                        @if ($postulacion->estado === 'Contratado' && $postulacion->calificacion)
+                            <span class="inline-flex items-center gap-1.5 rounded-xl border border-amber-200 bg-amber-50 px-3.5 py-2 text-[13px] font-bold text-amber-800">
+                                <span class="inline-flex gap-0.5" aria-hidden="true">
+                                    @for ($i = 1; $i <= 5; $i++)
+                                        <svg class="size-4 {{ $i <= $postulacion->calificacion ? 'text-amber-500' : 'text-amber-300' }}"
+                                            viewBox="0 0 24 24"
+                                            fill="{{ $i <= $postulacion->calificacion ? 'currentColor' : 'none' }}"
+                                            stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
+                                        </svg>
+                                    @endfor
+                                </span>
+                                <span class="sr-only">{{ $postulacion->calificacion }} de 5 estrellas.</span>
+                                Calificada · {{ $postulacion->calificacion }}/5
+                            </span>
+                        @endif
+
                         <button type="button" data-ver-postulacion="{{ json_encode($datosModal) }}"
                                 class="{{ $btnSecundario }} cursor-pointer">
                             Ver mi postulación
                         </button>
 
-                        @if ($postulacion->estado === 'Contratado')
-                        {{-- Botón Calificar --}}
+                        {{-- Contratada y todavía sin calificar: botón Calificar --}}
+                        @if ($postulacion->estado === 'Contratado' && ! $postulacion->calificacion)
+                            <button type="button" data-calificar="{{ json_encode($datosCalificar) }}"
+                                    class="{{ $btnPrimario }} cursor-pointer">
+                                <svg class="size-[18px]" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
+                                </svg>
+                                Calificar
+                            </button>
                         @endif
                     </div>
                 </div>
@@ -208,8 +243,9 @@
 </section>
 
 {{-- MODAL VER MI POSTULACIÓN Y CANCELAR --}}
-@include('layouts.Publico.verPostulacionUsuario')
+@include('layouts.Publico.Usuario.verPostulacionUsuario')
 
 {{-- MODAL CALIFICAR --}}
-@include('layouts.Publico.calificar')
+@include('layouts.Publico.calificarContratacion')
+
 @endsection

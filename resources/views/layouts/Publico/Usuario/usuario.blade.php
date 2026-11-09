@@ -13,7 +13,7 @@
 </head>
 <body class="bg-fondo font-sans text-slate-800 antialiased">
 
-    @include('layouts.Publico.navbarUsuario')
+    @include('layouts.Publico.Usuario.navbarUsuario')
 
     <main>
         @yield('content')

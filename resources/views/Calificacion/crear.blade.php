@@ -18,7 +18,7 @@
         </h1>
 
         <p class="mt-1 text-sm text-gray-500">
-            Registra una nueva calificación para un usuario y una empresa.
+            Registra la experiencia de una contratación realizada en Málaga Emplea.
         </p>
     </div>
 
@@ -30,90 +30,70 @@
 
             <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
 
-                {{-- Usuario --}}
-                <div>
-                    <label for="idUsuario" class="mb-1 block text-sm font-medium text-gray-700">
-                        Usuario
-                    </label>
+            {{-- Postulación --}}
+            <div class="md:col-span-2">
+                <label for="idPostulacion" class="mb-1 block text-sm font-medium text-gray-700">
+                    Postulación contratada
+                </label>
 
-                    <select
-                        name="idUsuario"
-                        id="idUsuario"
-                        class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]"
-                    >
-                        <option value="">Seleccione un usuario</option>
+                <select
+                    name="idPostulacion"
+                    id="idPostulacion"
+                    required
+                    class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]"
+                >
+                    <option value="">Seleccione una postulación</option>
 
-                        @foreach ($usuarios as $usuario)
-                            <option value="{{ $usuario->id }}"
-                                {{ old('idUsuario') == $usuario->id ? 'selected' : '' }}>
-                                {{ $usuario->nombres }} {{ $usuario->apellidos }}
-                            </option>
-                        @endforeach
-                    </select>
+                    @foreach ($postulaciones as $postulacion)
+                        <option
+                            value="{{ $postulacion->id }}"
+                            {{ old('idPostulacion') == $postulacion->id ? 'selected' : '' }}
+                        >
+                            Postulación #{{ $postulacion->id }}
+                            - {{ $postulacion->usuario->nombres ?? 'Sin nombre' }}
+                            {{ $postulacion->usuario->apellidos ?? '' }}
+                            - {{ $postulacion->oferta->titulo ?? 'Sin oferta' }}
+                            - Publicada por:
+                            {{ $postulacion->oferta->empresa->nombreEmpresa
+                                ?? ($postulacion->oferta->usuario->nombres ?? 'Sin publicador') }}
+                        </option>
+                    @endforeach
+                </select>
 
-                    @error('idUsuario')
-                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                {{-- Empresa --}}
-                <div>
-                    <label for="idEmpresa" class="mb-1 block text-sm font-medium text-gray-700">
-                        Empresa
-                    </label>
-
-                    <select
-                        name="idEmpresa"
-                        id="idEmpresa"
-                        class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]"
-                    >
-                        <option value="">Seleccione una empresa</option>
-
-                        @foreach ($empresas as $empresa)
-                            <option value="{{ $empresa->id }}"
-                                {{ old('idEmpresa') == $empresa->id ? 'selected' : '' }}>
-                                {{ $empresa->nombreEmpresa }}
-                            </option>
-                        @endforeach
-                    </select>
-
-                    @error('idEmpresa')
-                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                    @enderror
-                </div>
+                @error('idPostulacion')
+                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                @enderror
+            </div>
 
 
             {{-- Tipo de calificador --}}
             <div>
                 <label for="tipoCalificador" class="mb-1 block text-sm font-medium text-gray-700">
-                     ¿Quién realiza la calificación?
+                    ¿Quién realiza la calificación?
                 </label>
 
-             <select
-                 name="tipoCalificador"
-                    id="tipoCalificador"
-                 required
-                 class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]"
-                >
-                    <option value="">Seleccione quién califica</option>
+                <select
+                    name="tipoCalificador"
+                        id="tipoCalificador"
+                    required
+                    class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
+                        <option value="">Seleccione quién califica</option>
 
-                    <option value="usuario"
-                       {{ old('tipoCalificador') == 'usuario' ? 'selected' : '' }}>
-                       El usuario califica a la empresa
-                 </option>
+                        <option value="usuario"
+                            {{ old('tipoCalificador') == 'usuario' ? 'selected' : '' }}>
+                                El usuario califica a la empresa
+                        </option>
 
-                    <option value="empresa"
-                     {{ old('tipoCalificador') == 'empresa' ? 'selected' : '' }}>
-                     La empresa califica al usuario
-                 </option>
-                   </select>
+                        <option value="empresa"
+                            {{ old('tipoCalificador') == 'empresa' ? 'selected' : '' }}>
+                                La empresa califica al usuario
+                        </option>
+                </select>
 
-              @error('tipoCalificador')
-                 <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-              @enderror
+                @error('tipoCalificador')
+                <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                @enderror
             </div>
-
-
 
                 {{-- Puntuación --}}
                 <div>
@@ -159,9 +139,10 @@
                         name="comentario"
                         id="comentario"
                         rows="4"
-                        class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]"
-                        placeholder="Escribe un comentario..."
-                    >{{ old('comentario') }}</textarea>
+                        maxlength="255"
+                        class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-700 placeholder:text-gray-400 focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]"
+                        placeholder="Escribe un comentario sobre la experiencia de la contratación..."
+                    >{{ trim(old('comentario', '')) }}</textarea>
 
                     @error('comentario')
                         <p class="mt-1 text-sm text-red-500">{{ $message }}</p>

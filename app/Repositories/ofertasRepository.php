@@ -9,6 +9,7 @@ use App\Models\Postulacion;
 use App\Models\HojaDeVida;
 use App\Models\Servicios;
 use App\Models\Usuario;
+use App\Models\Calificacion;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -225,5 +226,14 @@ class ofertasRepository
         };
 
         return $consulta->paginate($porPagina)->withQueryString();
+    }
+
+    /** Devuelve [idPostulacion => puntuación] de lo que la persona ya calificó. */
+    public function calificacionesPorPostulacion(array $idsPostulaciones, int $idUsuario): array
+    {
+        return Calificacion::whereIn('idPostulacion', $idsPostulaciones)
+            ->where('idUsuario', $idUsuario)
+            ->pluck('puntuacion', 'idPostulacion')
+            ->all();
     }
 }

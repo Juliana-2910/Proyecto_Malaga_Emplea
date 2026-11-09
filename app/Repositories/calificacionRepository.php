@@ -3,13 +3,16 @@
 namespace App\Repositories;
 
 use App\Models\Calificacion;
+use App\Models\Postulacion;
 use Illuminate\Support\Facades\DB;
 
 class calificacionRepository{
 
     public function listarTodos()
     {
-        return Calificacion::all();
+        return Calificacion::with(['usuario','empresa','usuarioCalificado','empresaCalificada',
+            'postulacion.usuario', 'postulacion.oferta.empresa', 'postulacion.oferta.usuario'
+        ])->get();
     }
 
     public function guardar(array $datos)
@@ -35,62 +38,91 @@ class calificacionRepository{
         return $calificacion;
     }
 
-    // Reputación promedio de las empresas
+    // Reputación promedio de las empresas (calificaciones que recibieron)
     public function listarReputacionEmpresas()
     {
         return DB::select("
-             SELECT
-                 e.id,
-                 e.nombreEmpresa,
-                 (
+            SELECT
+                e.id,
+                e.nombreEmpresa,
+                (
                     SELECT AVG(c.puntuacion)
                     FROM calificacion AS c
-                    WHERE c.idEmpresa = e.id
-                    AND c.tipoCalificador = 'usuario'
-                 ) AS reputacion,
-                 (
+                    WHERE c.idEmpresaCalificada = e.id
+                ) AS reputacion,
+                (
                     SELECT COUNT(*)
                     FROM calificacion AS c
-                    WHERE c.idEmpresa = e.id
-                    AND c.tipoCalificador = 'usuario'
-                 ) AS totalCalificaciones
-                    FROM empresas AS e
-                    WHERE EXISTS (
-                    SELECT 1
-                    FROM calificacion AS c
-                    WHERE c.idEmpresa = e.id
-                    AND c.tipoCalificador = 'usuario'
-                )
+                    WHERE c.idEmpresaCalificada = e.id
+                ) AS totalCalificaciones
+            FROM empresas AS e
+            WHERE EXISTS (
+                SELECT 1
+                FROM calificacion AS c
+                WHERE c.idEmpresaCalificada = e.id
+            )
         ");
     }
 
-    // Reputación promedio de los usuarios
+    // Reputación promedio de las personas naturales (calificaciones que recibieron)
     public function listarReputacionUsuarios()
     {
         return DB::select("
-                SELECT
+            SELECT
                 u.id,
                 u.nombres,
                 u.apellidos,
-            (
-                SELECT AVG(c.puntuacion)
-                FROM calificacion AS c
-                WHERE c.idUsuario = u.id
-                  AND c.tipoCalificador = 'empresa'
-            ) AS reputacion,
-            (
-                SELECT COUNT(*)
-                FROM calificacion AS c
-                WHERE c.idUsuario = u.id
-                  AND c.tipoCalificador = 'empresa'
-            ) AS totalCalificaciones
-                FROM usuarios AS u
-                WHERE EXISTS (
+                (
+                    SELECT AVG(c.puntuacion)
+                    FROM calificacion AS c
+                    WHERE c.idUsuarioCalificado = u.id
+                ) AS reputacion,
+                (
+                    SELECT COUNT(*)
+                    FROM calificacion AS c
+                    WHERE c.idUsuarioCalificado = u.id
+                ) AS totalCalificaciones
+            FROM usuarios AS u
+            WHERE EXISTS (
                 SELECT 1
                 FROM calificacion AS c
-                WHERE c.idUsuario = u.id
-                AND c.tipoCalificador = 'empresa'
-        )
+                WHERE c.idUsuarioCalificado = u.id
+            )
         ");
+    }
+
+    /** Postulación con su oferta, para calificar una contratación. */
+    public function buscarPostulacionConOferta(int $idPostulacion)
+    {
+        return Postulacion::with('oferta')->findOrFail($idPostulacion);
+    }
+
+    /** ¿Esta persona ya calificó esta postulación? */
+    public function yaCalificadaPorUsuario(int $idPostulacion, int $idUsuario): bool
+    {
+        return Calificacion::where('idPostulacion', $idPostulacion)
+            ->where('idUsuario', $idUsuario)
+            ->exists();
+    }
+
+    /** ¿Ya existe una calificación de este sentido en la postulación? */
+    public function yaCalificadaPorSentido(int $idPostulacion, string $tipoCalificador): bool
+    {
+        return Calificacion::where('idPostulacion', $idPostulacion)
+            ->where('tipoCalificador', $tipoCalificador)
+            ->exists();
+    }
+
+    /** Lista las postulaciones contratadas para el formulario administrativo. */
+    public function listarPostulacionesContratadas()
+    {
+        return Postulacion::with([
+            'usuario',
+            'oferta.empresa',
+            'oferta.usuario'
+        ])
+        ->where('estado', 'Contratado')
+        ->orderByDesc('id')
+        ->get();
     }
 }

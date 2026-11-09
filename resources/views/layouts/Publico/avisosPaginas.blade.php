@@ -22,7 +22,7 @@
                     }, 3000);
                 });
             </script>
-            @endif
+        @endif
 
     {{-- AVISO AMARILLO: MENSAJES ADVERTENCIA O ERRORES --}}
         @if (session('error'))
@@ -60,6 +60,33 @@
                 </div>
                 <button type="button" aria-label="Cerrar aviso" onclick="this.closest('[role=alert]').remove()"
                         style="border:none;background:transparent;color:#B42318;cursor:pointer;display:flex;padding:4px">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="size-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 18 6M6 6l12 12" /></svg>
+                </button>
+            </div>
+
+            <script>
+                document.querySelectorAll('[role="alert"]').forEach((aviso) => {
+                    setTimeout(() => {
+                        aviso.remove();
+                    }, 3000);
+                });
+            </script>
+        @endif
+
+        {{-- AVISO AZUL: MENSAJE DE ACTUALIZACIÓN --}}
+        @if (session('actualizar'))
+            <div role="alert"
+                style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 16px;border-radius:12px;border:1px solid #BAE6FD;background:#E0F2FE;color:#0369A1;font-size:14px;box-shadow:0 1px 2px rgba(0,0,0,0.05)">
+
+                <div style="display:flex;align-items:center;gap:12px">
+                    <span style="width:32px;height:32px;border-radius:999px;background:#BAE6FD;display:flex;align-items:center;justify-content:center;flex:0 0 auto">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" /></svg>
+                    </span>
+
+                    <span>{{ session('actualizar') }}</span>
+                </div>
+                <button type="button" aria-label="Cerrar aviso" onclick="this.closest('[role=alert]').remove()"
+                        style="border:none;background:transparent;color:#0369A1;cursor:pointer;display:flex;padding:4px">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="size-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 18 6M6 6l12 12" /></svg>
                 </button>
             </div>

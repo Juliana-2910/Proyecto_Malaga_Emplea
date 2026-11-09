@@ -1,4 +1,4 @@
-@extends('layouts.Publico.usuario')
+@extends('layouts.Publico.Usuario.usuario')
 
 @section('title', 'Ofertas')
 
@@ -163,7 +163,7 @@
                 </section>
             @endif
 
-    @include('layouts.Publico.crearHojaDeVida')
+    @include('layouts.Publico.usuario.crearHojaDeVida')
 
     {{-- FILTROS + LISTADO --}}
     <section class="px-6 pb-16 pt-8">
@@ -296,10 +296,7 @@
                                 >
                             @else
                                 <div class="flex h-full w-full items-center justify-center text-marca-texto">
-                                    <svg class="size-7" fill="none" viewBox="0 0 24 24"
-                                        stroke-width="1.6" stroke="currentColor" aria-hidden="true">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.5 20.1a7.5 7.5 0 0115 0" />
+                                    <svg class="size-7" fill="none" viewBox="0 0 24 24" stroke-width="1.6" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.5 20.1a7.5 7.5 0 0115 0" />
                                     </svg>
                                 </div>
                             @endif
@@ -389,8 +386,8 @@
     </div>
 </section>
 
-    @include('layouts.Publico.verOfertaUsuario')
+    @include('layouts.Publico.usuario.verOfertaUsuario')
 
-    @include('layouts.Publico.verPostulacionUsuario')
+    @include('layouts.Publico.usuario.verPostulacionUsuario')
 
 @endsection

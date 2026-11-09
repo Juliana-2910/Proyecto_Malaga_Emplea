@@ -49,3 +49,4 @@ Route::delete('/empleos/postulaciones/{id}', [OfertaPublicaController::class, 'c
 Route::post('/empleos/hoja-de-vida', [OfertaPublicaController::class, 'guardarHojaDeVida'])->name('Publico.guardarHojaDeVida');
 Route::post('/empleos/publicar', [OfertaPublicaController::class, 'guardarOferta'])->name('Publico.guardarOferta');
 Route::get('/mis-postulaciones', [OfertaPublicaController::class, 'misPostulaciones'])->name('Publico.postulaciones');
+Route::post('/mis-postulaciones/{id}/calificar', [OfertaPublicaController::class, 'calificar'])->whereNumber('id')->name('Publico.calificar');
