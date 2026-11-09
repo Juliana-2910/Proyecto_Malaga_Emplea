@@ -65,7 +65,6 @@ class OfertaPublicaController extends Controller
             ->with('error', $e->getMessage());
     }
     }
-}
 
     public function cancelarPostulacion(Request $request, int $id)
     {

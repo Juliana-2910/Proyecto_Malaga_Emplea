@@ -77,7 +77,6 @@ class usuariosRepository{
         ");
     }
 
-
     // Subconsulta: usuarios que no han realizado postulaciones
     public function listarUsuariosSinPostulaciones()
     {
