@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('postulacion', function (Blueprint $table) {
             $table->id();
             $table->date('fecha');
-            $table->enum('estado', ['Enviado', 'Aceptado', 'Rechazado']);
+            $table->enum('estado', ['Enviado', 'Aceptado', 'Rechazado', 'Contratado']);
             $table->unsignedBigInteger('idUsuario');
             $table->unsignedBigInteger('idOferta');
 

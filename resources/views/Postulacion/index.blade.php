@@ -177,14 +177,21 @@
 
                                     </span>
 
-                                @else
+                                @elseif ($postulacion->estado === 'Contratado')
+
+                                    <span class="inline-flex items-center rounded-full bg-sky-100 px-3 py-1 text-xs font-semibold text-sky-700">
+
+                                        Contratado
+
+                                    </span>
+
+                                    @else
 
                                     <span class="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-600">
 
                                         {{ $postulacion->estado }}
 
                                     </span>
-
                                 @endif
 
                             </td>

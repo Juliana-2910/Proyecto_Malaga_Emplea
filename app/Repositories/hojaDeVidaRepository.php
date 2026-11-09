@@ -37,4 +37,9 @@ class hojaDeVidaRepository
     {
         return HojaDeVida::where('idUsuario', $idUsuario)->exists();
     }
+
+    public function buscarPorUsuario(int $idUsuario)
+    {
+        return HojaDeVida::where('idUsuario', $idUsuario)->first();
+    }
 }

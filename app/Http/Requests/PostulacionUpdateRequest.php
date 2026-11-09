@@ -25,6 +25,6 @@ class PostulacionUpdateRequest extends FormRequest
         return [
             'idUsuario' => 'required|exists:usuarios,id',
             'idOferta' => 'required|exists:ofertas,id',
-        ];
+            'estado' => 'required|in:Enviado,Aceptado,Rechazado,Contratado',];
     }
 }

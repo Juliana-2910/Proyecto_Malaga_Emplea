@@ -3,6 +3,13 @@
 namespace App\Repositories;
 
 use App\Models\Oferta;
+use App\Models\OfertaServicios;
+use App\Models\Categoria;
+use App\Models\Postulacion;
+use App\Models\HojaDeVida;
+use App\Models\Servicios;
+use App\Models\Usuario;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class ofertasRepository
@@ -114,13 +121,14 @@ class ofertasRepository
     public function listarActivas(array $filtros, int $porPagina)
     {
         $consulta = Oferta::with(['empresa', 'usuario'])
-            ->whereDate('fechaLimite', '>=', today())
+            ->whereDate('fechaLimite', '>=', now('America/Bogota')->toDateString()) //Ofertas activas (no vencidas) //
+            ->whereDoesntHave('postulaciones', function ($q) {$q->where('estado', 'Contratado');}) //Ocultar ofertas que ya tienen un postulante contratado //
             ->when($filtros['q'] ?? null, fn ($q, $v) => $q->where('titulo', 'like', "%{$v}%"))
             ->when($filtros['contrato'] ?? null, fn ($q, $v) => $q->where('tipoContrato', $v))
             ->when(($filtros['publica'] ?? null) === 'empresas', fn ($q) => $q->whereNotNull('idEmpresa'))
             ->when(($filtros['publica'] ?? null) === 'personas', fn ($q) => $q->whereNotNull('idUsuario'))
             ->when($filtros['categoria'] ?? null, function ($q, $idCategoria) {
-                $q->whereIn('id', \App\Models\OfertaServicios::query()
+                $q->whereIn('id', OfertaServicios::query()
                     ->select('idOferta')
                     ->whereHas('servicio', fn ($s) => $s->where('idCategoria', $idCategoria)));
             });
@@ -137,7 +145,7 @@ class ofertasRepository
     /** Devuelve [idOferta => nombre de la categoría]. */
     public function categoriasPorOferta(array $idsOfertas): array
     {
-        return \App\Models\OfertaServicios::with('servicio.categoria')
+        return OfertaServicios::with('servicio.categoria')
             ->whereIn('idOferta', $idsOfertas)
             ->get()
             ->groupBy('idOferta')
@@ -147,18 +155,18 @@ class ofertasRepository
 
     public function listarCategorias()
     {
-        return \App\Models\Categoria::orderBy('nombre')->get(['id', 'nombre']);
+        return Categoria::orderBy('nombre')->get(['id', 'nombre']);
     }
 
     public function idsOfertasPostuladas(int $idUsuario): array
     {
-        return \App\Models\Postulacion::where('idUsuario', $idUsuario)->pluck('idOferta')->all();
+        return Postulacion::where('idUsuario', $idUsuario)->pluck('idOferta')->all();
     }
 
-    /** Devuelve ['Enviado' => n, 'Aceptado' => n, 'Rechazado' => n]. */
+    /** Devuelve ['Enviado' => n, 'Aceptado' => n, 'Rechazado' => n, 'Contratado' => n]. */
     public function contarPostulacionesPorEstado(int $idUsuario): array
     {
-        return \App\Models\Postulacion::where('idUsuario', $idUsuario)
+        return Postulacion::where('idUsuario', $idUsuario)
             ->selectRaw('estado, COUNT(*) as total')
             ->groupBy('estado')
             ->pluck('total', 'estado')
@@ -167,19 +175,55 @@ class ofertasRepository
 
     public function contarPostulantesPorRevisar(int $idUsuario): int
     {
-        return \App\Models\Postulacion::where('estado', 'Enviado')
+        return Postulacion::where('estado', 'Enviado')
             ->whereHas('oferta', fn ($q) => $q->where('idUsuario', $idUsuario))
             ->count();
     }
 
     public function hojaDeVidaDe(int $idUsuario)
     {
-        return \App\Models\HojaDeVida::where('idUsuario', $idUsuario)->latest('id')->first();
+        return HojaDeVida::where('idUsuario', $idUsuario)->latest('id')->first();
     }
 
     /** TEMPORAL: mientras no exista el login se usa el primer usuario registrado. */
     public function usuarioDePrueba()
     {
-        return \App\Models\Usuario::first();
+        return Usuario::first();
+    }
+
+    /** Devuelve [idOferta => ['id' => ..., 'estado' => ..., 'fecha' => 'dd/mm/aaaa']] de las postulaciones del usuario. */
+    public function postulacionesPorOferta(int $idUsuario): array
+    {
+        return Postulacion::where('idUsuario', $idUsuario)->get()->mapWithKeys(fn ($p) => [$p->idOferta => [
+                'id'     => $p->id,
+                'estado' => $p->estado,
+                'fecha'  => Carbon::parse($p->fecha)->format('d/m/Y'),
+            ]])
+            ->all();
+    }
+
+    public function eliminarServiciosPorOferta(int $id): void
+    {
+        OfertaServicios::where('idOferta', $id)->delete();
+    }
+
+    public function listarServicios()
+    {
+        return Servicios::orderBy('nombre')->get(['id', 'nombre', 'idCategoria']);
+    }
+
+    /** "Mis postulaciones" **/
+    public function listarPostulacionesDeUsuario(int $idUsuario, array $filtros, int $porPagina)
+    {
+        $consulta = Postulacion::with(['oferta.empresa', 'oferta.usuario'])
+            ->where('idUsuario', $idUsuario)
+            ->when($filtros['estado'] ?? null, fn ($q, $estado) => $q->where('estado', $estado));
+
+        match ($filtros['orden'] ?? 'recientes') {
+            'antiguas' => $consulta->orderBy('fecha')->orderBy('id'),
+            default    => $consulta->orderByDesc('fecha')->orderByDesc('id'),
+        };
+
+        return $consulta->paginate($porPagina)->withQueryString();
     }
 }

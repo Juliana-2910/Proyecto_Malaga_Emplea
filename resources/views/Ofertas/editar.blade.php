@@ -200,6 +200,11 @@
                             Por horas
                         </option>
 
+                        <option value="horas"
+                            {{ old('tipoContrato') == 'porcentaje' ? 'selected' : '' }}>
+                            Por porcentaje
+                        </option>
+
                     </select>
 
                     @error('tipoContrato')

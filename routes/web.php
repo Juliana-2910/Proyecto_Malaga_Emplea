@@ -19,10 +19,13 @@ use App\Http\Controllers\PostulacionController;
     Route::get('/', [HomeController::class, 'index'])->name('Publico.inicio');
 
 Route::middleware('auth:web,empresa')->group(function () {
-
+    
     Route::get('/empleos', [OfertaPublicaController::class, 'index'])->name('Publico.ofertas');
     Route::post('/empleos/{id}/postular', [OfertaPublicaController::class, 'postular'])->whereNumber('id')->name('Publico.postular');
-
+    Route::delete('/empleos/postulaciones/{id}', [OfertaPublicaController::class, 'cancelarPostulacion'])->whereNumber('id')->name('Publico.cancelarPostulacion');
+    Route::post('/empleos/hoja-de-vida', [OfertaPublicaController::class, 'guardarHojaDeVida'])->name('Publico.guardarHojaDeVida');
+    Route::post('/empleos/publicar', [OfertaPublicaController::class, 'guardarOferta'])->name('Publico.guardarOferta');
+    Route::get('/mis-postulaciones', [OfertaPublicaController::class, 'misPostulaciones'])->name('Publico.postulaciones');
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
@@ -45,7 +48,6 @@ Route::middleware('auth:web,empresa')->group(function () {
     Route::get('/ofertas-sin-servicios', [OfertaController::class, 'ofertasSinServicios'])->name('ofertas.sinServicios');
     Route::get('/reputacion-empresas', [CalificacionController::class, 'reputacionEmpresas'])->name('calificacion.reputacionEmpresas');
     Route::get('/reputacion-usuarios', [CalificacionController::class, 'reputacionUsuarios'])->name('calificacion.reputacionUsuarios');
-
 
 
 });
