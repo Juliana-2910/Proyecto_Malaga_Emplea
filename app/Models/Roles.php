@@ -2,21 +2,26 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Spatie\Permission\Models\Role;
 
-class Roles extends Model
+class Roles extends Role
 {
-    protected $table = 'roles';
+    protected $table = 'spatie_roles';
 
     protected $fillable = [
-        'rol',
+        'name',
+        'guard_name',
+        'estado',
+        'modulo',
     ];
 
-    public function usuarios()
+    public function getRolAttribute(): ?string
     {
-        return $this->hasMany(Usuario::class);
+        return $this->name;
+    }
 
+    public function setRolAttribute(string $valor): void
+    {
+        $this->attributes['name'] = $valor;
+    }
 }
-}
-
-/*Tabla Padre*/

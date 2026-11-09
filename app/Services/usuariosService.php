@@ -58,7 +58,7 @@ class usuariosService{
             ); // Guardar foto de perfil
             $datos['fotoPerfil'] = $ruta;
         }
-        $this->usuariosRepository->guardar($datos);
+        return $this->usuariosRepository->guardar($datos);
     }
 
     public function eliminar(int $id)
@@ -86,8 +86,8 @@ class usuariosService{
         $usuario = $this->usuariosRepository->buscarPorId($id); // Buscar el usuario
         $fechaNacimiento = Carbon::parse($datos['fechaNacimiento']); // Validar que el usuario sea mayor de edad
         if ($fechaNacimiento->age < 18) {
-        throw ValidationException::withMessages([
-            'fechaNacimiento' => 'El usuario debe tener mínimo 18 años para actualizar sus datos.'
+            throw ValidationException::withMessages([
+                'fechaNacimiento' => 'El usuario debe tener mínimo 18 años para actualizar sus datos.'
         ]);
     }
         if (isset($datos['fotoPerfil'])) {
@@ -105,7 +105,7 @@ class usuariosService{
             }
             $datos['fotoPerfil'] = $ruta;
         }
-        $this->usuariosRepository->actualizar($id, $datos);
+        return $this->usuariosRepository->actualizar($id, $datos);
     }
 }
 

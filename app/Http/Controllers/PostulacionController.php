@@ -34,6 +34,14 @@ class PostulacionController extends Controller
         return view('Postulacion.index', compact('postulaciones'));
     }
 
+    public function misPostulaciones()
+    {
+        $usuario = auth('web')->user();
+
+        $postulaciones = $this->postulacionService->listarPorUsuario($usuario->id);
+
+        return view('Postulacion.misPostulaciones', compact('postulaciones'));
+    }
 
     public function create()
     {

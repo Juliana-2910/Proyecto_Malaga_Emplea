@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Models\Roles;
 use App\Models\Usuario;
 use Illuminate\Support\Facades\DB;
 
@@ -24,7 +25,14 @@ class usuariosRepository{
     public function guardar(array $datos)
     {
 
-        Usuario::create($datos);
+    return DB::transaction(function () use ($datos) {
+
+        $usuario = Usuario::create($datos);
+
+        $usuario->assignRole('usuario');
+
+        return $usuario;
+    });
     }
 
     public function eliminar (int $id)
@@ -43,9 +51,18 @@ class usuariosRepository{
     public function actualizar(int $id, array $datos)
     {
         $usuario = Usuario::findOrFail($id);
-        $usuario->update($datos);
+
+
+    if (empty($datos['password'])) {
+        unset($datos['password']);
     }
-    
+
+    $usuario->update($datos);
+
+    return $usuario;
+    }
+
+
     // Subconsulta: usuarios que han realizado postulaciones
     public function listarUsuariosConPostulaciones()
     {
@@ -74,8 +91,5 @@ class usuariosRepository{
             )
         ");
     }
-
-}
-
 
 }

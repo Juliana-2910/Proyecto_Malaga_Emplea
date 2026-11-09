@@ -18,7 +18,6 @@ use App\Http\Controllers\PostulacionController;
 
     Route::get('/', [HomeController::class, 'index'])->name('Publico.inicio');
 
-
 Route::middleware('auth:web,empresa')->group(function () {
     
     Route::get('/empleos', [OfertaPublicaController::class, 'index'])->name('Publico.ofertas');
@@ -40,7 +39,7 @@ Route::middleware('auth:web,empresa')->group(function () {
     Route::resource('postulacion', PostulacionController::class)->middleware('modulo:postulacion');
     Route::resource('calificacion', CalificacionController::class)->middleware('modulo:calificacion');
     Route::resource('ofertaServicios', OfertaServiciosController::class)->middleware('modulo:ofertaservicios');
-  
+
     Route::get('/empresas-con-ofertas',[EmpresaController::class, 'empresasConOfertas'])->name('empresas.conOfertas');
     Route::get('/usuarios-con-postulaciones',[UsuarioController::class, 'usuariosConPostulaciones'])->name('usuarios.conPostulaciones');
     Route::get('/usuarios-sin-postulaciones',[UsuarioController::class, 'usuariosSinPostulaciones'])->name('usuarios.sinPostulaciones');
@@ -49,7 +48,6 @@ Route::middleware('auth:web,empresa')->group(function () {
     Route::get('/ofertas-sin-servicios', [OfertaController::class, 'ofertasSinServicios'])->name('ofertas.sinServicios');
     Route::get('/reputacion-empresas', [CalificacionController::class, 'reputacionEmpresas'])->name('calificacion.reputacionEmpresas');
     Route::get('/reputacion-usuarios', [CalificacionController::class, 'reputacionUsuarios'])->name('calificacion.reputacionUsuarios');
-
 
 
 });

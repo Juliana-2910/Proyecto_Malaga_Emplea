@@ -38,23 +38,31 @@ class OfertaPublicaController extends Controller
         }
     }
 
-        public function postular(Request $request, int $id)
+        public function postular(int $id)
     {
-        // TEMPORAL: con el login, el idUsuario sale de la sesión y no del formulario.
-        $request->validate(['idUsuario' => 'required|exists:usuarios,id']);
+    // Solo los usuarios pueden postularse.
+    $usuario = auth('web')->user();
 
-        try {
-            // Se reutiliza el service de postulaciones del panel (ya trae todas las reglas).
-            $this->postulacionService->guardar([
-                'idUsuario' => $request->input('idUsuario'),
-                'idOferta'  => $id,
-            ]);
-
-            return redirect('/empleos')->with('success', 'Te postulaste correctamente a la oferta.');
-        } catch (Exception $e) {
-            return redirect('/empleos')->with('error', $e->getMessage());
-        }
+    if (!$usuario) {
+        return redirect('/empleos')
+            ->with('error', 'Debes ingresar como usuario para postularte.');
     }
+
+    try {
+        $this->postulacionService->guardar([
+            'idUsuario' => $usuario->id,
+            'idOferta'  => $id,
+        ]);
+
+        return redirect('/empleos')
+            ->with('success', 'Te postulaste correctamente a la oferta.');
+
+    } catch (Exception $e) {
+        return redirect('/empleos')
+            ->with('error', $e->getMessage());
+    }
+    }
+}
 
     public function cancelarPostulacion(Request $request, int $id)
     {

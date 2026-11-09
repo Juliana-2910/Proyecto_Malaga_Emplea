@@ -176,7 +176,7 @@
                                 </p>
 
                                 <p class="mt-1 break-all text-sm font-medium text-gray-700">
-                                    {{ $empresa->correoElectronico }}
+                                    {{ $empresa->email }}
                                 </p>
 
                             </div>

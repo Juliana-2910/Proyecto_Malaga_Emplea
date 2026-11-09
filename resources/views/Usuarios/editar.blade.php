@@ -223,7 +223,7 @@
             </option>
 
             <option value="CC"
-                {{ old('tipoDocumento', $usuarios->tipoDocumento) == 'CC' ? 'selected' : '' }}>
+                {{ old('tipoDocumento', $usuarios->tipoDocumento) == 'CC' ? 'selected' : '' }}
                 Cédula de ciudadanía (CC)
             </option>
 
@@ -285,19 +285,19 @@
     {{-- Correo electrónico --}}
     <div>
 
-        <label for="correoElectronico"
+        <label for="email"
             class="mb-2 block text-sm font-semibold text-gray-700">
             Correo electrónico
         </label>
 
         <input type="email"
-            name="correoElectronico"
-            id="correoElectronico"
-            value="{{ old('correoElectronico', $usuarios->correoElectronico) }}"
+            name="email"
+            id="email"
+            value="{{ old('email', $usuarios->email) }}"
             placeholder="ejemplo@correo.com"
             class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
 
-        @error('correoElectronico')
+        @error('email')
             <p class="mt-1 text-sm text-red-500">
                 {{ $message }}
             </p>
@@ -341,46 +341,11 @@
         <input type="password"
             name="password"
             id="password"
-            placeholder="Ingrese la contraseña"
+            autocomplete="new-password"
+            placeholder="Deje vacío si no desea cambiarla"
             class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
 
         @error('password')
-            <p class="mt-1 text-sm text-red-500">
-                {{ $message }}
-            </p>
-        @enderror
-
-    </div>
-
-
-    {{-- Rol --}}
-    <div>
-
-        <label for="idRol"
-            class="mb-2 block text-sm font-semibold text-gray-700">
-            Rol
-        </label>
-
-        <select name="idRol"
-                id="idRol"
-                class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
-
-            <option value="">
-                Seleccione un rol
-            </option>
-
-            @foreach ($roles as $rol)
-
-                <option value="{{ $rol->id }}"
-                    {{ old('idRol', $usuarios->idRol) == $rol->id ? 'selected' : '' }}>
-                    {{ $rol->rol }}
-                </option>
-
-            @endforeach
-
-        </select>
-
-        @error('idRol')
             <p class="mt-1 text-sm text-red-500">
                 {{ $message }}
             </p>

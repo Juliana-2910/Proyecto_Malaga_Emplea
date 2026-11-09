@@ -24,7 +24,7 @@ class EmpresaController extends Controller
 
         public function empresasConOfertas()
         {
-             $empresas = $this->empresasServices->listarEmpresasConOfertas();
+            $empresas = $this->empresasServices->listarEmpresasConOfertas();
 
             return view('Empresa.conOfertas', compact('empresas'));
         }
@@ -37,7 +37,7 @@ class EmpresaController extends Controller
 
         public function store(EmpresaStoreRequest $request)
         {
-            $this->empresasServices->guardar($request->all());
+            $this->empresasServices->guardar($request->validated());
             return redirect()->route('empresas.index')->with('success', 'Empresa creada exitosamente.');
         }
 
@@ -55,11 +55,11 @@ class EmpresaController extends Controller
 
         public function update(int $id, EmpresaUpdateRequest $request)
         {
-            $this->empresasServices->actualizar($id, $request->all());
+            $this->empresasServices->actualizar($id, $request->validated());
             return redirect()->route('empresas.index')->with('actualizar', 'Empresa actualizada exitosamente.');
         }
 
-        public function destroy($id)
+        public function destroy(int $id)
         {
             $this->empresasServices->eliminar($id);
             return redirect()->route('empresas.index')->with('eliminar', 'Empresa eliminada exitosamente.');

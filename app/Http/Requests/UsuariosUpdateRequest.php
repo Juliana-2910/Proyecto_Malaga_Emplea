@@ -12,7 +12,7 @@ class UsuariosUpdateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return True;
+        return true;
     }
 
     /**
@@ -29,12 +29,11 @@ class UsuariosUpdateRequest extends FormRequest
             'fechaNacimiento' => 'required|date',
             'tipoDocumento' => 'required|in:CC,CE,PPT,PEP',
             'numeroDocumento' => 'required|string|max:255',
-            'correoElectronico' => 'required|string|email|max:255',
-            'password' => 'required|string|min:8',
+            'email' => 'required|string|email|max:255',
+            'password' => 'nullable|string|min:8',
             'telefono' => 'required|string|max:20',
             'fechaRegistro' => 'required|date',
             'estado' => 'required|in:Activo,Inactivo',
-            'idRol' => 'required|exists:roles,id',
         ];
     }
 
@@ -62,12 +61,11 @@ class UsuariosUpdateRequest extends FormRequest
             'numeroDocumento.string' => 'El campo número de documento debe ser una cadena de texto.',
             'numeroDocumento.max' => 'El campo número de documento no debe exceder los 255 caracteres.',
 
-            'correoElectronico.required' => 'El campo correo electrónico es obligatorio.',
-            'correoElectronico.string' => 'El campo correo electrónico debe ser una cadena de texto.',
-            'correoElectronico.email' => 'El campo correo electrónico debe ser una dirección de correo válida.',
-            'correoElectronico.max' => 'El campo correo electrónico no debe exceder los 255 caracteres.',
+            'email.required' => 'El campo correo electrónico es obligatorio.',
+            'email.string' => 'El campo correo electrónico debe ser una cadena de texto.',
+            'email.email' => 'El campo correo electrónico debe ser una dirección de correo válida.',
+            'email.max' => 'El campo correo electrónico no debe exceder los 255 caracteres.',
 
-            'password.required' => 'El campo contraseña es obligatorio.',
             'password.string' => 'El campo contraseña debe ser una cadena de texto.',
             'password.min' => 'El campo contraseña debe tener al menos 8 caracteres.',
 
@@ -81,8 +79,6 @@ class UsuariosUpdateRequest extends FormRequest
             'estado.required' => 'El campo estado es obligatorio.',
             'estado.in' => 'El campo estado debe ser uno de los valores permitidos.',
 
-            'idRol.required' => 'El campo rol es obligatorio.',
-            'idRol.exists' => 'El rol seleccionado no existe.',
         ];
     }
 }

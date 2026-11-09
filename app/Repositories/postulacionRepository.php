@@ -13,6 +13,13 @@ class postulacionRepository
         return Postulacion::all();
     }
 
+    public function listarPorUsuario(int $idUsuario)
+    {
+        return Postulacion::where('idUsuario', $idUsuario)
+            ->orderBy('fecha', 'desc')
+            ->get();
+    }
+
     public function guardar(array $datos)
     {
         Postulacion::create($datos);
@@ -37,7 +44,7 @@ class postulacionRepository
 
     public function buscarUsuario(int $id)
     {
-        return Usuario::with('rol')->findOrFail($id);
+        return Usuario::findOrFail($id);
     }
 
     public function buscarOferta(int $id)

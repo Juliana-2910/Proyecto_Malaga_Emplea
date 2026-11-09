@@ -13,7 +13,7 @@ $guards = collect(config('seguridad.login') ?? [])->pluck('guard')->unique()->im
 Route::middleware('web')->group(function () use ($guards) {
 
     Route::middleware('guest:' . $guards)->group(function () {
-        Route::get('/', [AuthController::class, 'showLoginForm'])->name('login');
+        Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
         Route::post('/login', [AuthController::class, 'login'])
             ->middleware('throttle:5,1')
             ->name('login.store');

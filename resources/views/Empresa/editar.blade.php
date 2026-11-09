@@ -263,7 +263,7 @@
         {{-- Correo electrónico --}}
         <div>
 
-            <label for="correoElectronico"
+            <label for="email"
                 class="mb-2 block text-sm font-semibold text-gray-700">
 
                 Correo electrónico
@@ -271,13 +271,13 @@
             </label>
 
             <input type="email"
-                name="correoElectronico"
-                id="correoElectronico"
-                value="{{ old('correoElectronico', $empresa->correoElectronico) }}"
+                name="email"
+                id="email"
+                value="{{ old('email', $empresa->email) }}"
                 placeholder="ejemplo@correo.com"
                 class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
 
-            @error('correoElectronico')
+            @error('email')
 
                 <p class="mt-1 text-sm text-red-500">
                     {{ $message }}
@@ -301,7 +301,8 @@
             <input type="password"
                 name="password"
                 id="password"
-                placeholder="Ingrese la contraseña"
+                autocomplete="new-password"
+                placeholder="Deje vacío si no desea cambiar la contraseña"
                 class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
 
             @error('password')

@@ -48,9 +48,19 @@ class AuthController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(config('seguridad.redirect_despues_login'));
+        $cuenta = auth('web')->user();
+
+        if (
+            ($credenciales['tipo'] ?? 'usuario') === 'usuario'
+            && ! $cuenta?->hasRole(config('seguridad.rol_admin'))
+        ) {
+            return redirect()->route('Publico.ofertas');
+        }
+
+                return redirect()->intended(config('seguridad.redirect_despues_login'));
     }
 
+    // Cerrar sesión
     public function logout(Request $request): RedirectResponse
     {
         $this->authService->cerrarSesion();
