@@ -81,7 +81,7 @@
                         onmouseover="this.style.background='#8F1D14';this.style.borderColor='#8F1D14'"
                         onmouseout="this.style.background='#B42318';this.style.borderColor='#B42318'">
 
-                    Cancelar postulación
+                        Cancelar postulación
                 </button>
             </div>
         </div>
@@ -92,44 +92,48 @@
     <div id="modal-confirmar-cancelacion" hidden
         style="display:none;position:fixed;top:0;right:0;bottom:0;left:0;z-index:60;align-items:center;justify-content:center;padding:16px;box-sizing:border-box;background:rgba(18,48,63,0.7)">
 
-        <div role="alertdialog" aria-modal="true" aria-labelledby="mp-confirmar-titulo"
-            style="width:100%;max-width:440px;background:#FFFFFF;border-radius:20px;box-shadow:0 24px 64px rgba(18,48,63,0.35);overflow:hidden;font-family:inherit">
-
-            {{-- Encabezado --}}
-            <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;padding:22px 24px;border-bottom:1px solid #E3E8EF">
-
-                <h2 id="mp-confirmar-titulo" style="margin:0;font-size:20px;font-weight:700;color:#12303F;line-height:1.3">
-                    Cancelar postulación
-                </h2>
-
-                <button type="button" data-cerrar-confirmacion aria-label="Cerrar"
-                        style="width:44px;height:44px;flex:0 0 auto;border-radius:12px;border:none;background:#F5F7FA;color:#1F2933;display:flex;align-items:center;justify-content:center;cursor:pointer">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 18L18 6M6 6l12 12" /></svg>
-                </button>
-
-
-            </div>
+        <div role="alertdialog" aria-modal="true"
+            aria-label="Confirmar cancelación de la postulación"
+            style="width:100%;max-width:380px;background:#FFFFFF;border-radius:20px;box-shadow:0 24px 64px rgba(18,48,63,0.35);overflow:hidden;font-family:inherit">
 
             {{-- Cuerpo --}}
-            <div style="padding:24px;text-align:center">
+            <div style="padding:28px 24px 20px;text-align:center">
 
-                <span style="width:64px;height:64px;margin:0 auto 20px;border-radius:50%;background:#FEE2E2;color:#B42318;display:flex;align-items:center;justify-content:center">
-                    <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                        <path d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
-                    </svg>
+                {{-- Icono principal --}}
+                <span style="width:68px;height:68px;margin:0 auto 20px;border-radius:50%;background:#FEE2E2;color:#DC2626;display:flex;align-items:center;justify-content:center">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="size-7"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M9.5 4h5a1 1 0 011 1v2h-7V5a1 1 0 011-1z" /></svg>
                 </span>
 
-                <p style="margin:0;font-size:15px;line-height:1.7;color:#52606D">
-                    ¿Seguro que deseas eliminar tu postulación a la oferta
-                    <strong id="mp-confirmar-oferta" style="color:#12303F;font-weight:700"></strong>?
-                    <br>
-                    Esta acción no se puede deshacer, pero podrás volver a postularte mientras la oferta siga vigente.
+                <h2 style="margin:0 0 12px;font-size:19px;font-weight:700;color:#12303F;line-height:1.4">
+                    ¿Deseas cancelar tu postulación?
+                </h2>
+
+                <p style="margin:0;font-size:14px;line-height:1.7;color:#52606D">
+                    Al continuar, retirarás tu postulación de la oferta
+                    <strong id="mp-confirmar-oferta" style="color:#12303F;font-weight:700"></strong>
+                    y ya no participarás en el proceso de selección.
                 </p>
 
             </div>
 
+            {{-- Mensaje informativo --}}
+            <div style="padding:0 24px 20px;display:flex;align-items:center;gap:10px">
+
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="#1A75A8" stroke-width="1.8" stroke-linecap="round"
+                    stroke-linejoin="round" style="flex:0 0 auto" aria-hidden="true">
+                    <circle cx="12" cy="12" r="9" />
+                    <path d="M12 11v5m0-8h.01" />
+                </svg>
+
+                <p style="margin:0;font-size:14px;line-height:1.5;color:#52606D">
+                    Esta acción no se puede deshacer
+                </p>
+            </div>
+
             {{-- Botones --}}
-            <form id="mp-form-cancelar" method="POST" action="#" data-base="{{ url('/empleos/postulaciones') }}"
+            <form id="mp-form-cancelar" method="POST" action="#"
+                data-base="{{ url('/empleos/postulaciones') }}"
                 style="margin:0;display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:12px;padding:18px 24px;border-top:1px solid #E3E8EF;background:#FFFFFF">
 
                 @csrf
@@ -140,15 +144,16 @@
                     <input type="hidden" name="idUsuario" value="{{ $idUsuario }}">
                 @endif
 
-                <button type="button" data-cerrar-confirmacion class="{{ $btnSecundario }} cursor-pointer">
-                    Volver
+                <button type="button" data-cerrar-confirmacion
+                    class="{{ $btnSecundario }} cursor-pointer">
+                    Cancelar
                 </button>
 
                 <button type="submit"
-                    style="font-family:inherit;font-weight:700;font-size:15px;padding:12px 16px;min-height:46px;border-radius:9999px;border:2px solid #B42318;background:#B42318;color:#FFFFFF;cursor:pointer"
-                    onmouseover="this.style.background='#8F1D14';this.style.borderColor='#8F1D14'"
-                    onmouseout="this.style.background='#B42318';this.style.borderColor='#B42318'">
-                    Confirmar
+                    style="font-family:inherit;font-weight:700;font-size:15px;padding:12px 16px;min-height:46px;border-radius:9999px;border:2px solid #DC2626;background:#DC2626;color:#FFFFFF;cursor:pointer"
+                    onmouseover="this.style.background='#B42318';this.style.borderColor='#B42318'"
+                    onmouseout="this.style.background='#DC2626';this.style.borderColor='#DC2626'">
+                    Cancelar
                 </button>
 
             </form>

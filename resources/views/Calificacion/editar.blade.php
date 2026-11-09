@@ -31,58 +31,37 @@
 
         <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
 
-            {{-- Usuario --}}
-            <div>
-                <label for="idUsuario" class="mb-1 block text-sm font-medium text-gray-700">
-                    Usuario
+            {{-- Postulación --}}
+            <div class="md:col-span-2">
+                <label for="idPostulacion" class="mb-1 block text-sm font-medium text-gray-700">
+                    Postulación contratada
                 </label>
 
                 <select
-                    name="idUsuario"
-                    id="idUsuario"
+                    name="idPostulacion"
+                    id="idPostulacion"
+                    required
                     class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]"
                 >
-                    <option value="">Seleccione un usuario</option>
+                    <option value="">Seleccione una postulación</option>
 
-                    @foreach ($usuarios as $usuario)
+                    @foreach ($postulaciones as $postulacion)
                         <option
-                            value="{{ $usuario->id }}"
-                            {{ old('idUsuario', $calificacion->idUsuario) == $usuario->id ? 'selected' : '' }}
+                            value="{{ $postulacion->id }}"
+                            {{ old('idPostulacion', $calificacion->idPostulacion) == $postulacion->id ? 'selected' : '' }}
                         >
-                            {{ $usuario->nombres }} {{ $usuario->apellidos }}
+                            Postulación #{{ $postulacion->id }}
+                            - {{ $postulacion->usuario->nombres ?? 'Sin nombre' }}
+                            {{ $postulacion->usuario->apellidos ?? '' }}
+                            - {{ $postulacion->oferta->titulo ?? 'Sin oferta' }}
+                            - Publicada por:
+                            {{ $postulacion->oferta->empresa->nombreEmpresa
+                                ?? ($postulacion->oferta->usuario->nombres ?? 'Sin publicador') }}
                         </option>
                     @endforeach
                 </select>
 
-                @error('idUsuario')
-                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                @enderror
-            </div>
-
-            {{-- Empresa --}}
-            <div>
-                <label for="idEmpresa" class="mb-1 block text-sm font-medium text-gray-700">
-                    Empresa
-                </label>
-
-                <select
-                    name="idEmpresa"
-                    id="idEmpresa"
-                    class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]"
-                >
-                    <option value="">Seleccione una empresa</option>
-
-                    @foreach ($empresas as $empresa)
-                        <option
-                            value="{{ $empresa->id }}"
-                            {{ old('idEmpresa', $calificacion->idEmpresa) == $empresa->id ? 'selected' : '' }}
-                        >
-                            {{ $empresa->nombreEmpresa }}
-                        </option>
-                    @endforeach
-                </select>
-
-                @error('idEmpresa')
+                @error('idPostulacion')
                     <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                 @enderror
             </div>
@@ -103,13 +82,13 @@
                  <option value="">Seleccione quién califica</option>
 
                     <option value="usuario"
-                     {{ old('tipoCalificador', $calificacion->tipoCalificador) == 'usuario' ? 'selected' : '' }}>
-                      El usuario califica a la empresa
+                        {{ old('tipoCalificador', $calificacion->tipoCalificador) == 'usuario' ? 'selected' : '' }}>
+                        Usuario califica a empresa
                     </option>
 
                     <option value="empresa"
-                     {{ old('tipoCalificador', $calificacion->tipoCalificador) == 'empresa' ? 'selected' : '' }}>
-                        La empresa califica al usuario
+                        {{ old('tipoCalificador', $calificacion->tipoCalificador) == 'empresa' ? 'selected' : '' }}>
+                        Empresa califica a usuario
                     </option>
                 </select>
 

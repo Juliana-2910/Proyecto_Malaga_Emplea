@@ -7,6 +7,7 @@ use App\Services\postulacionService;
 use App\Http\Requests\HojaDeVidaStoreRequest;
 use App\Services\hojaDeVidaService;
 use App\Http\Requests\OfertaStoreRequest;
+use App\Services\calificacionService;
 use Exception;
 use Illuminate\Http\Request;
 use InvalidArgumentException;
@@ -16,12 +17,14 @@ class OfertaPublicaController extends Controller
     private ofertasService $ofertasService;
     private postulacionService $postulacionService;
     private hojaDeVidaService $hojaDeVidaService;
+    private calificacionService $calificacionService;
 
-    public function __construct(ofertasService $ofertasService, postulacionService $postulacionService, hojaDeVidaService $hojaDeVidaService)
+    public function __construct(ofertasService $ofertasService, postulacionService $postulacionService, hojaDeVidaService $hojaDeVidaService, calificacionService $calificacionService)
     {
         $this->ofertasService = $ofertasService;
         $this->postulacionService = $postulacionService;
         $this->hojaDeVidaService = $hojaDeVidaService;
+        $this->calificacionService = $calificacionService;
     }
 
     public function index(Request $request)
@@ -113,5 +116,34 @@ class OfertaPublicaController extends Controller
             // Solo filtros inválidos: se vuelve a la lista sin filtros.
             return redirect('/mis-postulaciones')->with('error', $e->getMessage());
         }
+    }
+
+    public function calificar(Request $request, int $id)
+    {
+        // Los errores van en su propio "bolsillo" para no abrir otros modales.
+        $datos = $request->validateWithBag('calificar', [
+            'idUsuario'  => 'required|exists:usuarios,id', // TEMPORAL: con el login sale de la sesión
+            'puntuacion' => 'required|integer|min:1|max:5',
+            'comentario' => 'required|string|max:500',
+        ], [
+            'puntuacion.required' => 'Elige de 1 a 5 estrellas.',
+            'puntuacion.min'      => 'Elige de 1 a 5 estrellas.',
+            'puntuacion.max'      => 'Elige de 1 a 5 estrellas.',
+            'comentario.required' => 'Cuéntanos cómo fue tu experiencia.',
+            'comentario.max'      => 'El comentario no puede superar los 500 caracteres.',
+        ]);
+
+        try {
+            $this->calificacionService->calificarContratacion(
+                $id,
+                (int) $datos['idUsuario'],
+                (int) $datos['puntuacion'],
+                $datos['comentario']
+            );
+        } catch (Exception $e) {
+            return back()->with('error', $e->getMessage());
+        }
+
+        return back()->with('success', 'Tu calificación se envió correctamente.');
     }
 }

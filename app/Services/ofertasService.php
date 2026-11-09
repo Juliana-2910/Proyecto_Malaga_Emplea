@@ -218,10 +218,12 @@ class ofertasService
         $postulaciones = $this->ofertasrepository->listarPostulacionesDeUsuario($idUsuario ?? 0, $filtros, self::POR_PAGINA);
 
         $categorias = $this->ofertasrepository->categoriasPorOferta($postulaciones->pluck('idOferta')->all());
+        $calificaciones = $this->ofertasrepository->calificacionesPorPostulacion($postulaciones->pluck('id')->all(), $idUsuario ?? 0);
 
-        $postulaciones->through(function ($postulacion) use ($categorias) {
+        $postulaciones->through(function ($postulacion) use ($categorias, $calificaciones) {
             $postulacion->oferta->publicador = $this->nombrePublicador($postulacion->oferta);
             $postulacion->oferta->categoria = $categorias[$postulacion->idOferta] ?? null;
+            $postulacion->calificacion = $calificaciones[$postulacion->id] ?? null; // puntuación, o null si aún no calificas
             return $postulacion;
         });
 

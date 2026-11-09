@@ -68,7 +68,8 @@
             </div>
         </div>
     </header>
-    @include('layouts.Publico.navbarUsuario')
+    
+    @include('layouts.Publico.Usuario.navbarUsuario')
 
     <main>
         @yield('content')
