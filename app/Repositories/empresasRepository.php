@@ -19,7 +19,7 @@ class empresasRepository{
     {
         $datos['password'] = Hash::make($datos['password']);
 
-        return Empresa::create($datos);
+        Empresa::create($datos);
     }
 
     public function eliminar(int $id)

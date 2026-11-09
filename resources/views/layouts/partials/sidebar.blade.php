@@ -25,21 +25,22 @@
 
         @php
             $links = [
-            ['label' => 'Inicio',   'route' => 'dashboard.index',  'icon' => 'home'],
-            ['label' => 'Roles',       'route' => 'roles.index',      'icon' => 'shield-check'],
-            ['label' => 'Categorías',  'route' => 'categorias.index', 'icon' => 'tag'],
-            ['label' => 'Servicios',     'route' => 'servicios.index',    'icon' => 'chart-bar'],
-            ['label' => 'Usuarios',    'route' => 'usuarios.index',      'icon' => 'user-group'],
-            ['label' => 'Empresas',    'route' => 'empresas.index',   'icon' => 'building'],
-            ['label' => 'Ofertas',     'route' => 'ofertas.index',    'icon' => 'briefcase'],
-            ['label' => 'Hoja de vida',     'route' => 'hojaDeVida.index',    'icon' => 'link'],
-            ['label' => 'Postulaciones', 'route' => 'postulacion.index',   'icon' => 'document'],
-            ['label' => 'Oferta Servicios', 'route' => 'ofertaServicios.index',   'icon' => 'circle-stack'],
-            ['label' => 'Calificacion', 'route' => 'calificacion.index',   'icon' => 'star'],
+            ['label' => 'Inicio',   'route' => 'dashboard.index',  'icon' => 'home', 'can' => []],
+            ['label' => 'Categorías',  'route' => 'categorias.index', 'icon' => 'tag', 'can' => ['ver categorias']],
+            ['label' => 'Servicios',     'route' => 'servicios.index',    'icon' => 'chart-bar', 'can' => ['ver servicios']],
+            ['label' => 'Usuarios',    'route' => 'usuarios.index',      'icon' => 'user-group', 'can' => ['ver usuarios']],
+            ['label' => 'Empresas',    'route' => 'empresas.index',   'icon' => 'building', 'can' => ['ver empresas']],
+            ['label' => 'Ofertas',     'route' => 'ofertas.index',    'icon' => 'briefcase', 'can' => ['ver ofertas']],
+            ['label' => 'Hoja de vida',     'route' => 'hojaDeVida.index',    'icon' => 'link', 'can' => ['ver hojadevida']],
+            ['label' => 'Postulaciones', 'route' => 'postulacion.index',   'icon' => 'document', 'can' => ['ver postulacion']],
+            ['label' => 'Oferta Servicios', 'route' => 'ofertaServicios.index',   'icon' => 'circle-stack', 'can' => ['ver ofertaservicios']],
+            ['label' => 'Calificacion', 'route' => 'calificacion.index',   'icon' => 'star', 'can' => ['ver calificacion']],
+            ['label' => 'seguridad', 'route' => 'seguridad.permisos.index',   'icon' => 'star', 'can' => ['gestionar seguridad']],
             ];
         @endphp
 
             @foreach ($links as $link)
+                @continue(! empty($link['can']) && ! auth()->user()->canAny($link['can']))
                 @php
                     $active = Route::has($link['route']) && request()->routeIs(explode('.', $link['route'])[0] . '.*');
                 @endphp
