@@ -30,16 +30,20 @@ class empresasServices
         if (isset($datos['fotoPerfil'])) {
             $datos['fotoPerfil'] = $this->guardarFoto($datos['fotoPerfil']);
         }
-        $this->empresasrepository->guardar($datos);
+        return $this->empresasrepository->guardar($datos);
     }
 
     public function eliminar(int $id)
     {
         $empresa = $this->empresasrepository->buscarporid($id);
-        if ($empresa->fotoPerfil) {
+
+        $resultado = $this->empresasrepository->eliminar($id);
+
+        if ($resultado && $empresa->fotoPerfil) {
             Storage::disk('public')->delete('empresas/' . $empresa->fotoPerfil);
         }
-        $this->empresasrepository->eliminar($id);
+
+        return $resultado;
     }
 
     public function buscarporid(int $id)
@@ -58,7 +62,7 @@ class empresasServices
             }
             $datos['fotoPerfil'] = $nuevaFoto;
         }
-        $this->empresasrepository->actualizar($id, $datos);
+        return $this->empresasrepository->actualizar($id, $datos);
     }
 
     private function guardarFoto($foto)
@@ -66,7 +70,7 @@ class empresasServices
         if (!$foto) {
             throw new Exception('No se recibió ninguna foto.');
         }
-        $nombreFoto = time() . '_' . $foto->getClientOriginalName();
+        $nombreFoto = $foto->hashName();
         $foto->storeAs('empresas', $nombreFoto, 'public');
         return $nombreFoto;
     }

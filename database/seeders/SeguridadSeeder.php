@@ -16,6 +16,19 @@ class SeguridadSeeder extends Seeder
 
         $guard = config('seguridad.guard');
 
+// Crear los roles para las cuentas del sistema
+        $rolUsuario = Role::firstOrCreate(
+            ['name' => 'usuario', 'guard_name' => $guard],
+            ['activo' => true]
+        );
+        $rolUsuario->update(['activo' => true]);
+
+        $rolEmpresa = Role::firstOrCreate(
+            ['name' => config('seguridad.rol_empresa'), 'guard_name' => $guard],
+            ['activo' => true]
+        );
+        $rolEmpresa->update(['activo' => true]);
+
         $permisoAdmin = Permission::firstOrCreate(
             ['name' => config('seguridad.permiso_admin'), 'guard_name' => $guard],
             ['modulo' => 'seguridad']

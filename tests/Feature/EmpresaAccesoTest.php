@@ -34,7 +34,7 @@ class EmpresaAccesoTest extends TestCase
     {
         return Empresa::create([
             'nombreEmpresa' => 'Acme Ltda', 'fotoPerfil' => 'x.png', 'nit' => $nit, 'direccion' => 'Calle 1',
-            'estado' => $estado, 'correoElectronico' => $correo, 'password' => Hash::make('12345678'),
+            'estado' => $estado, 'email' => $correo, 'password' => Hash::make('12345678'),
         ]);
     }
 

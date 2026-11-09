@@ -519,10 +519,6 @@
                 <form id="modal-form-postular" method="POST" action="#" data-base="{{ url('/empleos') }}"
                     style="margin:0;display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:12px;padding:18px 28px;border-top:1px solid #E3E8EF;background:#FFFFFF">
                     @csrf
-                    {{-- TEMPORAL: cuando exista el login, este campo se quita y el usuario sale de la sesión --}}
-                    @if (! empty($idUsuario))
-                        <input type="hidden" name="idUsuario" value="{{ $idUsuario }}">
-                    @endif
 
                     <button type="button" data-cerrar-modal class="{{ $btnSecundario }} cursor-pointer">Cerrar</button>
                     <button type="submit" class="{{ $btnPrimario }} cursor-pointer">Postularme</button>

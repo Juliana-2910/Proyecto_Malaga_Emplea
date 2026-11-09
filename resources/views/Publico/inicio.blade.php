@@ -58,7 +58,7 @@
             </nav>
 
             <div class="flex flex-wrap gap-3">
-                <a href="{{ url('/login') }}"
+                <a href="{{ route('login') }}"
                     class="self-start rounded-full border-2 border-slate-800 bg-white px-4 py-2 text-[15px] font-bold text-slate-800 transition hover:border-carbon hover:bg-carbon hover:text-white">
                         Ingresar
                 </a>

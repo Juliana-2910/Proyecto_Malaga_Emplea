@@ -20,6 +20,11 @@ class postulacionService
         return $this->postulacionrepository->listarTodos();
     }
 
+    public function listarPorUsuario(int $idUsuario)
+    {
+        return $this->postulacionrepository->listarPorUsuario($idUsuario);
+    }
+
     public function guardar(array $datos)
     {
         $usuario = $this->postulacionrepository->buscarUsuario(
@@ -84,7 +89,7 @@ class postulacionService
 
     private function validarUsuarioPuedePostular($usuario)
     {
-        if ($usuario->estado !== 'Activo') {
+        if ($usuario->estado !== 'activo') {
             throw new Exception(
                 'El usuario está inactivo y no puede postularse.'
             );

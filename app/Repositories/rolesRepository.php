@@ -8,30 +8,37 @@ class rolesRepository{
 
     public function listarTodos()
     {
-        $roles = Roles::all();
-        return $roles;
+        return Roles::where('guard_name', 'web')->get();
     }
 
     public function guardar(array $datos)
     {
-        Roles::create($datos);
+        $datos['guard_name'] = 'web';
+
+        return Roles::create($datos);
     }
 
     public function eliminar(int $id)
     {
-        Roles::destroy($id);
+        $rol = Roles::where('guard_name', 'web')
+            ->findOrFail($id);
+
+        return $rol->delete();
     }
 
     public function buscarporid(int $id)
     {
-        $roles = Roles::findOrFail($id);
-        return $roles;
+        return Roles::where('guard_name', 'web')
+            ->findOrFail($id);
     }
 
     public function actualizar(int $id, array $datos)
     {
-        $roles = Roles::findOrFail($id);
-        $roles->update($datos);
+        $rol = $this->buscarporid($id);
+
+        unset($datos['guard_name']);
+
+        return $rol->update($datos);
     }
 
 

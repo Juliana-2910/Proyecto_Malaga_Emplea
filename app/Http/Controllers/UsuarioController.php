@@ -4,20 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\Usuario;
 use App\Services\usuariosService;
-use App\Services\rolesServices;
 use App\Http\Requests\UsuariosStoreRequest;
 use App\Http\Requests\UsuariosUpdateRequest;
-use Illuminate\Http\Request;
 
 class UsuarioController extends Controller
 {
     private usuariosService $usuariosService;
-    private rolesServices $rolesService;
-
-    public function __construct(usuariosService $usuariosService, rolesServices $rolesService)
+    public function __construct(usuariosService $usuariosService)
     {
         $this->usuariosService = $usuariosService;
-        $this->rolesService = $rolesService;
     }
 
     public function index()
@@ -43,8 +38,7 @@ class UsuarioController extends Controller
 
     public function create()
     {
-        $roles = $this->rolesService->listarTodos()->unique('rol');
-        return view('Usuarios.crear', compact('roles'));
+        return view('Usuarios.crear');
     }
 
     public function store(UsuariosStoreRequest $request)
@@ -61,8 +55,8 @@ class UsuarioController extends Controller
     public function edit(int $id)
     {
         $usuarios = $this->usuariosService->buscarPorId($id);
-        $roles = $this->rolesService->listarTodos()->unique('rol');
-        return view('Usuarios.editar', compact('usuarios', 'roles'));
+
+        return view('Usuarios.editar', compact('usuarios'));
     }
 
     public function update(int $id,UsuariosUpdateRequest $request)

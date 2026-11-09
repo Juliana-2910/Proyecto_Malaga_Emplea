@@ -38,7 +38,7 @@ return [
         'empresa' => [
             'guard' => 'empresa',
             'modelo' => App\Models\Empresa::class,
-            'columna_email' => 'correoElectronico',
+            'columna_email' => 'email',
             'columna_estado' => 'estado',
             'valor_activo' => 'activo',
         ],

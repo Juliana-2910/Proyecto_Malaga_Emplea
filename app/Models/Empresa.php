@@ -15,10 +15,17 @@ class Empresa extends Authenticatable
 
     protected string $guard_name = 'web';
 
-    protected $fillable = [ 'nombreEmpresa','fotoPerfil','nit','direccion','estado','correoElectronico','password',
+    protected $fillable = [ 'nombreEmpresa','fotoPerfil','nit','direccion','estado','email','password',
     ];
 
     protected $hidden = ['password'];
+
+    protected function casts(): array
+    {
+        return [
+            'password' => 'hashed',
+        ];
+    }
 
     protected static function booted(): void
     {

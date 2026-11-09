@@ -32,6 +32,15 @@
 
         @csrf
 
+        @if ($errors->any())
+    <div class="mb-4 rounded-lg bg-red-100 p-4 text-sm text-red-700">
+        <ul class="list-disc pl-5">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
 
 {{-- Información principal --}}
 <div class="mb-8 grid grid-cols-1 gap-6 md:grid-cols-3">
@@ -250,19 +259,19 @@
             {{-- Correo electrónico --}}
             <div>
 
-                <label for="correoElectronico"
+                <label for="email"
                     class="mb-2 block text-sm font-semibold text-gray-700">
                     Correo electrónico
                 </label>
 
                 <input type="email"
-                    name="correoElectronico"
-                    id="correoElectronico"
-                    value="{{ old('correoElectronico') }}"
+                    name="email"
+                    id="email"
+                    value="{{ old('email') }}"
                     placeholder="ejemplo@gmail.com"
                     class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
 
-                @error('correoElectronico')
+                @error('email')
                     <p class="mt-1 text-sm text-red-500">
                         {{ $message }}
                     </p>
@@ -318,65 +327,6 @@
             </div>
 
 
-            {{-- Rol --}}
-            <div>
-
-                <label for="idRol"
-                    class="mb-2 block text-sm font-semibold text-gray-700">
-                    Rol
-                </label>
-
-                <select name="idRol"
-                        id="idRol"
-                        class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
-
-                    <option value="">
-                        Seleccione un rol
-                    </option>
-
-                    @foreach ($roles as $rol)
-
-                        <option value="{{ $rol->id }}"
-                            {{ old('idRol') == $rol->id ? 'selected' : '' }}>
-                            {{ $rol->rol }}
-                        </option>
-
-                    @endforeach
-
-                </select>
-
-                @error('idRol')
-                    <p class="mt-1 text-sm text-red-500">
-                        {{ $message }}
-                    </p>
-                @enderror
-
-            </div>
-
-
-            {{-- Fecha de registro --}}
-            <div>
-
-                <label for="fechaRegistro"
-                    class="mb-2 block text-sm font-semibold text-gray-700">
-                    Fecha de registro
-                </label>
-
-                <input type="date"
-                    name="fechaRegistro"
-                    id="fechaRegistro"
-                    value="{{ old('fechaRegistro', date('Y-m-d')) }}"
-                    class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
-
-                @error('fechaRegistro')
-                    <p class="mt-1 text-sm text-red-500">
-                        {{ $message }}
-                    </p>
-                @enderror
-
-            </div>
-
-
             {{-- Estado --}}
             <div>
 
@@ -393,13 +343,9 @@
                         Seleccione un estado
                     </option>
 
-                    <option value="Activo" {{ old('estado') == 'Activo' ? 'selected' : '' }}>
-                        Activo
-                    </option>
+                    <option value="activo">Activo</option>
 
-                    <option value="Inactivo" {{ old('estado') == 'Inactivo' ? 'selected' : '' }}>
-                        Inactivo
-                    </option>
+                    <option value="inactivo">Inactivo</option>
 
                 </select>
 

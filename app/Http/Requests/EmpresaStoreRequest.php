@@ -28,7 +28,7 @@ class EmpresaStoreRequest extends FormRequest
     'nit' => 'required|string|unique:empresas,nit',
     'direccion' => 'required|string|max:255',
     'estado' => 'required|in:activo,inactivo',
-    'correoElectronico' => 'required|email|max:255',
+    'email' => 'required|string|email|max:255|unique:empresas,email',
     'password' => 'required|string|min:8',
 
     ];
@@ -52,8 +52,9 @@ class EmpresaStoreRequest extends FormRequest
         'estado.required' => 'El estado de la empresa es obligatorio.',
         'estado.in' => 'El estado debe ser "activo" o "inactivo".',
 
-        'correoElectronico.required' => 'El correo electrónico es obligatorio.',
-        'correoElectronico.email' => 'Ingrese un correo electrónico válido.',
+        'email.required' => 'El correo electrónico es obligatorio.',
+        'email.email' => 'Ingrese un correo electrónico válido.',
+        'email.unique' => 'El correo electrónico ya se encuentra registrado.',
 
         'password.required' => 'La contraseña es obligatoria.',
         'password.min' => 'La contraseña debe tener mínimo 8 caracteres.',

@@ -12,7 +12,7 @@ class UsuariosStoreRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return True;
+        return true;
     }
 
     /**
@@ -27,17 +27,14 @@ class UsuariosStoreRequest extends FormRequest
             'apellidos' => 'required|string|max:255',
             'fotoPerfil' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'fechaNacimiento' => 'required|date|before_or_equal:' . now()->subYears(18)->format('Y-m-d'),
-            'tipoDocumento' => 'required|in:CC,CE,PPT,PEP',
+            'tipoDocumento' => 'required|in:CC,CE,PPT,PEP,PASAPORTE',
             'numeroDocumento' => 'required|string|max:255',
-            'correoElectronico' => 'required|string|email|max:255',
+            'email' => 'required|string|email|max:255',
             'password' => 'required|string|min:8',
             'telefono' => 'required|string|max:20',
-            'fechaRegistro' => 'required|date',
-            'estado' => 'required|in:Activo,Inactivo',
-            'idRol' => 'required|exists:roles,id',
+            'estado' => 'required|in:activo,inactivo',
         ];
-    }
-
+        }
     public function messages(): array
     {
         return [
@@ -63,10 +60,10 @@ class UsuariosStoreRequest extends FormRequest
             'numeroDocumento.string' => 'El campo número de documento debe ser una cadena de texto.',
             'numeroDocumento.max' => 'El campo número de documento no debe exceder los 255 caracteres.',
 
-            'correoElectronico.required' => 'El campo correo electrónico es obligatorio.',
-            'correoElectronico.string' => 'El campo correo electrónico debe ser una cadena de texto.',
-            'correoElectronico.email' => 'El campo correo electrónico debe ser una dirección de correo válida.',
-            'correoElectronico.max' => 'El campo correo electrónico no debe exceder los 255 caracteres.',
+            'email.required' => 'El campo correo electrónico es obligatorio.',
+            'email.string' => 'El campo correo electrónico debe ser una cadena de texto.',
+            'email.email' => 'El campo correo electrónico debe ser una dirección de correo válida.',
+            'email.max' => 'El campo correo electrónico no debe exceder los 255 caracteres.',
 
             'password.required' => 'El campo contraseña es obligatorio.',
             'password.string' => 'El campo contraseña debe ser una cadena de texto.',
@@ -76,14 +73,9 @@ class UsuariosStoreRequest extends FormRequest
             'telefono.string' => 'El campo teléfono debe ser una cadena de texto.',
             'telefono.max' => 'El campo teléfono no debe exceder los 20 caracteres.',
 
-            'fechaRegistro.required' => 'El campo fecha de registro es obligatorio.',
-            'fechaRegistro.date' => 'El campo fecha de registro debe ser una fecha válida.',
-
             'estado.required' => 'El campo estado es obligatorio.',
             'estado.in' => 'El campo estado debe ser uno de los valores permitidos.',
 
-            'idRol.required' => 'El campo rol es obligatorio.',
-            'idRol.exists' => 'El rol seleccionado no existe.',
         ];
     }
 }

@@ -13,17 +13,23 @@
 </head>
 <body class="bg-fondo font-sans text-slate-800 antialiased">
 
-@php
-    // Nombre del usuario que inició sesión (lo envía el controlador).
-    $nombre = $nombre ?? 'Usuario';
+    @php
+        // Obtener la cuenta que inició sesión.
+        $cuenta = auth('empresa')->user() ?? auth('web')->user();
 
-    // Iniciales para el avatar: "Juliana Alvarez" -> "JA"
-    $iniciales = collect(explode(' ', trim($nombre)))
-        ->filter()
-        ->map(fn ($parte) => mb_strtoupper(mb_substr($parte, 0, 1)))
-        ->take(2)
-        ->implode('');
-@endphp
+        // Mostrar el nombre según el tipo de cuenta.
+        $nombre = $cuenta?->nombreEmpresa
+            ?? trim(($cuenta?->nombres ?? '') . ' ' . ($cuenta?->apellidos ?? ''));
+
+        $nombre = $nombre ?: 'Usuario';
+
+        // Iniciales para el avatar.
+        $iniciales = collect(explode(' ', trim($nombre)))
+            ->filter()
+            ->map(fn ($parte) => mb_strtoupper(mb_substr($parte, 0, 1)))
+            ->take(2)
+            ->implode('');
+    @endphp
 
     {{-- NAVBAR --}}
     <header class="border-b border-slate-200 bg-white">
