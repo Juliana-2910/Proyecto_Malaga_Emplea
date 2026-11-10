@@ -247,8 +247,11 @@
                     'tipoContrato' => $oferta->tipoContrato,
                     'ubicacion'    => $oferta->ubicacion,
                     'fechaLimite'  => \Carbon\Carbon::parse($oferta->fechaLimite)->toDateString(),
-                ];
 
+                    // Categoría y servicio actuales de la oferta
+                    'idCategoria'  => $oferta->ofertaServicio->first()?->servicio?->idCategoria,
+                    'idServicio'   => $oferta->ofertaServicio->first()?->idServicio,
+                ];
 
                 // Datos para el modal de ver oferta
                 $datosVerOferta = [
