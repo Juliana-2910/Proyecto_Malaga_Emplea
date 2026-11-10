@@ -27,9 +27,12 @@ class empresasServices
 
     public function guardar(array $datos)
     {
+        $datos['estado'] = 'activo';
+
         if (isset($datos['fotoPerfil'])) {
             $datos['fotoPerfil'] = $this->guardarFoto($datos['fotoPerfil']);
         }
+
         return $this->empresasrepository->guardar($datos);
     }
 

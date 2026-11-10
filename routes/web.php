@@ -14,9 +14,13 @@ use App\Http\Controllers\RolesController;
 use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\OfertaController;
 use App\Http\Controllers\PostulacionController;
+use App\Http\Controllers\Seguridad\AuthController;
 
 
     Route::get('/', [HomeController::class, 'index'])->name('Publico.inicio');
+    
+    Route::post('/registro/usuario', [AuthController::class, 'registrarUsuario'])->name('registro.usuario');
+    Route::post('/registro/empresa', [AuthController::class, 'registrarEmpresa'])->name('registro.empresa');
 
 Route::middleware('auth:web,empresa')->group(function () {
 
