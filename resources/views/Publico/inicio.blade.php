@@ -123,10 +123,6 @@
                 @endforeach
             </ul>
 
-            <a href="{{ url('/registro') }}"
-                class="rounded-xl border-2 border-noche bg-noche px-5 py-3.5 text-center text-base font-bold text-white transition hover:border-carbon hover:bg-carbon">
-                Registrarme ahora
-            </a>
         </div>
     </div>
 </section>

@@ -7,6 +7,7 @@ use App\Services\postulacionService;
 use App\Http\Requests\HojaDeVidaStoreRequest;
 use App\Services\hojaDeVidaService;
 use App\Http\Requests\OfertaStoreRequest;
+use App\Http\Requests\OfertaUpdateRequest;
 use App\Services\calificacionService;
 use Exception;
 use Illuminate\Http\Request;
@@ -103,6 +104,17 @@ class OfertaPublicaController extends Controller
         return redirect()->route('Publico.ofertas')->with('success', 'Tu oferta se publicó correctamente.');
     }
 
+    public function actualizarOferta(OfertaUpdateRequest $request, int $id)
+    {
+        try {
+            $this->ofertasService->actualizarMiOferta($id, $request->validated());
+        } catch (Exception $e) {
+            return redirect()->route('Publico.misOfertas')->withInput()->with('errorModal', $e->getMessage())->with('abrirEditarOferta', $id);
+        }
+
+        return redirect()->route('Publico.misOfertas')->with('actualizar', 'Tu oferta se actualizó correctamente.');
+    }
+
     public function misPostulaciones(Request $request)
     {
         try {
@@ -144,5 +156,18 @@ class OfertaPublicaController extends Controller
         }
 
         return back()->with('success', 'Tu calificación se envió correctamente.');
+    }
+
+    public function misOfertas(Request $request)
+    {
+        try {
+            $datos = $this->ofertasService->datosMisOfertas(
+                $request->only(['estado', 'orden'])
+            );
+
+            return view('Publico.misOfertas', $datos);
+        } catch (InvalidArgumentException $e) {
+            return redirect('/mis-ofertas')->with('error', $e->getMessage());
+        }
     }
 }

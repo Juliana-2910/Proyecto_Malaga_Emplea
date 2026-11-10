@@ -236,4 +236,147 @@ class ofertasRepository
             ->pluck('puntuacion', 'idPostulacion')
             ->all();
     }
+
+    /** Aplica el filtro de estado a una consulta de ofertas (una sola regla para el listado y los contadores). */
+    private function aplicarEstadoOferta($consulta, string $estado): void
+    {
+        $hoy = now('America/Bogota')->toDateString();
+        $contratada = fn ($q) => $q->where('estado', 'Contratado');
+
+        match ($estado) {
+            'activas'      => $consulta->whereDate('fechaLimite', '>=', $hoy)->whereDoesntHave('postulaciones', $contratada),
+            'contratacion' => $consulta->whereHas('postulaciones', $contratada),
+            'vencidas'     => $consulta->whereDate('fechaLimite', '<', $hoy)->whereDoesntHave('postulaciones', $contratada),
+            default        => null,
+        };
+    }
+
+    /** Ofertas publicadas por la persona, filtradas por estado y ordenadas. */
+    public function listarOfertasDeUsuario(int $idUsuario, array $filtros, int $porPagina)
+    {
+        $consulta = Oferta::where('idUsuario', $idUsuario);
+
+        $this->aplicarEstadoOferta($consulta, $filtros['estado'] ?? 'todas');
+
+        match ($filtros['orden'] ?? 'recientes') {
+            'antiguas' => $consulta->orderBy('fechaPublicacion')->orderBy('id'),
+            'vencen'   => $consulta->orderBy('fechaLimite')->orderBy('id'),
+            default    => $consulta->orderByDesc('fechaPublicacion')->orderByDesc('id'),
+        };
+
+        return $consulta->paginate($porPagina)->withQueryString();
+        }
+
+    /** Devuelve ['todas' => n, 'activas' => n, 'contratacion' => n, 'vencidas' => n]. */
+    public function contarOfertasPorEstado(int $idUsuario): array
+    {
+        $conteo = [];
+
+        foreach (['todas', 'activas', 'contratacion', 'vencidas'] as $estado) {
+            $consulta = Oferta::where('idUsuario', $idUsuario);
+            $this->aplicarEstadoOferta($consulta, $estado);
+            $conteo[$estado] = $consulta->count();
+        }
+
+        return $conteo;
+    }
+
+    /** Devuelve [idOferta => ['Enviado' => n, 'Aceptado' => n, ...]]. */
+    public function contarPostulantesPorOferta(array $idsOfertas): array
+    {
+        return Postulacion::whereIn('idOferta', $idsOfertas)
+            ->selectRaw('idOferta, estado, COUNT(*) as total')
+            ->groupBy('idOferta', 'estado')
+            ->get()
+            ->groupBy('idOferta')
+            ->map(fn ($filas) => $filas->pluck('total', 'estado')->all())
+            ->all();
+    }
+
+    /** Devuelve [idOferta => nombre de la persona contratada]. */
+    public function nombresContratadosPorOferta(array $idsOfertas): array
+    {
+        return Postulacion::with('usuario')
+            ->whereIn('idOferta', $idsOfertas)
+            ->where('estado', 'Contratado')
+            ->get()
+            ->mapWithKeys(fn ($p) => [
+                $p->idOferta => $p->usuario ? trim($p->usuario->nombres . ' ' . $p->usuario->apellidos) : null,
+            ])
+            ->all();
+    }
+
+    /** Ofertas activas que vencen en los próximos $dias días. */
+    public function contarOfertasQueVencenPronto(int $idUsuario, int $dias): int
+    {
+        $hoy = Carbon::now('America/Bogota');
+
+        return Oferta::where('idUsuario', $idUsuario)
+            ->whereDate('fechaLimite', '>=', $hoy->toDateString())
+            ->whereDate('fechaLimite', '<=', $hoy->copy()->addDays($dias)->toDateString())
+            ->whereDoesntHave('postulaciones', fn ($q) => $q->where('estado', 'Contratado'))
+            ->count();
+    }
+
+    /** Ofertas activas a las que nadie se ha postulado. */
+    public function contarOfertasSinPostulantes(int $idUsuario): int
+    {
+        return Oferta::where('idUsuario', $idUsuario)
+            ->whereDate('fechaLimite', '>=', now('America/Bogota')->toDateString())
+            ->doesntHave('postulaciones')
+            ->count();
+    }
+
+    /** Contrataciones de la persona que ella todavía no ha calificado (subconsulta). */
+    public function contarContratacionesPorCalificar(int $idUsuario): int
+    {
+        return Postulacion::where('estado', 'Contratado')
+            ->whereHas('oferta', fn ($q) => $q->where('idUsuario', $idUsuario))
+            ->whereNotIn('id', Calificacion::select('idPostulacion')
+                ->where('tipoCalificador', '<>', 'usuario')
+                ->whereNotNull('idPostulacion'))
+            ->count();
+    }
+
+    /** Promedio y cantidad de calificaciones que la persona ha recibido. */
+    public function reputacionDeUsuario(int $idUsuario): array
+    {
+        $fila = Calificacion::where('idUsuarioCalificado', $idUsuario)
+            ->selectRaw('AVG(puntuacion) as promedio, COUNT(*) as total')
+            ->first();
+
+        return [
+            'promedio' => (float) ($fila->promedio ?? 0),
+            'total'    => (int) ($fila->total ?? 0),
+        ];
+    }
+
+    public function tienePostulanteContratado(int $id): bool
+    {
+        return Postulacion::where('idOferta', $id)->where('estado', 'Contratado')->exists();
+    }
+
+
+    /** Busca una oferta del usuario que la publicó. */
+    public function buscarOfertaDeUsuario(int $idOferta, int $idUsuario)
+    {
+        return Oferta::with(['ofertaServicio.servicio.categoria'])
+            ->where('id', $idOferta)
+            ->where('idUsuario', $idUsuario)
+            ->firstOrFail();
+    }
+
+    /** Lista las postulaciones de una oferta con los datos de cada usuario y su hoja de vida. */
+    public function listarPostulantesDeOferta(int $idOferta)
+    {
+        $postulaciones = Postulacion::with('usuario')->where('idOferta', $idOferta)->orderByDesc('fecha')->get();
+
+        $hojasDeVida = HojaDeVida::whereIn('idUsuario', $postulaciones->pluck('idUsuario')->unique())->get()->keyBy('idUsuario');
+
+        return $postulaciones->map(function ($postulacion) use ($hojasDeVida) {$postulacion->hojaDeVida = $hojasDeVida->get($postulacion->idUsuario);
+
+        return $postulacion;
+        });
+    }
+
 }

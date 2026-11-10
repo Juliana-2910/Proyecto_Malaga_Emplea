@@ -15,6 +15,20 @@ class OfertaUpdateRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation(): void
+    {
+        if ($this->input('_origen') !== 'publico') {
+            return; // el panel administrativo sigue funcionando igual
+        }
+
+        $this->errorBag = 'editarOferta';
+
+        $this->merge([
+            'salario'          => preg_replace('/\D/', '', (string) $this->input('salario')),
+            'fechaPublicacion' => now('America/Bogota')->toDateString(),
+        ]);
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
