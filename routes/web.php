@@ -31,7 +31,9 @@ Route::middleware('auth:web,empresa')->group(function () {
     Route::post('/empleos/publicar', [OfertaPublicaController::class, 'guardarOferta'])->name('Publico.guardarOferta');
     Route::get('/mis-postulaciones', [OfertaPublicaController::class, 'misPostulaciones'])->name('Publico.postulaciones');
     Route::post('/mis-postulaciones/{id}/calificar', [OfertaPublicaController::class, 'calificar'])->whereNumber('id')->name('Publico.calificar');
-
+    Route::get('/mis-ofertas', [OfertaPublicaController::class, 'misOfertas'])->name('Publico.misOfertas');
+    Route::put('/mis-ofertas/{id}', [OfertaPublicaController::class, 'actualizarOferta'])->whereNumber('id')->name('Publico.actualizarOferta');
+    Route::get('/mis-ofertas/{id}/postulantes', [OfertaPublicaController::class, 'postulantes'])->whereNumber('id')->name('Publico.misOfertas.postulantes');
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 

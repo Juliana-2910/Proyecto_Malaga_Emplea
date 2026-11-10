@@ -114,6 +114,8 @@ class ofertasService
     private const POR_PAGINA = 10;
     private const ESTADOS_POSTULACION = ['Enviado', 'Aceptado', 'Rechazado','Contratado'];
     private const ORDENES_POSTULACION = ['recientes', 'antiguas'];
+    private const ESTADOS_OFERTA = ['todas', 'activas', 'contratacion', 'vencidas'];
+    private const DIAS_VENCE_PRONTO = 3;
 
     public function datosListadoUsuario(array $filtros): array
     {
@@ -253,4 +255,104 @@ class ofertasService
             throw new InvalidArgumentException('El orden seleccionado no es válido.');
         }
     }
+
+    public function datosMisOfertas(array $filtros): array
+    {
+        $this->validarFiltrosMisOfertas($filtros);
+
+        // TEMPORAL: cuando exista el login, el usuario sale de auth().
+        $usuario = $this->ofertasrepository->usuarioDePrueba();
+        $idUsuario = $usuario?->id ?? 0;
+
+        $ofertas = $this->ofertasrepository->listarOfertasDeUsuario($idUsuario, $filtros, self::POR_PAGINA);
+
+        $ids = $ofertas->pluck('id')->all();
+        $categorias = $this->ofertasrepository->categoriasPorOferta($ids);
+        $postulantes = $this->ofertasrepository->contarPostulantesPorOferta($ids);
+        $contratados = $this->ofertasrepository->nombresContratadosPorOferta($ids);
+
+        $ofertas->through(function ($oferta) use ($categorias, $postulantes, $contratados) {
+            $porEstado = $postulantes[$oferta->id] ?? [];
+            $contratadas = $porEstado['Contratado'] ?? 0;
+
+            $oferta->categoria = $categorias[$oferta->id] ?? null;
+            $oferta->resumenPostulantes = [
+                'enviadas'    => $porEstado['Enviado'] ?? 0,
+                'aceptadas'   => $porEstado['Aceptado'] ?? 0,
+                'rechazadas'  => $porEstado['Rechazado'] ?? 0,
+                'contratadas' => $contratadas,
+            ];
+            $oferta->nombreContratado = $contratados[$oferta->id] ?? null;
+            $oferta->estadoOferta = $this->estadoDeOferta($contratadas, $oferta->fechaLimite);
+
+            return $oferta;
+        });
+
+        return [
+            'nombre'        => $usuario?->nombres ?? 'Usuario',
+            'idUsuario'     => $usuario?->id, // TEMPORAL: con el login sale de la sesión
+            'ofertas'       => $ofertas,
+            'categorias'    => $this->ofertasrepository->listarCategorias(),
+            'servicios'     => $this->ofertasrepository->listarServicios(),
+            'conteoEstados' => $this->ofertasrepository->contarOfertasPorEstado($idUsuario),
+            'resumen'       => [
+                'porCalificar'          => $this->ofertasrepository->contarContratacionesPorCalificar($idUsuario),
+                'vencenPronto'          => $this->ofertasrepository->contarOfertasQueVencenPronto($idUsuario, self::DIAS_VENCE_PRONTO),
+                'sinPostulantes'        => $this->ofertasrepository->contarOfertasSinPostulantes($idUsuario),
+                'postulantesPorRevisar' => $this->ofertasrepository->contarPostulantesPorRevisar($idUsuario),
+            ],
+            'calificacion'  => $this->ofertasrepository->reputacionDeUsuario($idUsuario),
+        ];
+    }
+
+    /** Con contratación gana sobre vencida: si ya contrataste, ese es el resultado de la oferta. */
+    private function estadoDeOferta(int $contratadas, $fechaLimite): string
+    {
+        if ($contratadas > 0) {
+            return 'con_contratacion';
+        }
+
+        if (Carbon::parse($fechaLimite)->toDateString() < Carbon::now('America/Bogota')->toDateString()) {
+            return 'vencida';
+        }
+
+        return 'activa';
+    }
+
+    private function validarFiltrosMisOfertas(array $filtros): void
+    {
+        if (! empty($filtros['estado']) && ! in_array($filtros['estado'], self::ESTADOS_OFERTA, true)) {
+            throw new InvalidArgumentException('El estado seleccionado no es válido.');
+        }
+
+        if (! empty($filtros['orden']) && ! in_array($filtros['orden'], self::ORDENES, true)) {
+            throw new InvalidArgumentException('El orden seleccionado no es válido.');
+        }
+    }
+
+    public function actualizarMiOferta(int $id, array $datos)
+    {
+        // TEMPORAL: cuando exista el login, el usuario sale de auth().
+        $usuario = $this->ofertasrepository->usuarioDePrueba();
+        $oferta = $this->ofertasrepository->buscarporid($id);
+
+        if (! $usuario || (int) $oferta->idUsuario !== (int) $usuario->id) {
+            throw new Exception('Solo puedes editar las ofertas que publicaste.');
+        }
+
+        if ($this->ofertasrepository->tienePostulanteContratado($id)) {
+            throw new Exception('Esta oferta ya tiene una persona contratada, por eso no se puede editar.');
+        }
+
+        if (Carbon::parse($oferta->fechaLimite)->toDateString() < Carbon::now('America/Bogota')->toDateString()) {
+            throw new Exception('Esta oferta ya venció, por eso no se puede editar.');
+        }
+
+        // Quien publica no se puede cambiar desde el formulario.
+        unset($datos['idUsuario'], $datos['idEmpresa']);
+
+        return $this->actualizar($id, $datos);
+    }
+
+    
 }

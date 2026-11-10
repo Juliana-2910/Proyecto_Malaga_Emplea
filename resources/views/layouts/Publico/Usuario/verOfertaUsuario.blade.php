@@ -1,4 +1,4 @@
-    {{-- MODAL VER OFERTA --}}
+    {{-- MODAL VER OFERTA (la que ve el usuario)--}}
     <div id="modal-oferta" hidden
         style="display:none;position:fixed;top:0;right:0;bottom:0;left:0;z-index:50;align-items:center;justify-content:center;padding:16px;box-sizing:border-box;background:rgba(18,48,63,0.6)">
         <div role="dialog" aria-modal="true" aria-labelledby="modal-titulo"
