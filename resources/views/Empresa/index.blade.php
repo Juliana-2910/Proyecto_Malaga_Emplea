@@ -205,7 +205,7 @@
                                 Estado
                             </p>
 
-                            @if ($empresa->estado === 'activo')
+                            @if (strtolower($empresa->estado) === 'activo')
 
                                 <span class="inline-flex items-center rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">
                                     Activo

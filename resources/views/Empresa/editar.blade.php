@@ -238,12 +238,12 @@
                 </option>
 
                 <option value="activo"
-                    {{ old('estado', $empresa->estado) == 'activo' ? 'selected' : '' }}>
+                    {{ strtolower(old('estado', $empresa->estado)) === 'activo' ? 'selected' : '' }}>
                     Activo
                 </option>
 
                 <option value="inactivo"
-                    {{ old('estado', $empresa->estado) == 'inactivo' ? 'selected' : '' }}>
+                    {{ strtolower(old('estado', $empresa->estado)) === 'inactivo' ? 'selected' : '' }}>
                     Inactivo
                 </option>
 

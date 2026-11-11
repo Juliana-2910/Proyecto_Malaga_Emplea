@@ -54,7 +54,7 @@ class AuthService
             return;
         }
 
-        if ($usuario->{$columna} !== config("seguridad.login.$tipo.valor_activo", 'activo')) {
+        if (strtolower((string) $usuario->{$columna}) !== config("seguridad.login.$tipo.valor_activo", 'activo')) {
             throw new Exception('Tu cuenta está inactiva. Comunícate con el administrador.');
         }
     }

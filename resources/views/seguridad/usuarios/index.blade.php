@@ -57,7 +57,7 @@
     </table>
 
     <div class="flex justify-end border-t border-slate-100 px-4 py-3">
-        <button type="submit" class="rounded-md bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2">Guardar asignaciones</button>
+        <button type="submit" class="rounded-xl bg-[#333333] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#4DB6E8] hover:text-[#17232c]">Guardar asignaciones</button>
     </div>
 </form>
 @endsection

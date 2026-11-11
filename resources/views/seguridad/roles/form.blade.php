@@ -80,7 +80,7 @@
 
     <div class="flex justify-end gap-3 border-t border-slate-100 pt-4">
         <a href="{{ route('seguridad.roles.index') }}" class="rounded-md border border-slate-300 px-4 py-2 text-sm text-slate-600">Cancelar</a>
-        <button type="submit" class="rounded-md bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2">Guardar</button>
+        <button type="submit" class="rounded-xl bg-[#333333] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#4DB6E8] hover:text-[#17232c]">Guardar</button>
     </div>
 </form>
 

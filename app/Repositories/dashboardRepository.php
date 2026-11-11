@@ -26,12 +26,12 @@ class dashboardRepository
 
             // Usuarios activos //
             'activeUsers' => DB::table('usuarios')
-                ->where('estado', 'Activo')
+                ->whereRaw('LOWER(estado) = ?', ['activo'])
                 ->count(),
 
             // Empresas activas //
             'activeCompanies' => DB::table('empresas')
-                ->where('estado', 'activo')
+                ->whereRaw('LOWER(estado) = ?', ['activo'])
                 ->count(),
 
             // Total hojas de vida //

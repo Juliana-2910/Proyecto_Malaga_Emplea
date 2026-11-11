@@ -96,7 +96,7 @@ class postulacionService
 
     private function validarUsuarioPuedePostular($usuario)
     {
-        if ($usuario->estado !== 'activo') {
+        if (strtolower((string) $usuario->estado) !== 'activo') {
             throw new Exception(
                 'El usuario está inactivo y no puede postularse.'
             );

@@ -19,8 +19,13 @@ class CuentaController extends Controller
 
     public function index(): View
     {
+        $cuentas = $this->cuentaService->listar()
+            ->concat($this->cuentaService->listarEmpresas())
+            ->sortBy(fn ($cuenta) => strtolower($cuenta->name ?? ($cuenta->nombres . ' ' . $cuenta->apellidos)))
+            ->values();
+
         return view('seguridad.cuentas.index', [
-            'usuarios' => $this->cuentaService->listar(),
+            'cuentas' => $cuentas,
         ]);
     }
 
@@ -105,5 +110,25 @@ class CuentaController extends Controller
         }
 
         return redirect()->route('seguridad.cuentas.index')->with('success', 'Usuario eliminado correctamente.');
+    }
+
+    public function estado(Request $request, string $tipo, int $id): RedirectResponse
+    {
+        $modelo = config("seguridad.login.$tipo.modelo");
+        abort_unless(is_string($modelo) && class_exists($modelo), 404);
+
+        $cuenta = $modelo::findOrFail($id);
+
+        try {
+            $activo = $this->cuentaService->cambiarEstado($cuenta, $request->user());
+        } catch (Exception $e) {
+            return back()->with('error', $e->getMessage());
+        }
+
+        $nombre = $cuenta instanceof \App\Models\Empresa
+            ? $cuenta->nombreEmpresa
+            : trim($cuenta->nombres . ' ' . $cuenta->apellidos);
+
+        return back()->with('success', 'La cuenta de ' . $nombre . ' quedó ' . ($activo ? 'activa' : 'inactiva') . '.');
     }
 }

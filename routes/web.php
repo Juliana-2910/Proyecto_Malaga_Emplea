@@ -22,7 +22,7 @@ use App\Http\Controllers\Seguridad\AuthController;
     Route::post('/registro/usuario', [AuthController::class, 'registrarUsuario'])->name('registro.usuario');
     Route::post('/registro/empresa', [AuthController::class, 'registrarEmpresa'])->name('registro.empresa');
 
-Route::middleware('auth:web,empresa')->group(function () {
+Route::middleware(['auth:web,empresa', 'cuenta.activa'])->group(function () {
 
     Route::get('/empleos', [OfertaPublicaController::class, 'index'])->name('Publico.ofertas');
     Route::post('/empleos/{id}/postular', [OfertaPublicaController::class, 'postular'])->whereNumber('id')->name('Publico.postular');

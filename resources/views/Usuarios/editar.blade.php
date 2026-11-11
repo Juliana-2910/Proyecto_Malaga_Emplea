@@ -393,13 +393,13 @@
                 Seleccione un estado
             </option>
 
-            <option value="Activo"
-                {{ old('estado', $usuarios->estado) == 'Activo' ? 'selected' : '' }}>
+            <option value="activo"
+                {{ strtolower(old('estado', $usuarios->estado)) === 'activo' ? 'selected' : '' }}>
                 Activo
             </option>
 
-            <option value="Inactivo"
-                {{ old('estado', $usuarios->estado) == 'Inactivo' ? 'selected' : '' }}>
+            <option value="inactivo"
+                {{ strtolower(old('estado', $usuarios->estado)) === 'inactivo' ? 'selected' : '' }}>
                 Inactivo
             </option>
 
