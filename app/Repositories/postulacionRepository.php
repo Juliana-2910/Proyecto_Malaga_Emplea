@@ -67,8 +67,18 @@ class postulacionRepository
 
     public function tienePostulacionesEnCurso(int $idUsuario): bool
     {
-        return Postulacion::where('idUsuario', $idUsuario)
-            ->whereIn('estado', ['Enviado', 'Aceptado'])
-            ->exists();
+        return Postulacion::where('idUsuario', $idUsuario)->whereIn('estado', ['Enviado', 'Aceptado'])->exists();
+    }
+
+    /** Busca una postulación junto con su oferta (para saber quién la publicó). */
+    public function buscarConOferta(int $id)
+    {
+        return Postulacion::with('oferta')->findOrFail($id);
+    }
+
+    /** ¿La oferta ya tiene una persona contratada? */
+    public function ofertaTieneContratado(int $idOferta): bool
+    {
+        return Postulacion::where('idOferta', $idOferta)->where('estado', 'Contratado')->exists();
     }
 }

@@ -226,6 +226,13 @@
                 if ($p->calificacion) {
                     $botones = array_values(array_diff($botones, ['calificar']));
                 }
+
+                // Datos que usan los modales de confirmar (aceptar, rechazar, contratar)
+                $datosAccion = [
+                    'id'     => $p->id,
+                    'nombre' => $nombrePersona,
+                ];
+
             @endphp
 
             <article class="flex flex-wrap items-center gap-5 rounded-2xl border border-slate-200 bg-white p-6 transition hover:shadow-lg hover:shadow-noche/10">
@@ -278,6 +285,8 @@
                                     data-ver-postulante="{{ json_encode($datosHoja, JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_HEX_TAG) }}"
                                 @elseif ($clave === 'calificar')
                                     data-calificar="{{ json_encode($datosCalificar, JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_HEX_TAG) }}"
+                                @elseif ($clave === 'aceptar')
+                                    data-aceptar="{{ json_encode($datosAccion, JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_HEX_TAG) }}"
                                 @else
                                     data-accion="{{ $clave }}" data-postulacion="{{ $p->id }}"
                                 @endif
@@ -303,6 +312,8 @@
 </section>
 
 @include('layouts.Publico.verHojaPostulante')
+
+@include('layouts.Publico.aceptarPostulacion')
 
 @include('layouts.Publico.calificarContratacion')
 

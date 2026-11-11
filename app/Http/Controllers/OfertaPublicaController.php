@@ -171,7 +171,7 @@ class OfertaPublicaController extends Controller
         }
     }
 
-        public function postulantes(Request $request, int $id)
+    public function postulantes(Request $request, int $id)
     {
         try {
             $datos = $this->ofertasService->datosPostulantes(
@@ -187,5 +187,19 @@ class OfertaPublicaController extends Controller
             // Oferta que no existe o que no es tuya.
             return redirect()->route('Publico.misOfertas')->with('error', $e->getMessage());
         }
+    }
+
+    public function aceptarPostulante(Request $request, int $id)
+    {
+        // TEMPORAL: con el login, el idUsuario sale de la sesión y no del formulario.
+        $request->validate(['idUsuario' => 'required|exists:usuarios,id']);
+
+        try {
+            $this->postulacionService->aceptar($id, (int) $request->input('idUsuario'));
+        } catch (Exception $e) {
+            return back()->with('error', $e->getMessage());
+        }
+
+        return back()->with('success', 'Aceptaste la postulación correctamente.');
     }
 }

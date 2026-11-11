@@ -201,4 +201,47 @@ class postulacionService
             throw new Exception('Solo puedes cancelar postulaciones que aún están en estado Enviado.');
         }
     }
+
+    /* ===== Decisiones de quien publica la oferta ===== */
+
+    public function aceptar(int $idPostulacion, int $idPublicador): void
+    {
+        $postulacion = $this->buscarPostulacionDelPublicador($idPostulacion, $idPublicador);
+
+        $this->validarOfertaSinContratado((int) $postulacion->idOferta);
+        $this->validarEstadoActual($postulacion, 'Enviado', 'aceptar');
+        $this->validarCambioEstado($postulacion->estado, 'Aceptado'); // reutiliza tu tabla de transiciones
+
+        $this->postulacionrepository->actualizar($idPostulacion, ['estado' => 'Aceptado']);
+    }
+
+    private function buscarPostulacionDelPublicador(int $idPostulacion, int $idPublicador)
+    {
+        try {
+            $postulacion = $this->postulacionrepository->buscarConOferta($idPostulacion);
+        } catch (ModelNotFoundException $e) {
+            throw new Exception('Esa postulación no existe.');
+        }
+
+        // Solo decide quien publicó la oferta
+        if ((int) $postulacion->oferta->idUsuario !== $idPublicador) {
+            throw new Exception('Solo puedes decidir sobre postulaciones de tus ofertas.');
+        }
+
+        return $postulacion;
+    }
+
+    private function validarOfertaSinContratado(int $idOferta): void
+    {
+        if ($this->postulacionrepository->ofertaTieneContratado($idOferta)) {
+            throw new Exception('Esta oferta ya tiene una persona contratada, por eso no se pueden tomar más decisiones.');
+        }
+    }
+
+    private function validarEstadoActual($postulacion, string $esperado, string $accion): void
+    {
+        if ($postulacion->estado !== $esperado) {
+            throw new Exception("Solo puedes {$accion} postulaciones en estado {$esperado}.");
+        }
+    }
 }
