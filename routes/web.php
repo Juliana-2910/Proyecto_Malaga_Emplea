@@ -18,7 +18,7 @@ use App\Http\Controllers\Seguridad\AuthController;
 
 
     Route::get('/', [HomeController::class, 'index'])->name('Publico.inicio');
-    
+
     Route::post('/registro/usuario', [AuthController::class, 'registrarUsuario'])->name('registro.usuario');
     Route::post('/registro/empresa', [AuthController::class, 'registrarEmpresa'])->name('registro.empresa');
 
@@ -34,6 +34,7 @@ Route::middleware('auth:web,empresa')->group(function () {
     Route::get('/mis-ofertas', [OfertaPublicaController::class, 'misOfertas'])->name('Publico.misOfertas');
     Route::put('/mis-ofertas/{id}', [OfertaPublicaController::class, 'actualizarOferta'])->whereNumber('id')->name('Publico.actualizarOferta');
     Route::get('/mis-ofertas/{id}/postulantes', [OfertaPublicaController::class, 'postulantes'])->whereNumber('id')->name('Publico.misOfertas.postulantes');
+    Route::post('/mis-ofertas/postulantes/{id}/calificar', [OfertaPublicaController::class, 'calificarPostulante'])->whereNumber('id')->name('Publico.misOfertas.calificarPostulante');
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 

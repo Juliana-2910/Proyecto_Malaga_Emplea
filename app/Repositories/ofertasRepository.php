@@ -379,4 +379,29 @@ class ofertasRepository
         });
     }
 
+        /** Postulantes de una oferta: filtrados por estado, ordenados y paginados. */
+    public function listarPostulantesPaginados(int $idOferta, array $filtros, int $porPagina)
+    {
+        $consulta = Postulacion::with('usuario')
+            ->where('idOferta', $idOferta)
+            ->when($filtros['estado'] ?? null, fn ($q, $estado) => $q->where('estado', $estado));
+
+        match ($filtros['orden'] ?? 'recientes') {
+            'antiguas' => $consulta->orderBy('fecha')->orderBy('id'),
+            default    => $consulta->orderByDesc('fecha')->orderByDesc('id'),
+        };
+
+        return $consulta->paginate($porPagina)->withQueryString();
+    }
+
+    /** Devuelve [idUsuario => hoja de vida] de las personas indicadas (la más reciente de cada una). */
+    public function hojasDeVidaPorUsuario(array $idsUsuarios): array
+    {
+        return HojaDeVida::whereIn('idUsuario', $idsUsuarios)
+            ->orderBy('id')
+            ->get()
+            ->keyBy('idUsuario')
+            ->all();
+    }
+
 }
