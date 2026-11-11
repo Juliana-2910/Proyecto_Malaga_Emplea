@@ -202,4 +202,32 @@ class OfertaPublicaController extends Controller
 
         return back()->with('success', 'Aceptaste la postulación correctamente.');
     }
+
+    public function contratarPostulante(Request $request, int $id)
+    {
+        // TEMPORAL: con el login, el idUsuario sale de la sesión y no del formulario.
+        $request->validate(['idUsuario' => 'required|exists:usuarios,id']);
+
+        try {
+            $this->postulacionService->contratar($id, (int) $request->input('idUsuario'));
+        } catch (Exception $e) {
+            return back()->with('error', $e->getMessage());
+        }
+
+        return back()->with('success', 'Contratación registrada. Las demás postulaciones de esta oferta quedaron rechazadas.');
+    }
+
+    public function rechazarPostulante(Request $request, int $id)
+    {
+        // TEMPORAL: con el login, el idUsuario sale de la sesión y no del formulario.
+        $request->validate(['idUsuario' => 'required|exists:usuarios,id']);
+
+        try {
+            $this->postulacionService->rechazar($id, (int) $request->input('idUsuario'));
+        } catch (Exception $e) {
+            return back()->with('error', $e->getMessage());
+        }
+
+        return back()->with('eliminar', 'Rechazaste la postulación.');
+    }
 }

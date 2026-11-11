@@ -36,6 +36,8 @@ Route::middleware(['auth:web,empresa', 'cuenta.activa'])->group(function () {
     Route::get('/mis-ofertas/{id}/postulantes', [OfertaPublicaController::class, 'postulantes'])->whereNumber('id')->name('Publico.misOfertas.postulantes');
     Route::post('/mis-ofertas/postulantes/{id}/calificar', [OfertaPublicaController::class, 'calificarPostulante'])->whereNumber('id')->name('Publico.misOfertas.calificarPostulante');
     Route::patch('/mis-ofertas/postulantes/{id}/aceptar', [OfertaPublicaController::class, 'aceptarPostulante'])->whereNumber('id')->name('Publico.misOfertas.aceptarPostulante');
+    Route::patch('/mis-ofertas/postulantes/{id}/contratar', [OfertaPublicaController::class, 'contratarPostulante'])->whereNumber('id')->name('Publico.misOfertas.contratarPostulante');
+    Route::patch('/mis-ofertas/postulantes/{id}/rechazar', [OfertaPublicaController::class, 'rechazarPostulante'])->whereNumber('id')->name('Publico.misOfertas.rechazarPostulante');
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 

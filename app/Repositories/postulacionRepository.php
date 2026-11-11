@@ -81,4 +81,10 @@ class postulacionRepository
     {
         return Postulacion::where('idOferta', $idOferta)->where('estado', 'Contratado')->exists();
     }
+
+    /** Pasa a Rechazado las demás postulaciones de la oferta que seguían en juego (Enviado o Aceptado). */
+    public function rechazarPendientesDeOferta(int $idOferta, int $idExcepto): void
+    {
+        Postulacion::where('idOferta', $idOferta)->where('id', '!=', $idExcepto)->whereIn('estado', ['Enviado', 'Aceptado'])->update(['estado' => 'Rechazado']);
+    }
 }

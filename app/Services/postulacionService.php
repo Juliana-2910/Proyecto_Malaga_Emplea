@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Repositories\postulacionRepository;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\DB;
 use Exception;
 use Carbon\Carbon;
 
@@ -38,6 +39,7 @@ class postulacionService
 
         $this->validarUsuarioPuedePostular($usuario);
         $this->validarOfertaVigente($oferta);
+        $this->validarOfertaSinContratacion($oferta);
         $this->validarNoDuplicada($usuario->id, $oferta->id);
         $this->validarNoEsDuenoDeLaOferta($usuario, $oferta);
 
@@ -243,5 +245,41 @@ class postulacionService
         if ($postulacion->estado !== $esperado) {
             throw new Exception("Solo puedes {$accion} postulaciones en estado {$esperado}.");
         }
+    }
+
+    public function contratar(int $idPostulacion, int $idPublicador): void
+    {
+        // Todo o nada: si algo falla, no queda una persona contratada con las demás sin rechazar.
+        DB::transaction(function () use ($idPostulacion, $idPublicador) {
+            $postulacion = $this->buscarPostulacionDelPublicador($idPostulacion, $idPublicador);
+
+            $this->validarOfertaSinContratado((int) $postulacion->idOferta);
+            $this->validarEstadoActual($postulacion, 'Aceptado', 'contratar'); // solo se contrata a quien ya aceptaste
+            $this->validarCambioEstado($postulacion->estado, 'Contratado');
+
+            $this->postulacionrepository->actualizar($idPostulacion, ['estado' => 'Contratado']);
+
+            // Una sola persona por oferta: las demás quedan rechazadas
+            $this->postulacionrepository->rechazarPendientesDeOferta((int) $postulacion->idOferta, $idPostulacion);
+        });
+    }
+
+    /** Una oferta con persona contratada ya no recibe postulaciones nuevas. */
+    private function validarOfertaSinContratacion($oferta): void
+    {
+        if ($this->postulacionrepository->ofertaTieneContratado((int) $oferta->id)) {
+            throw new Exception('Esta oferta ya tiene una persona contratada y no admite más postulaciones.');
+        }
+    }
+
+    public function rechazar(int $idPostulacion, int $idPublicador): void
+    {
+        $postulacion = $this->buscarPostulacionDelPublicador($idPostulacion, $idPublicador);
+
+        $this->validarOfertaSinContratado((int) $postulacion->idOferta);
+        $this->validarEstadoActual($postulacion, 'Enviado', 'rechazar'); // quien ya fue aceptado solo avanza a contratado
+        $this->validarCambioEstado($postulacion->estado, 'Rechazado');
+
+        $this->postulacionrepository->actualizar($idPostulacion, ['estado' => 'Rechazado']);
     }
 }

@@ -131,7 +131,7 @@
         {{-- AVISO DE REGLAS --}}
         <div class="flex items-center gap-3 rounded-xl border border-l-4 border-slate-200 border-l-marca bg-white px-4 py-3.5 text-sm text-slate-600">
             <svg class="size-5 shrink-0 text-marca-texto" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" /></svg>
-            <span>Solo puedes contratar a <strong>una persona</strong> por oferta. Una vez que aceptas o rechazas, la decisión no se puede cambiar.</span>
+            <span>Solo puedes contratar a <strong>una persona</strong> por oferta. Si rechazas a alguien, la decisión no se puede cambiar; si lo aceptas, el siguiente paso es contratarlo.</span>
         </div>
 
         {{-- PESTAÑAS + ORDENAR --}}
@@ -283,10 +283,12 @@
                                 aria-label="{{ $a['texto'] }}"
                                 @if ($clave === 'ver')
                                     data-ver-postulante="{{ json_encode($datosHoja, JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_HEX_TAG) }}"
-                                @elseif ($clave === 'calificar')
-                                    data-calificar="{{ json_encode($datosCalificar, JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_HEX_TAG) }}"
                                 @elseif ($clave === 'aceptar')
                                     data-aceptar="{{ json_encode($datosAccion, JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_HEX_TAG) }}"
+                                @elseif ($clave === 'rechazar')
+                                    data-rechazar="{{ json_encode($datosAccion, JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_HEX_TAG) }}"
+                                @elseif ($clave === 'contratar')
+                                    data-contratar="{{ json_encode($datosAccion, JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_HEX_TAG) }}"
                                 @else
                                     data-accion="{{ $clave }}" data-postulacion="{{ $p->id }}"
                                 @endif
@@ -315,6 +317,8 @@
 
 @include('layouts.Publico.aceptarPostulacion')
 
-@include('layouts.Publico.calificarContratacion')
+@include('layouts.Publico.rechazarPostulacion')
+
+@include('layouts.Publico.contratarPostulacion')
 
 @endsection
