@@ -17,7 +17,7 @@
             </span>
             <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:4px">
                 <h2 id="cal-titulo" style="margin:0;font-size:24px;font-weight:700;color:#12303F;line-height:1.25">Calificación</h2>
-                <span style="font-size:15px;line-height:1.5;color:#52606D">Comparte tu experiencia con quien realizaste la contratación.</span>
+                <span id="cal-subtitulo" style="font-size:15px;line-height:1.5;color:#52606D">Comparte tu experiencia con quien realizaste la contratación.</span>
             </div>
             <button type="button" data-cerrar-calificar aria-label="Cerrar"
                     style="width:44px;height:44px;flex:0 0 auto;border-radius:12px;border:none;background:#F5F7FA;color:#1F2933;display:flex;align-items:center;justify-content:center;cursor:pointer">
@@ -49,7 +49,7 @@
                             <span id="cal-nombre" style="font-size:16px;font-weight:700;color:#12303F"></span>
                             <span id="cal-tipo" style="padding:3px 10px;border-radius:999px;background:#F5F7FA;color:#52606D;font-size:12px;font-weight:700"></span>
                         </span>
-                        <span style="font-size:13px;color:#52606D">Por tu trabajo como «<span id="cal-oferta"></span>»</span>
+                        <span id="cal-leyenda" style="font-size:13px;color:#52606D"></span>
                     </div>
                 </div>
 
@@ -151,9 +151,12 @@
 
             texto('cal-nombre', d.nombre);
             texto('cal-tipo', d.tipo);
-            texto('cal-oferta', d.titulo);
+            texto('cal-subtitulo', d.subtitulo || 'Comparte tu experiencia con quien realizaste la contratación.');
+            texto('cal-leyenda', d.leyenda || 'Por tu trabajo como «' + d.titulo + '»');
+            comentario.placeholder = d.placeholder || 'Cuenta cómo fue el trato, el pago y las condiciones del trabajo';
             document.getElementById('cal-id').value = d.id;
-            form.action = form.dataset.base + '/' + d.id + '/calificar';
+            // Si el botón trae su propia dirección (publicador califica), se usa; si no, la de siempre (usuario califica)
+            form.action = d.url || (form.dataset.base + '/' + d.id + '/calificar');
 
             const foto = document.getElementById('cal-foto');
             const fotoVacia = document.getElementById('cal-foto-vacia');

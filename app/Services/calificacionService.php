@@ -3,6 +3,7 @@
 namespace App\Services;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Models\Usuario;
 use App\Repositories\calificacionRepository;
 
@@ -181,5 +182,58 @@ class calificacionService{
         }
 
         return $datos;
+    }
+
+    // Valor que se guarda en tipoCalificador cuando califica quien publicó la oferta.
+    private const TIPO_PUBLICADOR = 'empresa';
+
+    /** Quien publicó la oferta califica a la persona que contrató. */
+    public function calificarPostulanteContratado(int $idPostulacion, int $idPublicador, int $puntuacion, string $comentario): void
+    {
+        try {
+            $postulacion = $this->calificacionRepository->buscarPostulacionConOferta($idPostulacion);
+        } catch (ModelNotFoundException $e) {
+            throw new Exception('Esa postulación no existe.');
+        }
+
+        $oferta = $postulacion->oferta;
+
+        $this->validarOfertaEsDelPublicador($oferta, $idPublicador);
+        $this->validarContratadoPorPublicador($postulacion);
+        $this->validarNoCalificadaPorPublicador($idPostulacion);
+
+        $this->calificacionRepository->guardar([
+            'puntuacion'          => $puntuacion,
+            'comentario'          => $comentario,
+            'fecha'               => Carbon::now('America/Bogota')->toDateString(),
+            'idUsuario'           => $oferta->idEmpresa ? null : $oferta->idUsuario, // quien califica: quien publicó
+            'idEmpresa'           => $oferta->idEmpresa,
+            'idUsuarioCalificado' => $postulacion->idUsuario,                        // la persona contratada
+            'idEmpresaCalificada' => null,
+            'idPostulacion'       => $idPostulacion,
+            'tipoCalificador'     => self::TIPO_PUBLICADOR,
+        ]);
+    }
+
+    private function validarOfertaEsDelPublicador($oferta, int $idPublicador): void
+    {
+        // TEMPORAL: con el login de empresa también se compara idEmpresa.
+        if (! $oferta || (int) $oferta->idUsuario !== $idPublicador) {
+            throw new Exception('Solo puedes calificar a quienes contrataste en tus ofertas.');
+        }
+    }
+
+    private function validarContratadoPorPublicador($postulacion): void
+    {
+        if ($postulacion->estado !== 'Contratado') {
+            throw new Exception('Solo puedes calificar a una persona que ya contrataste.');
+        }
+    }
+
+    private function validarNoCalificadaPorPublicador(int $idPostulacion): void
+    {
+        if ($this->calificacionRepository->yaCalificadaPorSentido($idPostulacion, self::TIPO_PUBLICADOR)) {
+            throw new Exception('Ya calificaste a esta persona. Solo se puede calificar una vez.');
+        }
     }
 }

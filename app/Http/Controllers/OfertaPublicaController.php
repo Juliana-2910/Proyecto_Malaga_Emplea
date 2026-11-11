@@ -8,6 +8,7 @@ use App\Http\Requests\HojaDeVidaStoreRequest;
 use App\Services\hojaDeVidaService;
 use App\Http\Requests\OfertaStoreRequest;
 use App\Http\Requests\OfertaUpdateRequest;
+use App\Http\Requests\CalificarPostulanteRequest;
 use App\Services\calificacionService;
 use Exception;
 use Illuminate\Http\Request;
@@ -229,5 +230,23 @@ class OfertaPublicaController extends Controller
         }
 
         return back()->with('eliminar', 'Rechazaste la postulación.');
+    }
+
+    public function calificarPostulante(CalificarPostulanteRequest $request, int $id)
+    {
+        $datos = $request->validated();
+
+        try {
+            $this->calificacionService->calificarPostulanteContratado(
+                $id,
+                (int) $datos['idUsuario'],
+                (int) $datos['puntuacion'],
+                $datos['comentario']
+            );
+        } catch (Exception $e) {
+            return back()->with('error', $e->getMessage());
+        }
+
+        return back()->with('success', 'Tu calificación se envió correctamente.');
     }
 }
