@@ -5,7 +5,7 @@
 @section('content')
 <div class="flex items-center justify-between">
     <h1 class="text-xl font-semibold">Roles</h1>
-    <a href="{{ route('seguridad.roles.create') }}" class="rounded-md bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2">Nuevo rol</a>
+    <a href="{{ route('seguridad.roles.create') }}" class="rounded-xl bg-[#333333] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#4DB6E8] hover:text-[#17232c]">Nuevo rol</a>
 </div>
 
 <div class="bg-white rounded-xl border border-slate-200 overflow-x-auto">
@@ -43,7 +43,7 @@
                     <td class="px-4 py-3 text-slate-500">{{ $rol->users_count }}</td>
                     <td class="px-4 py-3">
                         <div class="flex flex-wrap items-center gap-3">
-                            <a href="{{ route('seguridad.roles.edit', $rol) }}" class="text-indigo-600 hover:text-indigo-800">Editar</a>
+                            <a href="{{ route('seguridad.roles.edit', $rol) }}" class="font-semibold text-[#257da3] hover:text-[#333333]">Editar</a>
 
                             @unless ($noDesactivable)
                                 <form action="{{ route('seguridad.roles.estado', $rol) }}" method="POST"
@@ -52,7 +52,7 @@
                                       @endif>
                                     @csrf
                                     @method('PATCH')
-                                    <button type="submit" class="text-amber-600 hover:text-amber-800">
+                                    <button type="submit" class="font-semibold {{ $rol->activo ? 'text-red-600 hover:text-red-800' : 'text-[#257da3] hover:text-[#333333]' }}">
                                         {{ $rol->activo ? 'Desactivar' : 'Activar' }}
                                     </button>
                                 </form>

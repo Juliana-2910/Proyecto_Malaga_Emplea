@@ -33,7 +33,7 @@ class UsuariosUpdateRequest extends FormRequest
             'password' => 'nullable|string|min:8',
             'telefono' => 'required|string|max:20',
             'fechaRegistro' => 'required|date',
-            'estado' => 'required|in:Activo,Inactivo',
+            'estado' => 'required|in:activo,inactivo',
         ];
     }
 

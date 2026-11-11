@@ -30,7 +30,7 @@
                    placeholder="Elige uno existente o escribe uno nuevo" class="w-full rounded-md border border-slate-300 px-3 py-2">
         </div>
 
-        <button type="submit" class="rounded-md bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2">Crear permiso</button>
+        <button type="submit" class="rounded-xl bg-[#333333] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#4DB6E8] hover:text-[#17232c]">Crear permiso</button>
     </form>
 
     <form action="{{ route('seguridad.permisos.modulo') }}" method="POST" class="bg-white rounded-xl border border-slate-200 p-5 space-y-4">
@@ -47,7 +47,7 @@
                    placeholder="Ej. clientes" class="w-full rounded-md border border-slate-300 px-3 py-2">
         </div>
 
-        <button type="submit" class="rounded-md bg-slate-800 hover:bg-slate-900 text-white text-sm font-medium px-4 py-2">Crear permisos del módulo</button>
+        <button type="submit" class="rounded-xl bg-[#4DB6E8] px-4 py-2 text-sm font-semibold text-[#17232c] transition hover:bg-[#333333] hover:text-white">Crear permisos del módulo</button>
     </form>
 </div>
 
@@ -74,7 +74,7 @@
                             <form id="editar-{{ $permiso->id }}" action="{{ route('seguridad.permisos.update', $permiso) }}" method="POST" class="inline">
                                 @csrf
                                 @method('PUT')
-                                <button type="submit" class="text-indigo-600 hover:text-indigo-800">Guardar</button>
+                                <button type="submit" class="font-semibold text-[#257da3] hover:text-[#333333]">Guardar</button>
                             </form>
 
                             @if ($permiso->name !== config('seguridad.permiso_admin'))

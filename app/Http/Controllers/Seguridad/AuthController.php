@@ -64,6 +64,8 @@ public function registrarEmpresa(Request $request, empresasServices $empresasSer
         'password' => 'required|string|min:8',
     ]);
 
+    $datos['estado'] = 'activo';
+
     $empresasServices->guardar($datos);
 
     $autenticado = $this->authService->autenticar(

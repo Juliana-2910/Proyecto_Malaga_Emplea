@@ -18,7 +18,9 @@
         @yield('content')
     </main>
 
-    @include('layouts.Publico.footer')
+    @unless (View::hasSection('hide-public-footer'))
+        @include('layouts.Publico.footer')
+    @endunless
 
 </body>
 </html>

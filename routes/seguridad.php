@@ -19,7 +19,7 @@ Route::middleware('web')->group(function () use ($guards) {
             ->name('login.store');
     });
 
-    Route::middleware('auth:' . $guards)->group(function () {
+    Route::middleware(['auth:' . $guards, 'cuenta.activa'])->group(function () {
         Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
         Route::prefix('seguridad')
@@ -46,6 +46,10 @@ Route::middleware('web')->group(function () use ($guards) {
                 Route::get('/cuentas/{cuenta}/editar', [CuentaController::class, 'edit'])->name('cuentas.edit');
                 Route::put('/cuentas/{cuenta}', [CuentaController::class, 'update'])->name('cuentas.update');
                 Route::delete('/cuentas/{cuenta}', [CuentaController::class, 'destroy'])->name('cuentas.destroy');
+                Route::patch('/cuentas/{tipo}/{id}/estado', [CuentaController::class, 'estado'])
+                    ->whereIn('tipo', ['usuario', 'empresa'])
+                    ->whereNumber('id')
+                    ->name('cuentas.estado');
 
                 Route::get('/usuarios', [UsuarioRolController::class, 'index'])->name('usuarios.index');
                 Route::put('/usuarios', [UsuarioRolController::class, 'update'])->name('usuarios.update');

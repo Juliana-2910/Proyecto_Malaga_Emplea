@@ -4,6 +4,8 @@ namespace App\Services\Seguridad;
 
 use App\Repositories\Seguridad\RolRepository;
 use App\Repositories\Seguridad\UsuarioRepository;
+use App\Models\Empresa;
+use App\Models\Usuario;
 use Exception;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Collection;
@@ -27,6 +29,36 @@ class CuentaService
     public function listarRoles(): Collection
     {
         return $this->rolRepository->listar();
+    }
+
+    public function listarEmpresas(): Collection
+    {
+        return Empresa::with('rolesConInactivos')->orderBy('nombreEmpresa')->get();
+    }
+
+    public function cambiarEstado(Authenticatable $cuenta, Authenticatable $actual): bool
+    {
+        $activar = strtolower((string) $cuenta->estado) !== 'activo';
+
+        if (! $activar && $cuenta->is($actual)) {
+            throw new Exception('No puedes inactivar tu propia cuenta.');
+        }
+
+        $rolAdmin = config('seguridad.rol_admin');
+        if (! $activar && $cuenta instanceof Usuario && $cuenta->hasRole($rolAdmin)) {
+            $administradoresActivos = Usuario::query()
+                ->whereRaw('LOWER(estado) = ?', ['activo'])
+                ->whereHas('roles', fn ($consulta) => $consulta->where('name', $rolAdmin))
+                ->count();
+
+            if ($administradoresActivos <= 1) {
+                throw new Exception('No puedes inactivar al único administrador activo.');
+            }
+        }
+
+        $cuenta->update(['estado' => $activar ? 'activo' : 'inactivo']);
+
+        return $activar;
     }
 
     public function buscar(int|string $id): Authenticatable

@@ -65,7 +65,7 @@ class EmpresaAccesoTest extends TestCase
 
         app(PermissionRegistrar::class)->forgetCachedPermissions();
         $this->assertTrue($existente->fresh()->hasRole('empresa'));
-        $this->assertSame(1, DB::table('model_has_roles')->where('model_type', Empresa::class)->count());
+        $this->assertSame(1, DB::table(config('permission.table_names.model_has_roles'))->where('model_type', Empresa::class)->count());
     }
 
     public function test_una_empresa_nueva_recibe_el_rol_sola(): void
@@ -77,7 +77,7 @@ class EmpresaAccesoTest extends TestCase
     {
         $empresa = $this->crearEmpresa();
 
-        $this->get(route('login'))->assertOk()->assertSee('Soy')->assertSee('Empresa')->assertSee('Usuario');
+        $this->get(route('login'))->assertOk()->assertSee('Persona natural')->assertSee('Empresa')->assertSee('¿Cómo deseas ingresar?');
 
         $this->post(route('login.store'), ['tipo' => 'empresa', 'email' => 'e@e.com', 'password' => '12345678'])
             ->assertRedirect();
@@ -112,6 +112,118 @@ class EmpresaAccesoTest extends TestCase
         $this->post(route('login.store'), ['tipo' => 'empresa', 'email' => 'i@i.com', 'password' => '12345678'])
             ->assertSessionHasErrors(['email' => 'Tu cuenta está inactiva. Comunícate con el administrador.']);
         $this->assertGuest('empresa');
+    }
+
+    public function test_seguridad_muestra_y_cambia_el_estado_de_personas_y_empresas(): void
+    {
+        $usuario = Usuario::create([
+            'nombres' => 'Laura',
+            'apellidos' => 'Pérez',
+            'fechaNacimiento' => '1990-01-01',
+            'tipoDocumento' => 'CC',
+            'numeroDocumento' => '123456',
+            'telefono' => '3000000000',
+            'email' => 'laura@example.com',
+            'password' => Hash::make('12345678'),
+            'estado' => 'inactivo',
+        ]);
+        $empresa = $this->crearEmpresa('inactiva@acme.com', '905', 'inactivo');
+
+        $this->actingAs($this->admin(), 'web');
+        $this->get(route('seguridad.cuentas.index'))
+            ->assertOk()
+            ->assertSee('Laura Pérez')
+            ->assertSee('Acme Ltda')
+            ->assertSee('Inactivo');
+
+        $this->patch(route('seguridad.cuentas.estado', ['tipo' => 'usuario', 'id' => $usuario->id]))
+            ->assertSessionHas('success');
+        $this->assertSame('activo', $usuario->fresh()->estado);
+
+        $this->patch(route('seguridad.cuentas.estado', ['tipo' => 'empresa', 'id' => $empresa->id]))
+            ->assertSessionHas('success');
+        $this->assertSame('activo', $empresa->fresh()->estado);
+
+        $this->patch(route('seguridad.cuentas.estado', ['tipo' => 'usuario', 'id' => $usuario->id]))
+            ->assertSessionHas('success');
+        $this->assertSame('inactivo', $usuario->fresh()->estado);
+    }
+
+    public function test_estado_de_usuario_con_mayusculas_se_acepta_al_ingresar_y_la_sesion_se_cierra_al_inactivar(): void
+    {
+        $usuario = Usuario::create([
+            'nombres' => 'Caso',
+            'apellidos' => 'Legado',
+            'fechaNacimiento' => '1990-01-01',
+            'tipoDocumento' => 'CC',
+            'numeroDocumento' => '123457',
+            'telefono' => '3000000000',
+            'email' => 'legada@example.com',
+            'password' => Hash::make('12345678'),
+            'estado' => 'Activo',
+        ]);
+
+        $this->post(route('login.store'), [
+            'tipo' => 'usuario',
+            'email' => 'legada@example.com',
+            'password' => '12345678',
+        ])->assertRedirect();
+
+        $this->get('/dashboard')->assertOk();
+
+        DB::table('usuarios')->where('id', $usuario->id)->update(['estado' => 'Inactivo']);
+        $this->app['auth']->forgetGuards();
+
+        $this->get('/dashboard')
+            ->assertRedirect(route('login'))
+            ->assertSessionHas('error');
+        $this->assertGuest('web');
+    }
+
+    public function test_la_sesion_de_empresa_se_cierra_si_el_administrador_la_inactiva(): void
+    {
+        $empresa = $this->crearEmpresa('sesion@acme.com', '909');
+        $this->loginEmpresa('sesion@acme.com');
+        $this->get('/dashboard')->assertOk();
+
+        DB::table('empresas')->where('id', $empresa->id)->update(['estado' => 'inactivo']);
+        $this->app['auth']->forgetGuards();
+
+        $this->get('/dashboard')
+            ->assertRedirect(route('login'))
+            ->assertSessionHas('error');
+        $this->assertGuest('empresa');
+    }
+
+    public function test_registro_publico_activa_la_empresa_y_el_panel_respeta_el_estado_elegido(): void
+    {
+        $this->postJson(route('registro.empresa'), [
+            'nombreEmpresa' => 'Registro público',
+            'nit' => '907',
+            'direccion' => 'Calle 2',
+            'email' => 'registro@publico.com',
+            'password' => '12345678',
+        ])->assertCreated();
+
+        $this->assertDatabaseHas('empresas', [
+            'email' => 'registro@publico.com',
+            'estado' => 'activo',
+        ]);
+
+        $this->actingAs($this->admin(), 'web');
+        $this->post(route('empresas.store'), [
+            'nombreEmpresa' => 'Registro administrativo',
+            'nit' => '908',
+            'direccion' => 'Calle 3',
+            'email' => 'registro@admin.com',
+            'password' => '12345678',
+            'estado' => 'inactivo',
+        ])->assertRedirect(route('empresas.index'));
+
+        $this->assertDatabaseHas('empresas', [
+            'email' => 'registro@admin.com',
+            'estado' => 'inactivo',
+        ]);
     }
 
     public function test_la_empresa_entra_al_dashboard_con_su_nombre_y_sin_enlaces_de_mas(): void
