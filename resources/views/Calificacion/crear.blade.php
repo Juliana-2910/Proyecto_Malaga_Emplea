@@ -81,12 +81,12 @@
 
                         <option value="usuario"
                             {{ old('tipoCalificador') == 'usuario' ? 'selected' : '' }}>
-                                El usuario califica a la empresa
+                                El usuario califica al publicador
                         </option>
 
                         <option value="empresa"
                             {{ old('tipoCalificador') == 'empresa' ? 'selected' : '' }}>
-                                La empresa califica al usuario
+                                El publicador califica al usuario
                         </option>
                 </select>
 

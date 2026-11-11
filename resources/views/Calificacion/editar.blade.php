@@ -70,25 +70,25 @@
             {{-- Tipo de calificador --}}
             <div>
                 <label for="tipoCalificador" class="mb-1 block text-sm font-medium text-gray-700">
-                 ¿Quién realiza la calificación?
+                    ¿Quién realiza la calificación?
                 </label>
 
                 <select
-                 name="tipoCalificador"
-                 id="tipoCalificador"
-                 required
-                    class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]"
+                name="tipoCalificador"
+                id="tipoCalificador"
+                required
+                class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]"
     >
-                 <option value="">Seleccione quién califica</option>
+                <option value="">Seleccione quién califica</option>
 
                     <option value="usuario"
                         {{ old('tipoCalificador', $calificacion->tipoCalificador) == 'usuario' ? 'selected' : '' }}>
-                        Usuario califica a empresa
+                        Usuario califica al publicador
                     </option>
 
                     <option value="empresa"
                         {{ old('tipoCalificador', $calificacion->tipoCalificador) == 'empresa' ? 'selected' : '' }}>
-                        Empresa califica a usuario
+                        Publicador califica al usuario
                     </option>
                 </select>
 

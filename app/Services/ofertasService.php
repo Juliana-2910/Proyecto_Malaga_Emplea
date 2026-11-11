@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Repositories\ofertasRepository;
 use App\Repositories\ofertaServiciosRepository;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Carbon\Carbon;
 use InvalidArgumentException;
 use Exception;
@@ -354,5 +355,68 @@ class ofertasService
         return $this->actualizar($id, $datos);
     }
 
-    
+    /** "Postulantes de una oferta" (quien publicó decide sobre ellos) */
+    public function datosPostulantes(int $idOferta, array $filtros): array
+    {
+        $this->validarFiltrosPostulaciones($filtros); // mismos estados y órdenes de "Mis postulaciones"
+
+        // TEMPORAL: cuando exista el login, el usuario sale de auth().
+        $usuario = $this->ofertasrepository->usuarioDePrueba();
+        $idUsuario = $usuario?->id ?? 0;
+
+        $oferta = $this->buscarOfertaPropia($idOferta, $idUsuario);
+
+        $postulantes = $this->ofertasrepository->listarPostulantesPaginados($idOferta, $filtros, self::POR_PAGINA);
+        $hojas = $this->ofertasrepository->hojasDeVidaPorUsuario($postulantes->pluck('idUsuario')->all());
+        $calificaciones = $this->ofertasrepository->calificacionesPorPostulacion($postulantes->pluck('id')->all(), $idUsuario);
+        $postulantes->through(function ($postulacion) use ($hojas) {
+            $hoja = $hojas[$postulacion->idUsuario] ?? null;
+
+            $postulacion->hojaDeVida = $hoja;
+            $postulacion->perfilCompleto = $this->perfilCompleto($hoja);
+            $postulacion->calificacion = $calificaciones[$postulacion->id] ?? null; // puntuación, o null si aún no calificas
+
+            return $postulacion;
+        });
+
+        $porEstado = $this->ofertasrepository->contarPostulantesPorOferta([$idOferta])[$idOferta] ?? [];
+
+        $oferta->categoria = $this->ofertasrepository->categoriasPorOferta([$idOferta])[$idOferta] ?? null;
+        $oferta->estadoOferta = $this->estadoDeOferta($porEstado['Contratado'] ?? 0, $oferta->fechaLimite);
+
+        return [
+            'nombre'      => $usuario?->nombres ?? 'Usuario',
+            'idUsuario'   => $usuario?->id, // TEMPORAL: con el login sale de la sesión
+            'oferta'      => $oferta,
+            'postulantes' => $postulantes,
+            'conteos'     => [
+                'todos'      => array_sum($porEstado),
+                'Enviado'    => $porEstado['Enviado'] ?? 0,
+                'Aceptado'   => $porEstado['Aceptado'] ?? 0,
+                'Contratado' => $porEstado['Contratado'] ?? 0,
+                'Rechazado'  => $porEstado['Rechazado'] ?? 0,
+            ],
+        ];
+    }
+
+    /** Solo quien publicó la oferta puede ver sus postulantes. */
+    private function buscarOfertaPropia(int $idOferta, int $idUsuario)
+    {
+        try {
+            return $this->ofertasrepository->buscarOfertaDeUsuario($idOferta, $idUsuario);
+        } catch (ModelNotFoundException $e) {
+            throw new Exception('Esa oferta no existe o no es tuya.');
+        }
+    }
+
+    /** "Perfil completo" = los 4 campos de texto de la hoja de vida están llenos. */
+    private function perfilCompleto($hoja): bool
+    {
+        if (! $hoja) {
+            return false;
+        }
+
+        return collect(['ubicacion', 'nivelEducativo', 'perfilProfesional', 'experienciaLaboral'])
+            ->every(fn ($campo) => filled($hoja->{$campo}));
+    }
 }

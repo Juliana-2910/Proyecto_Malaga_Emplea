@@ -170,4 +170,22 @@ class OfertaPublicaController extends Controller
             return redirect('/mis-ofertas')->with('error', $e->getMessage());
         }
     }
+
+        public function postulantes(Request $request, int $id)
+    {
+        try {
+            $datos = $this->ofertasService->datosPostulantes(
+                $id,
+                $request->only(['estado', 'orden'])
+            );
+
+            return view('Publico.postulantes', $datos);
+        } catch (InvalidArgumentException $e) {
+            // Filtro inválido: se vuelve a la lista de esa oferta sin filtros.
+            return redirect()->route('Publico.misOfertas.postulantes', $id)->with('error', $e->getMessage());
+        } catch (Exception $e) {
+            // Oferta que no existe o que no es tuya.
+            return redirect()->route('Publico.misOfertas')->with('error', $e->getMessage());
+        }
+    }
 }
