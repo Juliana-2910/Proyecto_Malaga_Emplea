@@ -143,13 +143,13 @@
 
                                 {{-- TIPO DE CALIFICADOR --}}
                                 <td class="border-r border-gray-100 px-6 py-5 text-sm font-medium text-gray-600">
-                                     @if ($calificacion->tipoCalificador === 'usuario')
-                                        Usuario califica a empresa
+                                    @if ($calificacion->tipoCalificador === 'usuario')
+                                        Usuario califica al publicador
                                     @elseif ($calificacion->tipoCalificador === 'empresa')
-                                        Empresa califica a usuario
+                                        Publicador califica al usuario
                                     @else
                                         Sin especificar
-                                     @endif
+                                    @endif
                                 </td>
 
                                 {{-- PUNTUACIÓN --}}
