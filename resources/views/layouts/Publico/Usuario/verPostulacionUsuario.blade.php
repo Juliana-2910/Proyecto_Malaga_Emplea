@@ -139,10 +139,6 @@
                 @csrf
                 @method('DELETE')
 
-                {{-- TEMPORAL: cuando exista el login, este campo se quita y el usuario sale de la sesión --}}
-                @if (! empty($idUsuario))
-                    <input type="hidden" name="idUsuario" value="{{ $idUsuario }}">
-                @endif
 
                 <button type="button" data-cerrar-confirmacion
                     class="{{ $btnSecundario }} cursor-pointer">

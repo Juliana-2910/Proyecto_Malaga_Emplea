@@ -131,7 +131,7 @@
         {{-- AVISO DE REGLAS --}}
         <div class="flex items-center gap-3 rounded-xl border border-l-4 border-slate-200 border-l-marca bg-white px-4 py-3.5 text-sm text-slate-600">
             <svg class="size-5 shrink-0 text-marca-texto" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" /></svg>
-            <span>Solo puedes contratar a <strong>una persona</strong> por oferta. Una vez que aceptas o rechazas, la decisión no se puede cambiar.</span>
+            <span>Solo puedes contratar a <strong>una persona</strong> por oferta. Una postulación rechazada no se puede reabrir.</span>
         </div>
 
         {{-- PESTAÑAS + ORDENAR --}}
@@ -271,7 +271,14 @@
                         @foreach ($botones as $clave)
                             @php $a = $acciones[$clave]; @endphp
 
-                            <button type="button"
+                            @if (! in_array($clave, ['ver', 'calificar'], true))
+                                <form method="POST" action="{{ route('Publico.misOfertas.actualizarPostulante', $p->id) }}">
+                                    @csrf
+                                    @method('PATCH')
+                                    <input type="hidden" name="estado" value="{{ $clave === 'contratar' ? 'Contratado' : ($clave === 'aceptar' ? 'Aceptado' : 'Rechazado') }}">
+                            @endif
+
+                            <button type="{{ in_array($clave, ['ver', 'calificar'], true) ? 'button' : 'submit' }}"
                                 title="{{ $a['texto'] }}"
                                 aria-label="{{ $a['texto'] }}"
                                 @if ($clave === 'ver')
@@ -284,6 +291,10 @@
                                 class="{{ $btnAccion }} cursor-pointer {{ $a['clase'] }}">
                                 <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="{{ $a['ancho'] }}" aria-hidden="true">{!! $a['icono'] !!}</svg>
                             </button>
+
+                            @if (! in_array($clave, ['ver', 'calificar'], true))
+                                </form>
+                            @endif
                         @endforeach
                     </div>
                 </div>

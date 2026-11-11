@@ -38,10 +38,6 @@
             @method('PUT')
             <input type="hidden" name="_origen" value="publico">
             <input type="hidden" name="_idOferta" value="{{ $reabrirE ? $idReabrir : '' }}">
-            {{-- TEMPORAL: cuando exista el login, este campo se quita y el usuario sale de la sesión --}}
-            @if (! empty($idUsuario))
-                <input type="hidden" name="idUsuario" value="{{ $idUsuario }}">
-            @endif
 
             <div style="padding:24px 28px;display:flex;flex-direction:column;gap:20px;overflow:auto">
 

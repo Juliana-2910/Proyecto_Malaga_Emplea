@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Repositories\ofertasRepository;
 use App\Repositories\ofertaServiciosRepository;
+use App\Models\Empresa;
+use App\Models\Usuario;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Carbon\Carbon;
@@ -118,13 +120,12 @@ class ofertasService
     private const ESTADOS_OFERTA = ['todas', 'activas', 'contratacion', 'vencidas'];
     private const DIAS_VENCE_PRONTO = 3;
 
-    public function datosListadoUsuario(array $filtros): array
+    public function datosListadoUsuario(array $filtros, Usuario|Empresa $cuenta): array
     {
         $this->validarFiltros($filtros);
 
-        // TEMPORAL: cuando exista el login, el usuario sale de auth().
-        $usuario = $this->ofertasrepository->usuarioDePrueba();
-        $idUsuario = $usuario?->id;
+        $esEmpresa = $cuenta instanceof Empresa;
+        $idUsuario = $esEmpresa ? null : $cuenta->id;
 
         $ofertas = $this->ofertasrepository->listarActivas($filtros, self::POR_PAGINA);
 
@@ -142,9 +143,9 @@ class ofertasService
         $porEstado = $idUsuario ? $this->ofertasrepository->contarPostulacionesPorEstado($idUsuario) : [];
 
         return [
-            'nombre'                => $usuario?->nombres ?? 'Usuario',
-            'esEmpresa'             => false, // TEMPORAL: se define con el login
-            'idUsuario'             => $idUsuario, // TEMPORAL: con el login sale de la sesión
+            'nombre'                => $esEmpresa ? $cuenta->nombreEmpresa : trim($cuenta->nombres . ' ' . $cuenta->apellidos),
+            'esEmpresa'             => $esEmpresa,
+            'idUsuario'             => $idUsuario,
             'totalOfertas'          => $ofertas->total(),
             'ofertas'               => $ofertas,
             'categorias'            => $this->ofertasrepository->listarCategorias(),
@@ -155,9 +156,9 @@ class ofertasService
                 'rechazadas' => $porEstado['Rechazado'] ?? 0,
                 'contratadas' => $porEstado['Contratado'] ?? 0,
             ],
-            'postulantesPorRevisar' => $idUsuario ? $this->ofertasrepository->contarPostulantesPorRevisar($idUsuario) : 0,
+            'postulantesPorRevisar' => $this->ofertasrepository->contarPostulantesPorRevisarDePublicador($cuenta->id, $esEmpresa),
             'hojaDeVidaProgreso'    => $idUsuario ? $this->progresoHojaDeVida($idUsuario) : 0,
-            'hojaDeVida' => $this->ofertasrepository->hojaDeVidaDe($idUsuario),
+            'hojaDeVida' => $idUsuario ? $this->ofertasrepository->hojaDeVidaDe($idUsuario) : null,
             ];
     }
 
@@ -210,13 +211,11 @@ class ofertasService
 
     /** "Mis postulaciones" **/
 
-    public function datosMisPostulaciones(array $filtros): array
+    public function datosMisPostulaciones(array $filtros, Usuario $usuario): array
     {
         $this->validarFiltrosPostulaciones($filtros);
 
-        // TEMPORAL: cuando exista el login, el usuario sale de auth().
-        $usuario = $this->ofertasrepository->usuarioDePrueba();
-        $idUsuario = $usuario?->id;
+        $idUsuario = $usuario->id;
 
         $postulaciones = $this->ofertasrepository->listarPostulacionesDeUsuario($idUsuario ?? 0, $filtros, self::POR_PAGINA);
 
@@ -233,8 +232,8 @@ class ofertasService
         $porEstado = $idUsuario ? $this->ofertasrepository->contarPostulacionesPorEstado($idUsuario) : [];
 
         return [
-            'nombre'         => $usuario?->nombres ?? 'Usuario',
-            'idUsuario'      => $idUsuario, // TEMPORAL: con el login sale de la sesión
+            'nombre'         => trim($usuario->nombres . ' ' . $usuario->apellidos),
+            'idUsuario'      => $idUsuario,
             'postulaciones'  => $postulaciones,
             'conteos'        => [
                 'todas'      => array_sum($porEstado),
@@ -257,15 +256,15 @@ class ofertasService
         }
     }
 
-    public function datosMisOfertas(array $filtros): array
+    public function datosMisOfertas(array $filtros, Usuario|Empresa $cuenta): array
     {
         $this->validarFiltrosMisOfertas($filtros);
 
-        // TEMPORAL: cuando exista el login, el usuario sale de auth().
-        $usuario = $this->ofertasrepository->usuarioDePrueba();
-        $idUsuario = $usuario?->id ?? 0;
+        $esEmpresa = $cuenta instanceof Empresa;
+        $idPublicador = $cuenta->id;
+        $usuario = $esEmpresa ? null : $cuenta;
 
-        $ofertas = $this->ofertasrepository->listarOfertasDeUsuario($idUsuario, $filtros, self::POR_PAGINA);
+        $ofertas = $this->ofertasrepository->listarOfertasDePublicador($idPublicador, $esEmpresa, $filtros, self::POR_PAGINA);
 
         $ids = $ofertas->pluck('id')->all();
         $categorias = $this->ofertasrepository->categoriasPorOferta($ids);
@@ -290,19 +289,21 @@ class ofertasService
         });
 
         return [
-            'nombre'        => $usuario?->nombres ?? 'Usuario',
-            'idUsuario'     => $usuario?->id, // TEMPORAL: con el login sale de la sesión
+            'nombre'        => $esEmpresa ? $cuenta->nombreEmpresa : trim($cuenta->nombres . ' ' . $cuenta->apellidos),
+            'idUsuario'     => $usuario?->id,
+            'idEmpresa'     => $esEmpresa ? $cuenta->id : null,
+            'esEmpresa'     => $esEmpresa,
             'ofertas'       => $ofertas,
             'categorias'    => $this->ofertasrepository->listarCategorias(),
             'servicios'     => $this->ofertasrepository->listarServicios(),
-            'conteoEstados' => $this->ofertasrepository->contarOfertasPorEstado($idUsuario),
+            'conteoEstados' => $this->ofertasrepository->contarOfertasPorPublicador($idPublicador, $esEmpresa),
             'resumen'       => [
-                'porCalificar'          => $this->ofertasrepository->contarContratacionesPorCalificar($idUsuario),
-                'vencenPronto'          => $this->ofertasrepository->contarOfertasQueVencenPronto($idUsuario, self::DIAS_VENCE_PRONTO),
-                'sinPostulantes'        => $this->ofertasrepository->contarOfertasSinPostulantes($idUsuario),
-                'postulantesPorRevisar' => $this->ofertasrepository->contarPostulantesPorRevisar($idUsuario),
+                'porCalificar'          => $this->ofertasrepository->contarContratacionesPorCalificarDePublicador($idPublicador, $esEmpresa),
+                'vencenPronto'          => $this->ofertasrepository->contarOfertasQueVencenProntoDePublicador($idPublicador, $esEmpresa, self::DIAS_VENCE_PRONTO),
+                'sinPostulantes'        => $this->ofertasrepository->contarOfertasSinPostulantesDePublicador($idPublicador, $esEmpresa),
+                'postulantesPorRevisar' => $this->ofertasrepository->contarPostulantesPorRevisarDePublicador($idPublicador, $esEmpresa),
             ],
-            'calificacion'  => $this->ofertasrepository->reputacionDeUsuario($idUsuario),
+            'calificacion'  => $this->ofertasrepository->reputacionDePublicador($idPublicador, $esEmpresa),
         ];
     }
 
@@ -331,15 +332,10 @@ class ofertasService
         }
     }
 
-    public function actualizarMiOferta(int $id, array $datos)
+    public function actualizarMiOferta(int $id, array $datos, Usuario|Empresa $cuenta)
     {
-        // TEMPORAL: cuando exista el login, el usuario sale de auth().
-        $usuario = $this->ofertasrepository->usuarioDePrueba();
-        $oferta = $this->ofertasrepository->buscarporid($id);
-
-        if (! $usuario || (int) $oferta->idUsuario !== (int) $usuario->id) {
-            throw new Exception('Solo puedes editar las ofertas que publicaste.');
-        }
+        $esEmpresa = $cuenta instanceof Empresa;
+        $oferta = $this->ofertasrepository->buscarOfertaDePublicador($id, $cuenta->id, $esEmpresa);
 
         if ($this->ofertasrepository->tienePostulanteContratado($id)) {
             throw new Exception('Esta oferta ya tiene una persona contratada, por eso no se puede editar.');
@@ -356,19 +352,19 @@ class ofertasService
     }
 
     /** "Postulantes de una oferta" (quien publicó decide sobre ellos) */
-    public function datosPostulantes(int $idOferta, array $filtros): array
+    public function datosPostulantes(int $idOferta, array $filtros, Usuario|Empresa $cuenta): array
     {
         $this->validarFiltrosPostulaciones($filtros); // mismos estados y órdenes de "Mis postulaciones"
 
-        // TEMPORAL: cuando exista el login, el usuario sale de auth().
-        $usuario = $this->ofertasrepository->usuarioDePrueba();
-        $idUsuario = $usuario?->id ?? 0;
+        $esEmpresa = $cuenta instanceof Empresa;
+        $idPublicador = $cuenta->id;
+        $usuario = $esEmpresa ? null : $cuenta;
 
-        $oferta = $this->buscarOfertaPropia($idOferta, $idUsuario);
+        $oferta = $this->buscarOfertaPropia($idOferta, $idPublicador, $esEmpresa);
 
         $postulantes = $this->ofertasrepository->listarPostulantesPaginados($idOferta, $filtros, self::POR_PAGINA);
         $hojas = $this->ofertasrepository->hojasDeVidaPorUsuario($postulantes->pluck('idUsuario')->all());
-        $calificaciones = $this->ofertasrepository->calificacionesPorPostulacion($postulantes->pluck('id')->all(), $idUsuario);
+        $calificaciones = $this->ofertasrepository->calificacionesPorPostulacionDePublicador($postulantes->pluck('id')->all(), $idPublicador, $esEmpresa);
         $postulantes->through(function ($postulacion) use ($hojas) {
             $hoja = $hojas[$postulacion->idUsuario] ?? null;
 
@@ -385,8 +381,10 @@ class ofertasService
         $oferta->estadoOferta = $this->estadoDeOferta($porEstado['Contratado'] ?? 0, $oferta->fechaLimite);
 
         return [
-            'nombre'      => $usuario?->nombres ?? 'Usuario',
-            'idUsuario'   => $usuario?->id, // TEMPORAL: con el login sale de la sesión
+            'nombre'      => $esEmpresa ? $cuenta->nombreEmpresa : trim($cuenta->nombres . ' ' . $cuenta->apellidos),
+            'idUsuario'   => $usuario?->id,
+            'idEmpresa'   => $esEmpresa ? $cuenta->id : null,
+            'esEmpresa'    => $esEmpresa,
             'oferta'      => $oferta,
             'postulantes' => $postulantes,
             'conteos'     => [
@@ -400,10 +398,10 @@ class ofertasService
     }
 
     /** Solo quien publicó la oferta puede ver sus postulantes. */
-    private function buscarOfertaPropia(int $idOferta, int $idUsuario)
+    private function buscarOfertaPropia(int $idOferta, int $idPublicador, bool $esEmpresa)
     {
         try {
-            return $this->ofertasrepository->buscarOfertaDeUsuario($idOferta, $idUsuario);
+            return $this->ofertasrepository->buscarOfertaDePublicador($idOferta, $idPublicador, $esEmpresa);
         } catch (ModelNotFoundException $e) {
             throw new Exception('Esa oferta no existe o no es tuya.');
         }

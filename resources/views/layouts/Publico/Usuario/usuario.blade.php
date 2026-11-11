@@ -23,18 +23,9 @@
 
         $nombre = $nombre ?: 'Usuario';
 
-        // Iniciales para el avatar.
-        $iniciales = collect(explode(' ', trim($nombre)))
-            ->filter()
-            ->map(fn ($parte) => mb_strtoupper(mb_substr($parte, 0, 1)))
-            ->take(2)
-            ->implode('');
     @endphp
 
-    {{-- NAVBAR --}}
-    <header class="border-b border-slate-200 bg-white">
-        @include('layouts.Publico.Usuario.navbarUsuario')
-    </header>
+    @include('layouts.Publico.Usuario.navbarUsuario')
 
     <main>
         @yield('content')

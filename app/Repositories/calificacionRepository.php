@@ -4,6 +4,8 @@ namespace App\Repositories;
 
 use App\Models\Calificacion;
 use App\Models\Postulacion;
+use App\Models\Empresa;
+use App\Models\Usuario;
 use Illuminate\Support\Facades\DB;
 
 class calificacionRepository{
@@ -13,6 +15,28 @@ class calificacionRepository{
         return Calificacion::with(['usuario','empresa','usuarioCalificado','empresaCalificada',
             'postulacion.usuario', 'postulacion.oferta.empresa', 'postulacion.oferta.usuario'
         ])->get();
+    }
+
+    public function historialDeCuenta(Usuario|Empresa $cuenta)
+    {
+        $esEmpresa = $cuenta instanceof Empresa;
+        $columnaAutor = $esEmpresa ? 'idEmpresa' : 'idUsuario';
+        $columnaDestino = $esEmpresa ? 'idEmpresaCalificada' : 'idUsuarioCalificado';
+
+        return Calificacion::with([
+            'usuario',
+            'empresa',
+            'usuarioCalificado',
+            'empresaCalificada',
+            'postulacion.oferta',
+        ])
+            ->whereHas('postulacion', fn ($query) => $query->where('estado', 'Contratado'))
+            ->where(fn ($query) => $query
+                ->where($columnaAutor, $cuenta->id)
+                ->orWhere($columnaDestino, $cuenta->id))
+            ->orderByDesc('fecha')
+            ->orderByDesc('id')
+            ->get();
     }
 
     public function guardar(array $datos)

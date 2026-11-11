@@ -15,6 +15,7 @@ use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\OfertaController;
 use App\Http\Controllers\PostulacionController;
 use App\Http\Controllers\Seguridad\AuthController;
+use App\Http\Controllers\PerfilController;
 
 
     Route::get('/', [HomeController::class, 'index'])->name('Publico.inicio');
@@ -23,6 +24,10 @@ use App\Http\Controllers\Seguridad\AuthController;
     Route::post('/registro/empresa', [AuthController::class, 'registrarEmpresa'])->name('registro.empresa');
 
 Route::middleware(['auth:web,empresa', 'cuenta.activa'])->group(function () {
+
+    Route::get('/mi-perfil', [PerfilController::class, 'editar'])->name('perfil.editar');
+    Route::put('/mi-perfil', [PerfilController::class, 'actualizar'])->name('perfil.actualizar');
+    Route::get('/mi-cuenta/calificaciones', [PerfilController::class, 'calificaciones'])->name('perfil.calificaciones');
 
     Route::get('/empleos', [OfertaPublicaController::class, 'index'])->name('Publico.ofertas');
     Route::post('/empleos/{id}/postular', [OfertaPublicaController::class, 'postular'])->whereNumber('id')->name('Publico.postular');
@@ -35,6 +40,7 @@ Route::middleware(['auth:web,empresa', 'cuenta.activa'])->group(function () {
     Route::put('/mis-ofertas/{id}', [OfertaPublicaController::class, 'actualizarOferta'])->whereNumber('id')->name('Publico.actualizarOferta');
     Route::get('/mis-ofertas/{id}/postulantes', [OfertaPublicaController::class, 'postulantes'])->whereNumber('id')->name('Publico.misOfertas.postulantes');
     Route::post('/mis-ofertas/postulantes/{id}/calificar', [OfertaPublicaController::class, 'calificarPostulante'])->whereNumber('id')->name('Publico.misOfertas.calificarPostulante');
+    Route::patch('/mis-ofertas/postulantes/{id}/estado', [OfertaPublicaController::class, 'actualizarEstadoPostulante'])->whereNumber('id')->name('Publico.misOfertas.actualizarPostulante');
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 

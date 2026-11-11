@@ -32,7 +32,8 @@ class OfertaPublicaController extends Controller
     {
         try {
             $datos = $this->ofertasService->datosListadoUsuario(
-                $request->only(['q', 'categoria', 'contrato', 'publica', 'orden'])
+                $request->only(['q', 'categoria', 'contrato', 'publica', 'orden']),
+                auth('empresa')->user() ?? auth('web')->user()
             );
 
             return view('Publico.UsuarioOfertas', $datos);
@@ -69,11 +70,12 @@ class OfertaPublicaController extends Controller
 
     public function cancelarPostulacion(Request $request, int $id)
     {
-        // TEMPORAL: con el login, el idUsuario sale de la sesión y no del formulario.
-        $request->validate(['idUsuario' => 'required|exists:usuarios,id']);
+        // El propietario se obtiene de la sesión autenticada, no del formulario.
+        $usuario = auth('web')->user();
+        abort_unless($usuario, 403, 'Solo los usuarios pueden cancelar postulaciones.');
 
         try {
-            $this->postulacionService->cancelar($id, (int) $request->input('idUsuario'));
+            $this->postulacionService->cancelar($id, (int) $usuario->id);
 
             return back()->with('eliminar', 'Tu postulación fue cancelada correctamente.');
         } catch (Exception $e) {
@@ -97,7 +99,18 @@ class OfertaPublicaController extends Controller
     public function guardarOferta(OfertaStoreRequest $request) // Es un modal creado aparte //
     {
         try { // Se reutiliza ofertasService::guardar (pone la fecha de publicación, valida el salario mínimo y llena la tabla intermedia ofertaServicios) //
-            $this->ofertasService->guardar($request->validated());
+            $datos = $request->validated();
+            unset($datos['idUsuario'], $datos['idEmpresa']);
+
+            if ($empresa = auth('empresa')->user()) {
+                $datos['idEmpresa'] = $empresa->id;
+            } else {
+                $usuario = auth('web')->user();
+                abort_unless($usuario, 403);
+                $datos['idUsuario'] = $usuario->id;
+            }
+
+            $this->ofertasService->guardar($datos);
         } catch (Exception $e) {
             return redirect()->route('Publico.ofertas')->withInput()->with('errorModal', $e->getMessage())->with('abrirCrearOferta', true);
         }
@@ -107,7 +120,9 @@ class OfertaPublicaController extends Controller
     public function actualizarOferta(OfertaUpdateRequest $request, int $id)
     {
         try {
-            $this->ofertasService->actualizarMiOferta($id, $request->validated());
+            $cuenta = auth('empresa')->user() ?? auth('web')->user();
+            abort_unless($cuenta, 403);
+            $this->ofertasService->actualizarMiOferta($id, $request->validated(), $cuenta);
         } catch (Exception $e) {
             return redirect()->route('Publico.misOfertas')->withInput()->with('errorModal', $e->getMessage())->with('abrirEditarOferta', $id);
         }
@@ -117,9 +132,15 @@ class OfertaPublicaController extends Controller
 
     public function misPostulaciones(Request $request)
     {
+        $usuario = auth('web')->user();
+        if (! $usuario) {
+            return redirect()->route('Publico.ofertas')->with('error', 'Mis postulaciones está disponible para cuentas de usuario.');
+        }
+
         try {
             $datos = $this->ofertasService->datosMisPostulaciones(
-                $request->only(['estado', 'orden'])
+                $request->only(['estado', 'orden']),
+                $usuario
             );
 
             return view('Publico.usuarioPostulaciones', $datos);
@@ -131,23 +152,25 @@ class OfertaPublicaController extends Controller
 
     public function calificar(Request $request, int $id)
     {
+        $usuario = auth('web')->user();
+        abort_unless($usuario, 403, 'Solo los usuarios pueden enviar esta calificación.');
+
         // Los errores van en su propio "bolsillo" para no abrir otros modales.
         $datos = $request->validateWithBag('calificar', [
-            'idUsuario'  => 'required|exists:usuarios,id', // TEMPORAL: con el login sale de la sesión
             'puntuacion' => 'required|integer|min:1|max:5',
-            'comentario' => 'required|string|max:500',
+            'comentario' => 'required|string|max:255',
         ], [
             'puntuacion.required' => 'Elige de 1 a 5 estrellas.',
             'puntuacion.min'      => 'Elige de 1 a 5 estrellas.',
             'puntuacion.max'      => 'Elige de 1 a 5 estrellas.',
             'comentario.required' => 'Cuéntanos cómo fue tu experiencia.',
-            'comentario.max'      => 'El comentario no puede superar los 500 caracteres.',
+            'comentario.max'      => 'El comentario no puede superar los 255 caracteres.',
         ]);
 
         try {
             $this->calificacionService->calificarContratacion(
                 $id,
-                (int) $datos['idUsuario'],
+                (int) $usuario->id,
                 (int) $datos['puntuacion'],
                 $datos['comentario']
             );
@@ -161,8 +184,11 @@ class OfertaPublicaController extends Controller
     public function misOfertas(Request $request)
     {
         try {
+            $cuenta = auth('empresa')->user() ?? auth('web')->user();
+            abort_unless($cuenta, 403);
             $datos = $this->ofertasService->datosMisOfertas(
-                $request->only(['estado', 'orden'])
+                $request->only(['estado', 'orden']),
+                $cuenta
             );
 
             return view('Publico.misOfertas', $datos);
@@ -171,12 +197,66 @@ class OfertaPublicaController extends Controller
         }
     }
 
+    public function actualizarEstadoPostulante(Request $request, int $id)
+    {
+        $datos = $request->validate([
+            'estado' => ['required', 'in:Aceptado,Rechazado,Contratado'],
+        ]);
+        $publicador = auth('empresa')->user() ?? auth('web')->user();
+        abort_unless($publicador, 403);
+
+        try {
+            $this->postulacionService->cambiarEstadoDesdePanel($id, $datos['estado'], $publicador);
+        } catch (Exception $e) {
+            return back()->with('error', $e->getMessage());
+        }
+
+        return back()->with('success', match ($datos['estado']) {
+            'Aceptado' => 'La postulación fue aceptada.',
+            'Rechazado' => 'La postulación fue rechazada.',
+            default => 'La persona fue contratada. Ya puedes calificar el servicio.',
+        });
+    }
+
+    public function calificarPostulante(Request $request, int $id)
+    {
+        $publicador = auth('empresa')->user() ?? auth('web')->user();
+        abort_unless($publicador, 403);
+
+        $datos = $request->validateWithBag('calificar', [
+            'puntuacion' => ['required', 'integer', 'min:1', 'max:5'],
+            'comentario' => ['required', 'string', 'max:255'],
+        ], [
+            'puntuacion.required' => 'Elige de 1 a 5 estrellas.',
+            'puntuacion.min' => 'Elige de 1 a 5 estrellas.',
+            'puntuacion.max' => 'Elige de 1 a 5 estrellas.',
+            'comentario.required' => 'Cuéntanos cómo fue la experiencia.',
+            'comentario.max' => 'El comentario no puede superar los 255 caracteres.',
+        ]);
+
+        try {
+            $this->calificacionService->calificarPostulante(
+                $id,
+                $publicador,
+                (int) $datos['puntuacion'],
+                $datos['comentario']
+            );
+        } catch (Exception $e) {
+            return back()->with('error', $e->getMessage());
+        }
+
+        return back()->with('success', 'La calificación se envió correctamente.');
+    }
+
         public function postulantes(Request $request, int $id)
     {
         try {
+            $cuenta = auth('empresa')->user() ?? auth('web')->user();
+            abort_unless($cuenta, 403);
             $datos = $this->ofertasService->datosPostulantes(
                 $id,
-                $request->only(['estado', 'orden'])
+                $request->only(['estado', 'orden']),
+                $cuenta
             );
 
             return view('Publico.postulantes', $datos);

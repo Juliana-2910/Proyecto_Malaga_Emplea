@@ -26,6 +26,8 @@ class OfertaStoreRequest extends FormRequest
         $this->merge([
             'salario'          => preg_replace('/\D/', '', (string) $this->input('salario')),
             'fechaPublicacion' => now('America/Bogota')->toDateString(),
+            'idEmpresa'        => auth('empresa')->id(),
+            'idUsuario'        => auth('empresa')->check() ? null : auth('web')->id(),
         ]);
     }
 

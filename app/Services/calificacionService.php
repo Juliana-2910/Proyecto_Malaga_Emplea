@@ -4,6 +4,7 @@ namespace App\Services;
 use Carbon\Carbon;
 use Exception;
 use App\Models\Usuario;
+use App\Models\Empresa;
 use App\Repositories\calificacionRepository;
 
 class calificacionService{
@@ -18,6 +19,27 @@ class calificacionService{
     public function listarTodos()
     {
         return $this->calificacionRepository->listarTodos();
+    }
+
+    public function historialDeCuenta(Usuario|Empresa $cuenta)
+    {
+        $esEmpresa = $cuenta instanceof Empresa;
+
+        return $this->calificacionRepository->historialDeCuenta($cuenta)
+            ->map(function ($calificacion) use ($cuenta, $esEmpresa) {
+                $esAutor = $esEmpresa
+                    ? (int) $calificacion->idEmpresa === (int) $cuenta->id
+                    : (int) $calificacion->idUsuario === (int) $cuenta->id;
+
+                $calificacion->nombreRelacionado = $esAutor
+                    ? ($calificacion->empresaCalificada?->nombreEmpresa
+                        ?? trim(($calificacion->usuarioCalificado?->nombres ?? '') . ' ' . ($calificacion->usuarioCalificado?->apellidos ?? '')))
+                    : ($calificacion->empresa?->nombreEmpresa
+                        ?? trim(($calificacion->usuario?->nombres ?? '') . ' ' . ($calificacion->usuario?->apellidos ?? '')));
+                $calificacion->sentidoHistorial = $esAutor ? 'Calificación enviada' : 'Calificación recibida';
+
+                return $calificacion;
+            });
     }
 
     public function guardar(array $datos)
@@ -100,6 +122,36 @@ class calificacionService{
             'idUsuarioCalificado' => $oferta->idEmpresa ? null : $oferta->idUsuario,  // la persona que publicó
             'idPostulacion'       => $idPostulacion,
             'tipoCalificador'     => 'usuario',
+        ]);
+    }
+
+    /** Quien publicó la oferta califica a la persona contratada. */
+    public function calificarPostulante(int $idPostulacion, Usuario|Empresa $publicador, int $puntuacion, string $comentario): void
+    {
+        $postulacion = $this->calificacionRepository->buscarPostulacionConOferta($idPostulacion);
+        $this->validarContratado($postulacion);
+
+        $oferta = $postulacion->oferta;
+        $esEmpresa = $publicador instanceof Empresa;
+        $idPublicadorOferta = $esEmpresa ? $oferta?->idEmpresa : $oferta?->idUsuario;
+
+        if (! $oferta || (int) $idPublicadorOferta !== (int) $publicador->id) {
+            throw new Exception('Solo quien publicó la oferta puede calificar a la persona contratada.');
+        }
+
+        $tipoCalificador = $esEmpresa ? 'empresa' : 'usuario';
+        $this->validarCalificacionAdministrativa($idPostulacion, $tipoCalificador);
+
+        $this->calificacionRepository->guardar([
+            'puntuacion' => $puntuacion,
+            'comentario' => $comentario,
+            'fecha' => Carbon::now('America/Bogota')->toDateString(),
+            'idUsuario' => $esEmpresa ? null : $publicador->id,
+            'idEmpresa' => $esEmpresa ? $publicador->id : null,
+            'idUsuarioCalificado' => $postulacion->idUsuario,
+            'idEmpresaCalificada' => null,
+            'idPostulacion' => $postulacion->id,
+            'tipoCalificador' => $tipoCalificador,
         ]);
     }
 

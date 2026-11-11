@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Repositories\postulacionRepository;
+use App\Models\Empresa;
+use App\Models\Usuario;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Exception;
 use Carbon\Carbon;
@@ -92,6 +94,29 @@ class postulacionService
             'idOferta'  => $oferta->id,
             'estado'     => $datos['estado']
         ]);
+    }
+
+    public function cambiarEstadoDesdePanel(int $idPostulacion, string $nuevoEstado, Usuario|Empresa $publicador): void
+    {
+        $postulacion = $this->postulacionrepository->buscarConOferta($idPostulacion);
+        $oferta = $postulacion->oferta;
+        $esEmpresa = $publicador instanceof Empresa;
+        $idPublicadorOferta = $esEmpresa ? $oferta?->idEmpresa : $oferta?->idUsuario;
+
+        if (! $oferta || (int) $idPublicadorOferta !== (int) $publicador->id) {
+            throw new Exception('No tienes permiso para gestionar postulaciones de esta oferta.');
+        }
+
+        $this->validarCambioEstado($postulacion->estado, $nuevoEstado);
+
+        if (
+            $nuevoEstado === 'Contratado'
+            && $this->postulacionrepository->existeOtraContratacion((int) $postulacion->idOferta, (int) $postulacion->id)
+        ) {
+            throw new Exception('Esta oferta ya tiene una persona contratada.');
+        }
+
+        $this->postulacionrepository->actualizar($idPostulacion, ['estado' => $nuevoEstado]);
     }
 
     private function validarUsuarioPuedePostular($usuario)

@@ -35,6 +35,19 @@ class postulacionRepository
         return Postulacion::findOrFail($id);
     }
 
+    public function buscarConOferta(int $id)
+    {
+        return Postulacion::with('oferta')->findOrFail($id);
+    }
+
+    public function existeOtraContratacion(int $idOferta, int $idPostulacion): bool
+    {
+        return Postulacion::where('idOferta', $idOferta)
+            ->where('estado', 'Contratado')
+            ->where('id', '<>', $idPostulacion)
+            ->exists();
+    }
+
     public function actualizar(int $id, array $datos)
     {
         $postulacion = Postulacion::findOrFail($id);

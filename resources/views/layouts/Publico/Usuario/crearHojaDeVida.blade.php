@@ -85,11 +85,6 @@
 
                     @csrf
 
-                    {{-- TEMPORAL: cuando exista el login, este campo se quita y el usuario sale de la sesión --}}
-                    @if (!empty($idUsuario))
-                        <input type="hidden" name="idUsuario" value="{{ $idUsuario }}">
-                    @endif
-
                     {{-- Formulario --}}
                     <div style="padding:24px 28px;display:flex;flex-direction:column;gap:20px;overflow:auto">
 

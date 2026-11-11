@@ -12,7 +12,12 @@ class HojaDeVidaStoreRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return auth('web')->check();
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $this->merge(['idUsuario' => auth('web')->id()]);
     }
 
     /**
