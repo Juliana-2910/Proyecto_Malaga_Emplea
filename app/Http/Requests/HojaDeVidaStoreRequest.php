@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Usuario;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -12,7 +13,13 @@ class HojaDeVidaStoreRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return $this->user() instanceof Usuario;
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $usuario = $this->user();
+        $this->merge(['idUsuario' => $usuario instanceof Usuario ? $usuario->id : null]);
     }
 
     /**

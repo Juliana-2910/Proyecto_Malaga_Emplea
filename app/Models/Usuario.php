@@ -6,10 +6,16 @@ use App\Models\Concerns\TieneRolesActivos;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Notifications\RestablecerContrasena;
 
 class Usuario extends Authenticatable
 {
     use HasFactory, Notifiable, TieneRolesActivos;
+
+    public function sendPasswordResetNotification($token): void
+    {
+        $this->notify(new RestablecerContrasena($token, 'usuario'));
+    }
 
     protected $table = 'usuarios';
 

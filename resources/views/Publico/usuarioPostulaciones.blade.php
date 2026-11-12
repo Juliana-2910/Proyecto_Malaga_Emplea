@@ -114,13 +114,16 @@
             @php
                 $oferta = $postulacion->oferta;
                 $publicador = $oferta->usuario ?? $oferta->empresa;
+                $fotoPublicador = $publicador?->fotoPerfil
+                    ? asset('storage/' . ($oferta->idEmpresa ? 'empresas/' . $publicador->fotoPerfil : $publicador->fotoPerfil))
+                    : null;
                 $estado = $estados[$postulacion->estado] ?? $estados['Enviado'];
 
                 $datosModal = [
                     'id'          => $oferta->id,
                     'titulo'      => $oferta->titulo,
                     'publicador'  => $oferta->publicador,
-                    'foto'        => $publicador?->fotoPerfil ? asset('storage/' . $publicador->fotoPerfil) : null,
+                    'foto'        => $fotoPublicador,
                     'categoria'   => $oferta->categoria,
                     'contrato'    => $contratos[$oferta->tipoContrato] ?? $oferta->tipoContrato,
                     'salario'     => '$' . number_format($oferta->salario, 0, ',', '.'),
@@ -139,7 +142,9 @@
                         'nombre' => $oferta->publicador,
                         'tipo'   => $oferta->idEmpresa ? 'Empresa' : 'Persona natural',
                         'titulo' => $oferta->titulo,
-                        'foto'   => $publicador?->fotoPerfil ? asset('storage/' . $publicador->fotoPerfil) : null,
+                        'foto'   => $fotoPublicador,
+                        'leyenda' => 'Por tu trabajo en «' . $oferta->titulo . '»',
+                        'subtitulo' => 'Comparte tu experiencia con quien publicó esta oferta.',
                     ];
 
             @endphp
@@ -148,8 +153,8 @@
 
                 {{-- Foto de quien publica --}}
                 <div class="size-14 shrink-0 overflow-hidden rounded-full border-2 border-black bg-[#EAF6FD]">
-                    @if ($publicador?->fotoPerfil)
-                        <img src="{{ asset('storage/' . $publicador->fotoPerfil) }}" alt="Foto de perfil del publicador" class="h-full w-full object-cover">
+                    @if ($fotoPublicador)
+                        <img src="{{ $fotoPublicador }}" alt="Foto de perfil del publicador" class="h-full w-full object-cover">
                     @else
                         <div class="flex h-full w-full items-center justify-center text-marca-texto">
                             <svg class="size-7" fill="none" viewBox="0 0 24 24" stroke-width="1.6" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.5 20.1a7.5 7.5 0 0115 0" /></svg>

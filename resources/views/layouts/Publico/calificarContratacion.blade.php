@@ -16,8 +16,8 @@
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{ $estrella }}"/></svg>
             </span>
             <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:4px">
-                <h2 id="cal-titulo" style="margin:0;font-size:24px;font-weight:700;color:#12303F;line-height:1.25">Calificación</h2>
-                <span style="font-size:15px;line-height:1.5;color:#52606D">Comparte tu experiencia con quien realizaste la contratación.</span>
+                <h2 id="cal-titulo" style="margin:0;font-size:24px;font-weight:700;color:#12303F;line-height:1.25">Califica esta experiencia</h2>
+                <span id="cal-subtitulo" style="font-size:15px;line-height:1.5;color:#52606D">Cuéntanos cómo fue la experiencia.</span>
             </div>
             <button type="button" data-cerrar-calificar aria-label="Cerrar"
                     style="width:44px;height:44px;flex:0 0 auto;border-radius:12px;border:none;background:#F5F7FA;color:#1F2933;display:flex;align-items:center;justify-content:center;cursor:pointer">
@@ -30,10 +30,6 @@
             @csrf
             <input type="hidden" name="idPostulacion" id="cal-id" value="">
             <input type="hidden" name="puntuacion" id="cal-puntuacion" value="">
-            {{-- TEMPORAL: cuando exista el login, este campo se quita y el usuario sale de la sesión --}}
-            @if (! empty($idUsuario))
-                <input type="hidden" name="idUsuario" value="{{ $idUsuario }}">
-            @endif
 
             {{-- Cuerpo --}}
             <div style="padding:24px 28px;display:flex;flex-direction:column;gap:22px;overflow:auto">
@@ -49,7 +45,7 @@
                             <span id="cal-nombre" style="font-size:16px;font-weight:700;color:#12303F"></span>
                             <span id="cal-tipo" style="padding:3px 10px;border-radius:999px;background:#F5F7FA;color:#52606D;font-size:12px;font-weight:700"></span>
                         </span>
-                        <span style="font-size:13px;color:#52606D">Por tu trabajo como «<span id="cal-oferta"></span>»</span>
+                        <span id="cal-leyenda" style="font-size:13px;color:#52606D"></span>
                     </div>
                 </div>
 
@@ -84,9 +80,9 @@
                     <label style="display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:500;color:#52606D">
                         <span style="display:flex;justify-content:space-between;gap:12px">
                             <span>Tu comentario</span>
-                            <span id="cal-contador" style="font-weight:600;color:#7B8794">0/250</span>
+                            <span id="cal-contador" style="font-weight:600;color:#7B8794">0/255</span>
                         </span>
-                        <textarea id="cal-comentario" name="comentario" rows="4" maxlength="250"
+                        <textarea id="cal-comentario" name="comentario" rows="4" maxlength="255"
                                 placeholder="Cuenta cómo fue el trato, el pago y las condiciones del trabajo"
                                 style='font-family:inherit;font-size:15px;padding:12px 14px;border:1.5px solid #CBD2D9;border-radius:10px;color:#1F2933;background:#FFFFFF;width:100%;box-sizing:border-box'>{{ $reabrirCal ? old('comentario') : '' }}</textarea>
                         @if ($bolsaCal->has('comentario')) <span style="font-size:12px;font-weight:600;color:#B42318">{{ $bolsaCal->first('comentario') }}</span> @endif
@@ -142,7 +138,7 @@
         }
 
         function actualizarContador() {
-            contador.textContent = comentario.value.length + '/250';
+            contador.textContent = comentario.value.length + '/255';
         }
 
         function abrir(boton, conservar) {
@@ -152,8 +148,10 @@
             texto('cal-nombre', d.nombre);
             texto('cal-tipo', d.tipo);
             texto('cal-oferta', d.titulo);
+            texto('cal-leyenda', d.leyenda || 'Sobre la oferta «' + d.titulo + '»');
+            texto('cal-subtitulo', d.subtitulo || 'Cuéntanos cómo fue la experiencia.');
             document.getElementById('cal-id').value = d.id;
-            form.action = form.dataset.base + '/' + d.id + '/calificar';
+            form.action = d.url || form.dataset.base + '/' + d.id + '/calificar';
 
             const foto = document.getElementById('cal-foto');
             const fotoVacia = document.getElementById('cal-foto-vacia');

@@ -34,10 +34,6 @@
                 style="margin:0;display:flex;flex-direction:column;min-height:0;flex:1 1 auto">
             @csrf
             <input type="hidden" name="_origen" value="publico">
-            {{-- TEMPORAL: cuando exista el login, este campo se quita y el usuario sale de la sesión --}}
-            @if (! empty($idUsuario))
-                <input type="hidden" name="idUsuario" value="{{ $idUsuario }}">
-            @endif
 
             <div style="padding:24px 28px;display:flex;flex-direction:column;gap:20px;overflow:auto">
 

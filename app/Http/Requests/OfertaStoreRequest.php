@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Empresa;
+use App\Models\Usuario;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -23,9 +25,13 @@ class OfertaStoreRequest extends FormRequest
 
         $this->errorBag = 'crearOferta';
 
+        $cuenta = $this->user();
+
         $this->merge([
             'salario'          => preg_replace('/\D/', '', (string) $this->input('salario')),
             'fechaPublicacion' => now('America/Bogota')->toDateString(),
+            'idEmpresa'        => $cuenta instanceof Empresa ? $cuenta->id : null,
+            'idUsuario'        => $cuenta instanceof Usuario ? $cuenta->id : null,
         ]);
     }
 

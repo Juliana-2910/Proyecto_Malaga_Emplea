@@ -109,6 +109,12 @@ return [
             'expire' => 60,
             'throttle' => 60,
         ],
+        'empresas' => [
+            'provider' => 'empresas',
+            'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE_EMPRESAS', 'password_reset_tokens_empresas'),
+            'expire' => 60,
+            'throttle' => 60,
+        ],
     ],
 
     /*

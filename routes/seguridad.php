@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Seguridad\AuthController;
+use App\Http\Controllers\Seguridad\RecuperarContrasenaController;
 use App\Http\Controllers\Seguridad\CuentaController;
 use App\Http\Controllers\Seguridad\PermisoController;
 use App\Http\Controllers\Seguridad\RolController;
@@ -15,8 +16,18 @@ Route::middleware('web')->group(function () use ($guards) {
     Route::middleware('guest:' . $guards)->group(function () {
         Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
         Route::post('/login', [AuthController::class, 'login'])
-            ->middleware('throttle:5,1')
+            ->middleware('throttle:login')
             ->name('login.store');
+
+        Route::post('/recuperar-contrasena', [RecuperarContrasenaController::class, 'enviarEnlace'])
+            ->middleware('throttle:5,1')
+            ->name('password.email');
+        Route::get('/restablecer-contrasena/{tipo}/{token}', [RecuperarContrasenaController::class, 'formulario'])
+            ->whereIn('tipo', ['usuario', 'empresa'])
+            ->name('password.reset');
+        Route::post('/restablecer-contrasena', [RecuperarContrasenaController::class, 'actualizar'])
+            ->middleware('throttle:5,1')
+            ->name('password.update');
     });
 
     Route::middleware(['auth:' . $guards, 'cuenta.activa'])->group(function () {

@@ -8,7 +8,6 @@ use App\Models\Categoria;
 use App\Models\Postulacion;
 use App\Models\HojaDeVida;
 use App\Models\Servicios;
-use App\Models\Usuario;
 use App\Models\Calificacion;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -186,12 +185,6 @@ class ofertasRepository
         return HojaDeVida::where('idUsuario', $idUsuario)->latest('id')->first();
     }
 
-    /** TEMPORAL: mientras no exista el login se usa el primer usuario registrado. */
-    public function usuarioDePrueba()
-    {
-        return Usuario::first();
-    }
-
     /** Devuelve [idOferta => ['id' => ..., 'estado' => ..., 'fecha' => 'dd/mm/aaaa']] de las postulaciones del usuario. */
     public function postulacionesPorOferta(int $idUsuario): array
     {
@@ -237,6 +230,16 @@ class ofertasRepository
             ->all();
     }
 
+    /** Puntuaciones que ya envió quien publicó, sea usuario o empresa. */
+    public function calificacionesPorPostulacionDePublicador(array $idsPostulaciones, int $id, bool $esEmpresa): array
+    {
+        return Calificacion::whereIn('idPostulacion', $idsPostulaciones)
+            ->where('tipoCalificador', $esEmpresa ? 'empresa' : 'usuario')
+            ->where($esEmpresa ? 'idEmpresa' : 'idUsuario', $id)
+            ->pluck('puntuacion', 'idPostulacion')
+            ->all();
+    }
+
     /** Aplica el filtro de estado a una consulta de ofertas (una sola regla para el listado y los contadores). */
     private function aplicarEstadoOferta($consulta, string $estado): void
     {
@@ -266,6 +269,97 @@ class ofertasRepository
 
         return $consulta->paginate($porPagina)->withQueryString();
         }
+
+    /** Ofertas propias del usuario o empresa autenticados. */
+    public function listarOfertasDePublicador(int $id, bool $esEmpresa, array $filtros, int $porPagina)
+    {
+        $consulta = Oferta::where($esEmpresa ? 'idEmpresa' : 'idUsuario', $id);
+
+        $this->aplicarEstadoOferta($consulta, $filtros['estado'] ?? 'todas');
+
+        match ($filtros['orden'] ?? 'recientes') {
+            'antiguas' => $consulta->orderBy('fechaPublicacion')->orderBy('id'),
+            'vencen'   => $consulta->orderBy('fechaLimite')->orderBy('id'),
+            default    => $consulta->orderByDesc('fechaPublicacion')->orderByDesc('id'),
+        };
+
+        return $consulta->paginate($porPagina)->withQueryString();
+    }
+
+    /** Conteos por estado para la cuenta que publicó las ofertas. */
+    public function contarOfertasPorPublicador(int $id, bool $esEmpresa): array
+    {
+        $conteos = [];
+
+        foreach (['todas', 'activas', 'contratacion', 'vencidas'] as $estado) {
+            $consulta = Oferta::where($esEmpresa ? 'idEmpresa' : 'idUsuario', $id);
+            $this->aplicarEstadoOferta($consulta, $estado);
+            $conteos[$estado] = $consulta->count();
+        }
+
+        return $conteos;
+    }
+
+    public function contarPostulantesPorRevisarDePublicador(int $id, bool $esEmpresa): int
+    {
+        return Postulacion::where('estado', 'Enviado')
+            ->whereHas('oferta', fn ($q) => $q->where($esEmpresa ? 'idEmpresa' : 'idUsuario', $id))
+            ->count();
+    }
+
+    public function contarContratacionesPorCalificarDePublicador(int $id, bool $esEmpresa): int
+    {
+        $columna = $esEmpresa ? 'idEmpresa' : 'idUsuario';
+        $tipo = $esEmpresa ? 'empresa' : 'usuario';
+
+        return Postulacion::where('estado', 'Contratado')
+            ->whereHas('oferta', fn ($q) => $q->where($columna, $id))
+            ->whereNotIn('id', Calificacion::query()
+                ->select('idPostulacion')
+                ->where('tipoCalificador', $tipo)
+                ->where($columna, $id)
+                ->whereNotNull('idPostulacion'))
+            ->count();
+    }
+
+    public function contarOfertasQueVencenProntoDePublicador(int $id, bool $esEmpresa, int $dias): int
+    {
+        $hoy = Carbon::now('America/Bogota');
+
+        return Oferta::where($esEmpresa ? 'idEmpresa' : 'idUsuario', $id)
+            ->whereDate('fechaLimite', '>=', $hoy->toDateString())
+            ->whereDate('fechaLimite', '<=', $hoy->copy()->addDays($dias)->toDateString())
+            ->whereDoesntHave('postulaciones', fn ($q) => $q->where('estado', 'Contratado'))
+            ->count();
+    }
+
+    public function contarOfertasSinPostulantesDePublicador(int $id, bool $esEmpresa): int
+    {
+        return Oferta::where($esEmpresa ? 'idEmpresa' : 'idUsuario', $id)
+            ->whereDate('fechaLimite', '>=', now('America/Bogota')->toDateString())
+            ->doesntHave('postulaciones')
+            ->count();
+    }
+
+    public function reputacionDePublicador(int $id, bool $esEmpresa): array
+    {
+        $fila = Calificacion::where($esEmpresa ? 'idEmpresaCalificada' : 'idUsuarioCalificado', $id)
+            ->selectRaw('AVG(puntuacion) as promedio, COUNT(*) as total')
+            ->first();
+
+        return [
+            'promedio' => (float) ($fila->promedio ?? 0),
+            'total' => (int) ($fila->total ?? 0),
+        ];
+    }
+
+    public function buscarOfertaDePublicador(int $idOferta, int $idPublicador, bool $esEmpresa)
+    {
+        return Oferta::with(['ofertaServicio.servicio.categoria'])
+            ->whereKey($idOferta)
+            ->where($esEmpresa ? 'idEmpresa' : 'idUsuario', $idPublicador)
+            ->firstOrFail();
+    }
 
     /** Devuelve ['todas' => n, 'activas' => n, 'contratacion' => n, 'vencidas' => n]. */
     public function contarOfertasPorEstado(int $idUsuario): array
