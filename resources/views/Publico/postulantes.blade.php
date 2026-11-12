@@ -135,7 +135,7 @@
         {{-- AVISO DE REGLAS --}}
         <div class="flex items-center gap-3 rounded-xl border border-l-4 border-slate-200 border-l-marca bg-white px-4 py-3.5 text-sm text-slate-600">
             <svg class="size-5 shrink-0 text-marca-texto" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" /></svg>
-            <span>Solo puedes contratar a <strong>una persona</strong> por oferta. Una postulación rechazada no se puede reabrir.</span>
+            <span>Solo puedes contratar a <strong>una persona</strong> por oferta. Si rechazas a alguien, la decisión no se puede cambiar; si lo aceptas, el siguiente paso es contratarlo.</span>
         </div>
 
         {{-- PESTAÑAS + ORDENAR --}}
@@ -223,6 +223,7 @@
                     'url'       => route('Publico.misOfertas.calificarPostulante', $p->id),
                     'leyenda'   => 'Por su trabajo en «' . $oferta->titulo . '»',
                     'subtitulo' => 'Comparte tu experiencia con la persona que contrataste.',
+                    'placeholder' => 'Cuenta cómo fue trabajar con esta persona: puntualidad, responsabilidad y desempeño',
                 ];
 
                 // Si ya calificaste a esta persona, la estrella se cambia por el chip
@@ -235,6 +236,12 @@
                     'calificar' => $puedeCalificarPostulantes,
                     default => true,
                 }));
+
+                // Datos que usan los modales de confirmar (aceptar, rechazar, contratar)
+                $datosAccion = [
+                    'id'     => $p->id,
+                    'nombre' => $nombrePersona,
+                ];
             @endphp
 
             <article class="flex flex-wrap items-center gap-5 rounded-2xl border border-slate-200 bg-white p-6 transition hover:shadow-lg hover:shadow-noche/10">
@@ -269,41 +276,42 @@
 
                     <div class="flex flex-wrap items-center justify-end gap-2.5">
 
-                        {{-- Chip: ya calificaste a esta persona --}}
+                        {{-- Calificación que ya diste a esta persona (estrellas) --}}
                         @if ($p->estado === 'Contratado' && $p->calificacion)
-                            <span class="inline-flex items-center gap-1.5 rounded-xl border border-amber-200 bg-amber-50 px-3.5 py-2 text-[13px] font-bold text-amber-800">
-                                <svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="#FBBF24" aria-hidden="true"><path d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z" /></svg>
-                                Calificado · {{ (int) $p->calificacion }}/5
+                            <span class="inline-flex items-center gap-2 rounded-xl border border-amber-200 bg-amber-50 px-3.5 py-2 text-[13px] font-bold text-amber-800"
+                                title="Tu calificación: {{ (int) $p->calificacion }} de 5">
+                                <span class="flex items-center gap-1" aria-label="{{ (int) $p->calificacion }} de 5 estrellas">
+                                    @for ($i = 1; $i <= 5; $i++)
+                                        <svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="{{ $i <= (int) $p->calificacion ? '#FBBF24' : '#CBD5E1' }}" aria-hidden="true">
+                                            <path d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z" />
+                                        </svg>
+                                    @endfor
+                                </span>
+                                {{ (int) $p->calificacion }}/5
                             </span>
                         @endif
 
                         @foreach ($botones as $clave)
                             @php $a = $acciones[$clave]; @endphp
 
-                            @if (! in_array($clave, ['ver', 'calificar'], true))
-                                <form method="POST" action="{{ route('Publico.misOfertas.actualizarPostulante', $p->id) }}">
-                                    @csrf
-                                    @method('PATCH')
-                                    <input type="hidden" name="estado" value="{{ $clave === 'contratar' ? 'Contratado' : ($clave === 'aceptar' ? 'Aceptado' : 'Rechazado') }}">
-                            @endif
-
-                            <button type="{{ in_array($clave, ['ver', 'calificar'], true) ? 'button' : 'submit' }}"
+                            <button type="button"
                                 title="{{ $a['texto'] }}"
                                 aria-label="{{ $a['texto'] }}"
                                 @if ($clave === 'ver')
                                     data-ver-postulante="{{ json_encode($datosHoja, JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_HEX_TAG) }}"
                                 @elseif ($clave === 'calificar')
                                     data-calificar="{{ json_encode($datosCalificar, JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_HEX_TAG) }}"
-                                @else
-                                    data-accion="{{ $clave }}" data-postulacion="{{ $p->id }}"
+                                @elseif ($clave === 'aceptar')
+                                    data-aceptar="{{ json_encode($datosAccion, JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_HEX_TAG) }}"
+                                @elseif ($clave === 'rechazar')
+                                    data-rechazar="{{ json_encode($datosAccion, JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_HEX_TAG) }}"
+                                @elseif ($clave === 'contratar')
+                                    data-contratar="{{ json_encode($datosAccion, JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_HEX_TAG) }}"
                                 @endif
                                 class="{{ $btnAccion }} cursor-pointer {{ $a['clase'] }}">
                                 <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="{{ $a['ancho'] }}" aria-hidden="true">{!! $a['icono'] !!}</svg>
                             </button>
 
-                            @if (! in_array($clave, ['ver', 'calificar'], true))
-                                </form>
-                            @endif
                         @endforeach
                     </div>
                 </div>
@@ -324,6 +332,14 @@
 
 @include('layouts.Publico.verHojaPostulante')
 
-@if ($puedeCalificarPostulantes)@include('layouts.Publico.calificarContratacion')@endif
+@if ($puedeGestionarPostulaciones)
+    @include('layouts.Publico.aceptarPostulacion')
+    @include('layouts.Publico.rechazarPostulacion')
+    @include('layouts.Publico.contratarPostulacion')
+@endif
+
+@if ($puedeCalificarPostulantes)
+    @include('layouts.Publico.calificarContratacion')
+@endif
 
 @endsection

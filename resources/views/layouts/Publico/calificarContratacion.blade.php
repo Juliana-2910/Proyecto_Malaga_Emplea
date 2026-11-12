@@ -16,8 +16,8 @@
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{ $estrella }}"/></svg>
             </span>
             <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:4px">
-                <h2 id="cal-titulo" style="margin:0;font-size:24px;font-weight:700;color:#12303F;line-height:1.25">Califica esta experiencia</h2>
-                <span id="cal-subtitulo" style="font-size:15px;line-height:1.5;color:#52606D">Cuéntanos cómo fue la experiencia.</span>
+                <h2 id="cal-titulo" style="margin:0;font-size:24px;font-weight:700;color:#12303F;line-height:1.25">Calificación</h2>
+                <span id="cal-subtitulo" style="font-size:15px;line-height:1.5;color:#52606D">Comparte tu experiencia con quien realizaste la contratación.</span>
             </div>
             <button type="button" data-cerrar-calificar aria-label="Cerrar"
                     style="width:44px;height:44px;flex:0 0 auto;border-radius:12px;border:none;background:#F5F7FA;color:#1F2933;display:flex;align-items:center;justify-content:center;cursor:pointer">
@@ -150,6 +150,7 @@
             texto('cal-oferta', d.titulo);
             texto('cal-leyenda', d.leyenda || 'Sobre la oferta «' + d.titulo + '»');
             texto('cal-subtitulo', d.subtitulo || 'Cuéntanos cómo fue la experiencia.');
+            comentario.placeholder = d.placeholder || 'Cuéntanos cómo fue la experiencia.';
             document.getElementById('cal-id').value = d.id;
             form.action = d.url || form.dataset.base + '/' + d.id + '/calificar';
 
