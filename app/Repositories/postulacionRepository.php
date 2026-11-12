@@ -40,12 +40,33 @@ class postulacionRepository
         return Postulacion::with('oferta')->findOrFail($id);
     }
 
+    /** Relee la postulación con bloqueo para observar decisiones concurrentes ya confirmadas. */
+    public function buscarConOfertaBloqueada(int $id)
+    {
+        return Postulacion::with('oferta')->lockForUpdate()->findOrFail($id);
+    }
+
     public function existeOtraContratacion(int $idOferta, int $idPostulacion): bool
     {
         return Postulacion::where('idOferta', $idOferta)
             ->where('estado', 'Contratado')
             ->where('id', '<>', $idPostulacion)
             ->exists();
+    }
+
+    /** Serializa las contrataciones de una misma oferta dentro de una transacción. */
+    public function bloquearOfertaParaContratar(int $idOferta): void
+    {
+        Oferta::whereKey($idOferta)->lockForUpdate()->firstOrFail();
+    }
+
+    /** Rechaza todas las postulaciones que seguían en proceso al contratar una persona. */
+    public function rechazarPendientesDeOferta(int $idOferta, int $idPostulacionContratada): void
+    {
+        Postulacion::where('idOferta', $idOferta)
+            ->where('id', '<>', $idPostulacionContratada)
+            ->whereIn('estado', ['Enviado', 'Aceptado'])
+            ->update(['estado' => 'Rechazado']);
     }
 
     public function actualizar(int $id, array $datos)

@@ -16,6 +16,9 @@
     $campo = 'rounded-[10px] border-[1.5px] border-slate-300 bg-white px-3.5 py-3 text-[15px] text-slate-800';
     $btnPrimario = 'inline-flex items-center justify-center gap-2 rounded-full border-2 border-marca bg-marca px-4 py-3 text-[15px] font-bold text-tinta transition hover:border-carbon hover:bg-carbon hover:text-white';
     $btnSecundario = 'inline-flex items-center justify-center rounded-full border-2 border-slate-800 bg-white px-4 py-3 text-[15px] font-bold text-slate-800 transition hover:border-carbon hover:bg-carbon hover:text-white';
+    $visor = request()->user();
+    $empresaVisora = $visor instanceof \App\Models\Empresa ? $visor : null;
+    $puedeVerCalificaciones = ! $empresaVisora || $empresaVisora->can('ver calificacion');
 @endphp
 
 {{-- ENCABEZADO + TARJETAS --}}
@@ -270,12 +273,17 @@
 
                         @php
                             $publicador = $oferta->usuario ?? $oferta->empresa;
+                            $fotoPublicador = $publicador?->fotoPerfil
+                                ? asset('storage/' . ($oferta->idEmpresa ? 'empresas/' . $publicador->fotoPerfil : $publicador->fotoPerfil))
+                                : null;
+                            $reputacionPublicador = $oferta->reputacionPublicador;
+                            $promedioPublicadorTexto = rtrim(rtrim(number_format($reputacionPublicador['promedio'], 2, '.', ''), '0'), '.');
 
                             $datosModal = [
                                 'id'          => $oferta->id,
                                 'titulo'      => $oferta->titulo,
                                 'publicador'  => $oferta->publicador,
-                                'foto'        => $publicador?->fotoPerfil ? asset('storage/' . $publicador->fotoPerfil) : null,
+                                'foto'        => $fotoPublicador,
                                 'categoria'   => $oferta->categoria,
                                 'contrato'    => $contratos[$oferta->tipoContrato] ?? $oferta->tipoContrato,
                                 'salario'     => '$' . number_format($oferta->salario, 0, ',', '.'),
@@ -292,9 +300,9 @@
 
                         <div class="size-14 shrink-0 overflow-hidden rounded-full border-2 border-black bg-[#EAF6FD]">
 
-                            @if ($publicador?->fotoPerfil)
+                            @if ($fotoPublicador)
                                 <img
-                                    src="{{ asset('storage/' . $publicador->fotoPerfil) }}"
+                                    src="{{ $fotoPublicador }}"
                                     alt="Foto de perfil del publicador"
                                     class="h-full w-full object-cover"
                                 >
@@ -315,6 +323,17 @@
                             <p class="text-sm text-slate-500">
                                 {{ $oferta->publicador }}
                             </p>
+
+                            @if ($puedeVerCalificaciones)<button type="button" @click="$dispatch('abrir-calificaciones', { url: '{{ route('perfil.calificaciones.publicas', [$oferta->idEmpresa ? 'empresa' : 'usuario', $oferta->idEmpresa ?: $oferta->idUsuario]) }}' })" class="inline-flex w-fit items-center gap-1.5 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-800 hover:bg-amber-100 focus:outline-none focus:ring-2 focus:ring-amber-400"@else<span class="inline-flex w-fit items-center gap-1.5 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-800"@endif
+                                aria-label="{{ $reputacionPublicador['total'] > 0 ? $promedioPublicadorTexto . ' de 5, ' . $reputacionPublicador['total'] . ' calificaciones' : 'Sin calificaciones' }}">
+                                <svg class="size-4 text-amber-500" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z" /></svg>
+                                @if ($reputacionPublicador['total'] > 0)
+                                    {{ $promedioPublicadorTexto }}/5
+                                    <span class="text-amber-700">· {{ $reputacionPublicador['total'] }} {{ $reputacionPublicador['total'] === 1 ? 'calificación' : 'calificaciones' }}</span>
+                                @else
+                                    Sin calificaciones
+                                @endif
+                            @if ($puedeVerCalificaciones)</button>@else</span>@endif
 
                             <div class="flex flex-wrap gap-2">
                                 @if ($oferta->categoria)

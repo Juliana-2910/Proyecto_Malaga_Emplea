@@ -21,14 +21,14 @@
     cargandoCalificaciones: false,
     errorCalificaciones: false,
     htmlCalificaciones: '',
-    async abrirCalificaciones() {
+    async abrirCalificaciones(url = null) {
         this.open = false;
         this.modalAbierto = 'calificaciones';
-        if (this.htmlCalificaciones) return;
+        this.htmlCalificaciones = '';
         this.cargandoCalificaciones = true;
         this.errorCalificaciones = false;
         try {
-            const respuesta = await fetch('{{ route('perfil.calificaciones') }}', { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+            const respuesta = await fetch(url || '{{ route('perfil.calificaciones') }}', { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
             if (!respuesta.ok) throw new Error('No fue posible cargar el historial.');
             this.htmlCalificaciones = await respuesta.text();
         } catch (error) {
@@ -36,8 +36,15 @@
         } finally {
             this.cargandoCalificaciones = false;
         }
+    },
+    async cambiarPaginaCalificaciones(event) {
+        const enlace = event.target.closest('a[data-calificaciones-page]');
+        if (!enlace) return;
+        event.preventDefault();
+        await this.abrirCalificaciones(enlace.href);
+        this.$nextTick(() => this.$refs.calificacionesScroll?.scrollTo({ top: 0, behavior: 'smooth' }));
     }
-}" x-effect="document.body.style.overflow = modalAbierto ? 'hidden' : ''" @keydown.escape.window="modalAbierto = null" class="relative">
+}" @abrir-calificaciones.window="abrirCalificaciones($event.detail.url)" x-effect="document.body.style.overflow = modalAbierto ? 'hidden' : ''" @keydown.escape.window="modalAbierto = null" class="relative">
     <button type="button" @click="open = !open" @click.outside="open = false" :aria-expanded="open.toString()" aria-haspopup="true" class="flex max-w-[min(72vw,320px)] items-center gap-2 rounded-full p-1.5 pr-3 text-left transition hover:bg-[#EAF6FD] focus:outline-none focus:ring-2 focus:ring-marca">
         @if ($foto)
             <img src="{{ $foto }}" alt="Foto de {{ $nombreCuenta }}" class="size-10 shrink-0 rounded-full border-2 border-[#EAF6FD] object-cover">
@@ -61,8 +68,7 @@
     </div>
 
     @if ($puedeVerPerfil || $puedeEditarPerfil)<div x-show="modalAbierto === 'perfil'" x-cloak x-transition.opacity class="fixed inset-0 z-[100] flex items-center justify-center bg-noche/65 p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="perfil-modal-titulo" @click.self="modalAbierto = null">
-        <section x-transition class="w-full max-w-md overflow-hidden rounded-[24px] bg-white shadow-2xl">
-            <div class="h-2 bg-gradient-to-r from-marca to-[#A9DDF5]"></div>
+        <section x-transition class="w-full max-w-md overflow-hidden rounded-[20px] bg-[#F8FBFD] shadow-2xl">
             <div class="p-6 text-center sm:p-8">
                 @if ($foto)
                     <img src="{{ $foto }}" alt="Foto de {{ $nombreCuenta }}" class="mx-auto size-24 rounded-full border-4 border-[#EAF6FD] object-cover">
@@ -80,22 +86,21 @@
         </section>
     </div>@endif
 
-    <div x-show="modalAbierto === 'calificaciones'" x-cloak x-transition.opacity class="fixed inset-0 z-[100] flex items-center justify-center bg-noche/65 p-3 backdrop-blur-sm sm:p-6" role="dialog" aria-modal="true" aria-labelledby="calificaciones-modal-titulo" @click.self="modalAbierto = null">
-        <section x-transition class="flex max-h-[92vh] w-full max-w-4xl flex-col overflow-hidden rounded-[24px] bg-[#F8FBFD] shadow-2xl">
-            <header class="flex items-start justify-between gap-4 bg-noche px-5 py-5 text-white sm:px-7">
-                <div>
-                    <p class="text-xs font-extrabold uppercase tracking-[0.16em] text-[#A9DDF5]">Tu experiencia</p>
-                    <h2 id="calificaciones-modal-titulo" class="mt-1 text-2xl font-extrabold">Mis calificaciones</h2>
-                    <p class="mt-1 text-sm text-slate-300">Historial de contrataciones completadas</p>
+    <div x-show="modalAbierto === 'calificaciones'" x-cloak x-transition.opacity class="fixed inset-0 z-[100] flex items-center justify-center bg-noche/65 p-2 backdrop-blur-sm sm:p-4" role="dialog" aria-modal="true" aria-labelledby="calificaciones-modal-titulo" @click.self="modalAbierto = null">
+        <section x-transition class="flex max-h-[92dvh] w-full max-w-5xl flex-col overflow-hidden rounded-[20px] bg-[#F8FBFD] shadow-2xl">
+            <header class="flex shrink-0 items-center justify-between gap-3 border-b border-[#B9E3F6] bg-white px-4 py-3 text-noche sm:px-5 sm:py-4">
+                <div class="flex items-center gap-4">
+                    <span class="flex size-10 shrink-0 items-center justify-center rounded-full bg-[#B9E3F6] text-marca-texto sm:size-11"><svg class="size-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 2.9 5.88 6.49.94-4.7 4.58 1.11 6.47L12 16.82l-5.8 3.05 1.1-6.47-4.7-4.58 6.5-.94L12 2Z"/></svg></span>
+                    <div><h2 id="calificaciones-modal-titulo" class="text-lg font-extrabold sm:text-xl">Calificaciones recibidas</h2><p class="mt-0.5 text-xs text-slate-500 sm:text-sm">Opiniones recibidas en tus contrataciones</p></div>
                 </div>
-                <button type="button" @click="modalAbierto = null" aria-label="Cerrar calificaciones" class="flex size-10 shrink-0 items-center justify-center rounded-full text-white transition hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white">
+                <button type="button" @click="modalAbierto = null" aria-label="Cerrar calificaciones" class="flex size-9 shrink-0 items-center justify-center rounded-full text-slate-600 transition hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-marca sm:size-10">
                     <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" d="m6 6 12 12M18 6 6 18"/></svg>
                 </button>
             </header>
-            <div class="min-h-0 overflow-y-auto p-4 sm:p-6">
+            <div x-ref="calificacionesScroll" class="min-h-0 flex-1 touch-pan-y overscroll-contain overflow-y-auto p-3 sm:p-4">
                 <div x-show="cargandoCalificaciones" class="py-12 text-center text-sm font-semibold text-slate-500">Cargando tu historial...</div>
                 <div x-show="errorCalificaciones" class="rounded-xl bg-red-50 p-4 text-sm font-semibold text-red-700">No pudimos cargar tus calificaciones. Cierra y vuelve a intentarlo.</div>
-                <div x-show="!cargandoCalificaciones && !errorCalificaciones" x-html="htmlCalificaciones"></div>
+                <div x-show="!cargandoCalificaciones && !errorCalificaciones" @click="cambiarPaginaCalificaciones($event)" x-html="htmlCalificaciones"></div>
             </div>
         </section>
     </div>

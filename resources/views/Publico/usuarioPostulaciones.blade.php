@@ -149,7 +149,7 @@
 
             @endphp
 
-            <article class="flex flex-wrap items-center gap-5 rounded-2xl border border-slate-200 bg-white p-6 transition hover:shadow-lg hover:shadow-noche/10">
+            <article id="postulacion-{{ $postulacion->id }}" class="scroll-mt-24 flex flex-wrap items-center gap-5 rounded-2xl border border-slate-200 bg-white p-6 transition hover:shadow-lg hover:shadow-noche/10 target:border-marca target:ring-2 target:ring-marca/30">
 
                 {{-- Foto de quien publica --}}
                 <div class="size-14 shrink-0 overflow-hidden rounded-full border-2 border-black bg-[#EAF6FD]">

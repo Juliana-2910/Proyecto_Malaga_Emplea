@@ -49,6 +49,7 @@
     $empresa = $cuentaActual instanceof \App\Models\Empresa ? $cuentaActual : null;
     $puedeGestionarPostulaciones = ! $empresa || $empresa->can('editar postulacion');
     $puedeCalificarPostulantes = ! $empresa || $empresa->can('crear calificacion');
+    $puedeVerCalificaciones = ! $empresa || $empresa->can('ver calificacion');
 
     // Iconos redondos: texto del tooltip, colores y dibujo
     $acciones = [
@@ -244,7 +245,7 @@
                 ];
             @endphp
 
-            <article class="flex flex-wrap items-center gap-5 rounded-2xl border border-slate-200 bg-white p-6 transition hover:shadow-lg hover:shadow-noche/10">
+            <article id="postulacion-{{ $p->id }}" class="scroll-mt-24 flex flex-wrap items-center gap-5 rounded-2xl border border-slate-200 bg-white p-6 transition hover:shadow-lg hover:shadow-noche/10 target:border-marca target:ring-2 target:ring-marca/30">
 
                 {{-- Foto o icono --}}
                 <div class="flex size-14 shrink-0 items-center justify-center self-center overflow-hidden rounded-full border-2 border-[#EAF6FD] bg-[#EAF6FD] text-marca-texto">
@@ -257,7 +258,18 @@
 
                 {{-- Información --}}
                 <div class="flex min-w-[260px] flex-1 flex-col gap-2">
-                    <h3 class="text-[19px] font-bold text-noche">{{ $nombrePersona }}</h3>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <h3 class="text-[19px] font-bold text-noche">{{ $nombrePersona }}</h3>
+                        @if (($p->reputacionUsuario['total'] ?? 0) > 0)
+                            @php $promedioPostulante = rtrim(rtrim(number_format($p->reputacionUsuario['promedio'], 2, '.', ''), '0'), '.'); @endphp
+                            @if ($puedeVerCalificaciones)<button type="button" @click="$dispatch('abrir-calificaciones', { url: '{{ route('perfil.calificaciones.publicas', ['usuario', $p->usuario->id]) }}' })" class="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-extrabold text-noche hover:bg-amber-100 focus:outline-none focus:ring-2 focus:ring-amber-400" aria-label="Promedio {{ $promedioPostulante }} de 5">@else<span class="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-extrabold text-noche" aria-label="Promedio {{ $promedioPostulante }} de 5">@endif
+                                <span class="text-amber-400" aria-hidden="true">{{ str_repeat('★', (int) round($p->reputacionUsuario['promedio'])) }}{{ str_repeat('☆', 5 - (int) round($p->reputacionUsuario['promedio'])) }}</span>
+                                {{ $promedioPostulante }}/5
+                            @if ($puedeVerCalificaciones)</button>@else</span>@endif
+                        @else
+                            @if ($puedeVerCalificaciones)<button type="button" @click="$dispatch('abrir-calificaciones', { url: '{{ route('perfil.calificaciones.publicas', ['usuario', $p->usuario->id]) }}' })" class="text-xs font-semibold text-slate-500 underline decoration-slate-300 underline-offset-2 hover:text-marca-texto">Sin calificaciones</button>@else<span class="text-xs font-semibold text-slate-500">Sin calificaciones</span>@endif
+                        @endif
+                    </div>
 
                     <span class="text-sm text-slate-500">{{ $contacto }}</span>
 

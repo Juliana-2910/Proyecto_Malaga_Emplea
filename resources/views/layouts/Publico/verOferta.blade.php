@@ -37,20 +37,21 @@
 
                 {{-- Datos principales --}}
                 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px">
-                    <div style="background:#F5F7FA;border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:6px">
+                    <div style="background:#F5F7FA;border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px">
                         <span style="font-size:12px;font-weight:700;color:#52606D;letter-spacing:0.04em;text-transform:uppercase">Salario</span>
                         <span id="mo-salario" style="font-size:17px;font-weight:700;color:#12303F"></span>
                     </div>
-                    <div style="background:#F5F7FA;border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:6px">
+                    <div style="background:#F5F7FA;border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px">
                         <span style="font-size:12px;font-weight:700;color:#52606D;letter-spacing:0.04em;text-transform:uppercase">Ubicación</span>
                         <span id="mo-ubicacion" style="font-size:17px;font-weight:700;color:#12303F"></span>
                     </div>
-                    <div style="background:#F5F7FA;border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:6px">
+                    <div style="background:#F5F7FA;border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px">
                         <span style="font-size:12px;font-weight:700;color:#52606D;letter-spacing:0.04em;text-transform:uppercase">Publicada</span>
                         <span id="mo-publicada" style="font-size:17px;font-weight:700;color:#12303F"></span>
                     </div>
                     <div id="mo-caja-vence" style="border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:6px">
-                        <span id="mo-vence-titulo" style="font-size:12px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase">Vence</span>
+                        <span id="mo-vence-titulo" style="font-size:12px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase">FINALIZA</span>
+                        <span id="mo-dias-restantes" style="font-size:14px;font-weight:700"></span>
                         <span id="mo-vence" style="font-size:17px;font-weight:700"></span>
                     </div>
                 </div>
@@ -163,6 +164,9 @@
                 caja.style.backgroundColor = fondo;
                 titulo.style.color = colorTitulo;
                 fecha.style.color = color;
+                const diasTexto = document.getElementById('mo-dias-restantes');
+                diasTexto.style.color = color;
+                diasTexto.textContent = o.estado === 'vencida' ? 'Plazo finalizado' : (dias === 0 ? 'Finaliza hoy' : 'Quedan ' + dias + (dias === 1 ? ' día' : ' días'));
                 fecha.textContent = o.vence ?? '';
             }
 
@@ -251,6 +255,15 @@
 
                     textoPostulantes.textContent =
                         'Aún nadie se ha postulado a esta oferta.';
+                }
+
+                const enlacePostulantes = document.getElementById('mo-ver-postulantes');
+                if (o.urlPostulantes) {
+                    enlacePostulantes.href = o.urlPostulantes;
+                    enlacePostulantes.hidden = false;
+                } else {
+                    enlacePostulantes.removeAttribute('href');
+                    enlacePostulantes.hidden = true;
                 }
 
                 // Mostrar modal

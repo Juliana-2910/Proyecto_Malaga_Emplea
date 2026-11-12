@@ -91,9 +91,11 @@ class OfertaPublicaController extends Controller
         try {
             $this->hojaDeVidaService->guardarOActualizar($datos);
         } catch (\Exception $e) {
-            return redirect()->route('Publico.ofertas')->with('error', $e->getMessage());
+            $destino = $request->boolean('volverPerfil') ? 'perfil.editar' : 'Publico.ofertas';
+            return redirect()->route($destino)->withInput()->with('error', $e->getMessage());
         }
-        return redirect()->route('Publico.ofertas')->with('success', 'Tu hoja de vida se guardó correctamente.');
+        $destino = $request->boolean('volverPerfil') ? 'perfil.editar' : 'Publico.ofertas';
+        return redirect()->route($destino)->with('success', 'Tu hoja de vida se guardó correctamente.');
     }
 
     public function guardarOferta(OfertaStoreRequest $request) // Es un modal creado aparte //
@@ -140,7 +142,7 @@ class OfertaPublicaController extends Controller
 
         try {
             $datos = $this->ofertasService->datosMisPostulaciones(
-                $request->only(['estado', 'orden']),
+                $request->only(['estado', 'orden', 'destacar']),
                 $usuario
             );
 
@@ -256,7 +258,7 @@ class OfertaPublicaController extends Controller
             abort_unless($cuenta, 403);
             $datos = $this->ofertasService->datosPostulantes(
                 $id,
-                $request->only(['estado', 'orden']),
+                $request->only(['estado', 'orden', 'destacar']),
                 $cuenta
             );
 

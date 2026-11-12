@@ -46,6 +46,7 @@
                             <span id="cal-tipo" style="padding:3px 10px;border-radius:999px;background:#F5F7FA;color:#52606D;font-size:12px;font-weight:700"></span>
                         </span>
                         <span id="cal-leyenda" style="font-size:13px;color:#52606D"></span>
+                        <span style="font-size:13px;font-weight:600;color:#1A75A8">Oferta: <span id="cal-oferta"></span></span>
                     </div>
                 </div>
 
@@ -121,7 +122,8 @@
         let botonOrigen = null;
 
         function texto(id, valor) {
-            document.getElementById(id).textContent = valor ?? '';
+            const elemento = document.getElementById(id);
+            if (elemento) elemento.textContent = valor ?? '';
         }
 
         function pintar(n) {

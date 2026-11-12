@@ -23,23 +23,35 @@ class calificacionService{
 
     public function historialDeCuenta(Usuario|Empresa $cuenta)
     {
-        $esEmpresa = $cuenta instanceof Empresa;
-
-        return $this->calificacionRepository->historialDeCuenta($cuenta)
-            ->map(function ($calificacion) use ($cuenta, $esEmpresa) {
-                $esAutor = $esEmpresa
-                    ? (int) $calificacion->idEmpresa === (int) $cuenta->id
-                    : (int) $calificacion->idUsuario === (int) $cuenta->id;
-
-                $calificacion->nombreRelacionado = $esAutor
-                    ? ($calificacion->empresaCalificada?->nombreEmpresa
-                        ?? trim(($calificacion->usuarioCalificado?->nombres ?? '') . ' ' . ($calificacion->usuarioCalificado?->apellidos ?? '')))
-                    : ($calificacion->empresa?->nombreEmpresa
-                        ?? trim(($calificacion->usuario?->nombres ?? '') . ' ' . ($calificacion->usuario?->apellidos ?? '')));
-                $calificacion->sentidoHistorial = $esAutor ? 'Calificación enviada' : 'Calificación recibida';
-
+        $historial = $this->calificacionRepository->historialDeCuenta($cuenta);
+        $historial->getCollection()->transform(function ($calificacion) {
+                $oferta = $calificacion->postulacion?->oferta;
+                $calificadorEsPublicador = $oferta && (
+                    ($oferta->idEmpresa && (int) $calificacion->idEmpresa === (int) $oferta->idEmpresa)
+                    || ($oferta->idUsuario && (int) $calificacion->idUsuario === (int) $oferta->idUsuario)
+                );
+                $calificacion->esPublicadorCalificador = (bool) $calificadorEsPublicador;
+                $calificacion->nombreCalificador = $calificacion->empresa?->nombreEmpresa
+                    ?? trim(($calificacion->usuario?->nombres ?? '') . ' ' . ($calificacion->usuario?->apellidos ?? ''));
+                $publicador = $oferta?->empresa;
+                $publicador ??= $oferta?->usuario;
+                $calificacion->nombrePublicador = $publicador instanceof Empresa
+                    ? $publicador->nombreEmpresa
+                    : trim(($publicador?->nombres ?? '') . ' ' . ($publicador?->apellidos ?? ''));
                 return $calificacion;
             });
+
+        return $historial;
+    }
+
+    public function promedioRecibido(Usuario|Empresa $cuenta): array
+    {
+        return $this->calificacionRepository->promedioRecibido($cuenta);
+    }
+
+    public function cuentaCalificable(string $tipo, int $id): Usuario|Empresa
+    {
+        return $this->calificacionRepository->buscarCuentaCalificable($tipo, $id);
     }
 
     public function guardar(array $datos)
@@ -140,7 +152,9 @@ class calificacionService{
         }
 
         $tipoCalificador = $esEmpresa ? 'empresa' : 'usuario';
-        $this->validarCalificacionAdministrativa($idPostulacion, $tipoCalificador);
+        if ($this->calificacionRepository->yaCalificadaPorPublicador($idPostulacion, (int) $publicador->id, $esEmpresa)) {
+            throw new Exception('Ya calificaste a esta persona. Solo se puede calificar una vez.');
+        }
 
         $this->calificacionRepository->guardar([
             'puntuacion' => $puntuacion,

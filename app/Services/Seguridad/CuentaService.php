@@ -69,6 +69,7 @@ class CuentaService
     public function crear(array $datos, array $roles): void
     {
         $datos['password'] = Hash::make($datos['password']);
+        $datos['fechaRegistro'] = now('America/Bogota');
 
         DB::transaction(function () use ($datos, $roles): void {
             $usuario = $this->usuarioRepository->crear($datos);

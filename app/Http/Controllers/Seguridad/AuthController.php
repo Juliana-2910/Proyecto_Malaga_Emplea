@@ -145,6 +145,10 @@ public function registrarEmpresa(Request $request, empresasServices $empresasSer
             return redirect()->route('Publico.ofertas');
         }
 
+        if ($cuenta?->hasRole(config('seguridad.rol_admin'))) {
+            return redirect()->route('dashboard.index');
+        }
+
         return redirect()->intended(config('seguridad.redirect_despues_login'));
     }
 
