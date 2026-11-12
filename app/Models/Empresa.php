@@ -6,10 +6,17 @@ use App\Models\Concerns\TieneRolesActivos;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Spatie\Permission\Models\Role;
+use Illuminate\Notifications\Notifiable;
+use App\Notifications\RestablecerContrasena;
 
 class Empresa extends Authenticatable
 {
-    use TieneRolesActivos;
+    use TieneRolesActivos, Notifiable;
+
+    public function sendPasswordResetNotification($token): void
+    {
+        $this->notify(new RestablecerContrasena($token, 'empresa'));
+    }
 
     protected $table = 'empresas';
 

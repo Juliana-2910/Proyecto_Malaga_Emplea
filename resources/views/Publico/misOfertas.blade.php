@@ -15,7 +15,6 @@
     $etiqueta = 'rounded-full bg-fondo px-3 py-1 text-[13px] font-semibold text-slate-600';
     $campo = 'rounded-[10px] border-[1.5px] border-slate-300 bg-white px-3.5 py-3 text-[15px] text-slate-800';
     $btnPrimario = 'inline-flex items-center justify-center gap-2 rounded-full border-2 border-marca bg-marca px-4 py-3 text-[15px] font-bold text-tinta transition hover:border-carbon hover:bg-carbon hover:text-white';
-
     $btnSecundario = 'inline-flex items-center justify-center rounded-full border-2 border-slate-800 bg-white px-4 py-3 text-[15px] font-bold text-slate-800 transition hover:border-carbon hover:bg-carbon hover:text-white';
 
     // Botón redondo de acción (ojito / lápiz)
@@ -41,6 +40,12 @@
     $plural = fn (int $n, string $singular) => $n . ' ' . ($n === 1 ? $singular : $singular . 's');
 
     $promedio = (float) ($calificacion['promedio'] ?? 0);
+    $cuentaActual = request()->user();
+    $empresa = $cuentaActual instanceof \App\Models\Empresa ? $cuentaActual : null;
+    $esEmpresa = $empresa !== null;
+    $puedeCrearOfertas = ! $empresa || $empresa->can('crear ofertas');
+    $puedeEditarOfertas = ! $empresa || $empresa->can('editar ofertas');
+    $puedeVerPostulantes = ! $empresa || $empresa->can('ver postulacion');
 @endphp
 
 {{-- ENCABEZADO + TARJETAS --}}
@@ -64,29 +69,30 @@
         </div>
 
         <div class="grid gap-5 md:grid-cols-2">
+            @if ($puedeCrearOfertas)
+                {{-- PUBLICAR OFERTA: disponible en Mis ofertas para cuentas autorizadas. --}}
+                <div class="flex flex-col gap-4 rounded-[20px] bg-noche p-6 shadow-lg shadow-noche/10">
+                    <h2 class="text-[19px] font-extrabold text-white">
+                        ¿Necesitas contratar a alguien?
+                    </h2>
 
-            {{-- PUBLICAR OFERTA --}}
-            <div class="flex flex-col gap-4 rounded-[20px] bg-noche p-6 shadow-lg shadow-noche/10">
-                <h2 class="text-[19px] font-extrabold text-white">
-                    ¿Necesitas contratar a alguien?
-                </h2>
+                    <p class="text-[15px] leading-relaxed text-slate-300">
+                        Publica una oferta, recibe postulaciones y elige a la persona que mejor se ajuste.
+                    </p>
 
-                <p class="text-[15px] leading-relaxed text-slate-300">
-                    Publica una oferta, recibe postulaciones y elige a la persona que mejor se ajuste.
-                </p>
+                    <div class="flex flex-wrap items-center gap-3">
+                        <button type="button" data-abrir-crear-oferta class="{{ $btnPrimario }} cursor-pointer">
+                            <svg class="size-[18px]" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+                            Publicar una oferta
+                        </button>
 
-                <div class="flex flex-wrap items-center gap-3">
-                    <button type="button" data-abrir-crear-oferta class="{{ $btnPrimario }} cursor-pointer">
-                        <svg class="size-[18px]" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
-                        Publicar una oferta
-                    </button>
-
-                    <span class="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-3 text-sm font-semibold text-sky-200">
-                        <span class="rounded-md bg-white/15 px-2 py-0.5 text-sm">{{ $resumen['postulantesPorRevisar'] }}</span>
-                        Postulantes por revisar
-                    </span>
+                        <span class="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-3 text-sm font-semibold text-sky-200">
+                            <span class="rounded-md bg-white/15 px-2 py-0.5 text-sm">{{ $resumen['postulantesPorRevisar'] }}</span>
+                            Postulantes por revisar
+                        </span>
+                    </div>
                 </div>
-            </div>
+            @endif
 
             {{-- TU RESUMEN --}}
             <div class="flex flex-col gap-5 rounded-[20px] bg-white p-6 shadow-lg shadow-noche/10">
@@ -158,7 +164,9 @@
     </div>
 </section>
 
-@include('layouts.Publico.crearOferta')
+@if ($puedeCrearOfertas)
+    @include('layouts.Publico.crearOferta')
+@endif
 
 {{-- FILTROS + LISTADO --}}
 <section class="px-6 pb-16 pt-8">
@@ -229,7 +237,7 @@
                 $totalPostulantes = array_sum($r);
 
                 // REGLA: el lápiz solo funciona en ofertas activas
-                $puedeEditar = $oferta->estadoOferta === 'activa';
+                $puedeEditar = $puedeEditarOfertas && $oferta->estadoOferta === 'activa';
 
                 $motivoNoEditar = match ($oferta->estadoOferta) {
                     'con_contratacion' => 'Ya tiene una persona contratada',
@@ -274,7 +282,7 @@
                         preg_split('/\r\n|\r|\n/', $oferta->requisitos ?? '')
                     )),
                     'totalPostulantes' => $totalPostulantes,
-                    'urlPostulantes'   => route('Publico.misOfertas.postulantes', $oferta->id),
+                    'urlPostulantes'   => $puedeVerPostulantes ? route('Publico.misOfertas.postulantes', $oferta->id) : null,
                     'puedeEditar'      => $puedeEditar,
                     'motivoNoEditar'  => $motivoNoEditar,
                     'datosEditar'      => $datosEditar,
@@ -361,14 +369,14 @@
                         </button>
 
                         {{-- POSTULANTES: ver l de los postulantes --}}
-                            <a href="{{ route('Publico.misOfertas.postulantes', $oferta->id) }}"
+                            @if ($puedeVerPostulantes)<a href="{{ route('Publico.misOfertas.postulantes', $oferta->id) }}"
                             title="Ver postulantes"
                             aria-label="Ver postulantes"
                             class="{{ $btnAccion }} cursor-pointer bg-purple-100 text-purple-700 hover:bg-purple-200">
                             <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.6" stroke="currentColor" aria-hidden="true">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z" />
                             </svg>
-                        </a>
+                        </a>@endif
 
                         {{-- LÁPIZ: solo funciona si la oferta está activa --}}
                         @if ($puedeEditar)

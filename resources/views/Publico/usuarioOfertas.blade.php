@@ -91,37 +91,41 @@
                 </div>
             @endunless
 
-            {{-- PUBLICAR OFERTA --}}
-            <div class="flex flex-col gap-4 rounded-[20px] bg-noche p-6 shadow-lg shadow-noche/10">
-                <h2 class="text-[19px] font-extrabold text-white">
-                    ¿Necesitas contratar a alguien?
-                </h2>
+            @unless ($esEmpresa)
+                {{-- PUBLICAR OFERTA: disponible en la interfaz de Usuario. --}}
+                <div class="flex flex-col gap-4 rounded-[20px] bg-noche p-6 shadow-lg shadow-noche/10">
+                    <h2 class="text-[19px] font-extrabold text-white">
+                        ¿Necesitas contratar a alguien?
+                    </h2>
 
-                <p class="text-[15px] leading-relaxed text-slate-300">
-                    Publica una oferta, recibe postulaciones y elige a la persona que mejor se ajuste.
-                </p>
+                    <p class="text-[15px] leading-relaxed text-slate-300">
+                        Publica una oferta, recibe postulaciones y elige a la persona que mejor se ajuste.
+                    </p>
 
-                <div class="flex flex-wrap items-center gap-3">
-                    <button type="button" data-abrir-crear-oferta class="{{ $btnPrimario }} cursor-pointer">
-                        <svg class="size-[18px]" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round"d="M12 4.5v15m7.5-7.5h-15" /></svg>
-                        Publicar una oferta
-                    </button>
+                    <div class="flex flex-wrap items-center gap-3">
+                        <button type="button" data-abrir-crear-oferta class="{{ $btnPrimario }} cursor-pointer">
+                            <svg class="size-[18px]" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+                            Publicar una oferta
+                        </button>
 
-                    <a href="{{ url('/mis-ofertas') }}"
-                        class="inline-flex items-center justify-center rounded-full border-2 border-white px-4 py-3 text-[15px] font-bold text-white transition hover:border-carbon hover:bg-carbon">
-                        Ver mis ofertas y postulantes
-                    </a>
+                        <a href="{{ url('/mis-ofertas') }}"
+                            class="inline-flex items-center justify-center rounded-full border-2 border-white px-4 py-3 text-[15px] font-bold text-white transition hover:border-carbon hover:bg-carbon">
+                            Ver mis ofertas y postulantes
+                        </a>
+                    </div>
+
+                    <span class="text-sm font-semibold text-sky-200">
+                        {{ $postulantesPorRevisar }} postulantes por revisar
+                    </span>
                 </div>
-
-                <span class="text-sm font-semibold text-sky-200">
-                    {{ $postulantesPorRevisar }} postulantes por revisar
-                </span>
-            </div>
+            @endunless
         </div>
     </div>
 </section>
 
+@unless ($esEmpresa)
     @include('layouts.Publico.crearOferta')
+@endunless
 
             {{-- AVISO HOJA DE VIDA --}}
             @if (! $esEmpresa && $hojaDeVidaProgreso < 100)

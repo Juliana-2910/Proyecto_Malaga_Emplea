@@ -22,6 +22,8 @@ class AuthService
 
         $this->verificarCuentaActiva($usuario, $tipo);
 
+        // Evita mantener autenticadas simultáneamente cuentas de guardias distintas.
+        $this->cerrarSesion();
         Auth::guard($this->guard($tipo))->login($usuario, $recordar);
 
         return true;

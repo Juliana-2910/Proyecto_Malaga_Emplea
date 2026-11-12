@@ -1,15 +1,18 @@
 @props(['showLogout' => true])
 
 @php
-    $cuenta = auth('empresa')->user() ?? auth('web')->user();
+    $cuenta = request()->user();
     $nombreCuenta = $cuenta?->nombreEmpresa
         ?? trim(($cuenta?->nombres ?? '') . ' ' . ($cuenta?->apellidos ?? ''));
     $nombreCuenta = $nombreCuenta ?: 'Mi cuenta';
-    $esEmpresa = auth('empresa')->check();
+    $esEmpresa = $cuenta instanceof \App\Models\Empresa;
     $foto = $cuenta?->fotoPerfil
         ? asset('storage/' . ($esEmpresa ? 'empresas/' . $cuenta->fotoPerfil : $cuenta->fotoPerfil))
         : null;
     $inicial = mb_strtoupper(mb_substr($nombreCuenta, 0, 1));
+    $puedeVerPerfil = ! $esEmpresa || $cuenta->can('ver perfil');
+    $puedeEditarPerfil = ! $esEmpresa || $cuenta->can('editar perfil');
+    $puedeVerCalificaciones = ! $esEmpresa || $cuenta->can('ver calificacion');
 @endphp
 
 <div x-data="{
@@ -46,8 +49,8 @@
     </button>
 
     <div x-show="open" x-cloak x-transition @click.outside="open = false" class="absolute right-0 z-50 mt-2 w-60 overflow-hidden rounded-2xl border border-slate-100 bg-white p-2 shadow-xl shadow-noche/15">
-        <button type="button" @click="open = false; modalAbierto = 'perfil'" class="block w-full rounded-xl px-4 py-3 text-left text-sm font-bold text-noche transition hover:bg-[#EAF6FD]">Mi perfil</button>
-        <button type="button" @click="abrirCalificaciones()" class="block w-full rounded-xl px-4 py-3 text-left text-sm font-bold text-noche transition hover:bg-[#EAF6FD]">Mis calificaciones</button>
+        @if ($puedeVerPerfil || $puedeEditarPerfil)<button type="button" @click="open = false; modalAbierto = 'perfil'" class="block w-full rounded-xl px-4 py-3 text-left text-sm font-bold text-noche transition hover:bg-[#EAF6FD]">Mi perfil</button>@endif
+        @if ($puedeVerCalificaciones)<button type="button" @click="abrirCalificaciones()" class="block w-full rounded-xl px-4 py-3 text-left text-sm font-bold text-noche transition hover:bg-[#EAF6FD]">Mis calificaciones</button>@endif
         @if ($showLogout)
             <hr class="my-1 border-slate-100">
             <form method="POST" action="{{ url('/logout') }}">
@@ -57,7 +60,7 @@
         @endif
     </div>
 
-    <div x-show="modalAbierto === 'perfil'" x-cloak x-transition.opacity class="fixed inset-0 z-[100] flex items-center justify-center bg-noche/65 p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="perfil-modal-titulo" @click.self="modalAbierto = null">
+    @if ($puedeVerPerfil || $puedeEditarPerfil)<div x-show="modalAbierto === 'perfil'" x-cloak x-transition.opacity class="fixed inset-0 z-[100] flex items-center justify-center bg-noche/65 p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="perfil-modal-titulo" @click.self="modalAbierto = null">
         <section x-transition class="w-full max-w-md overflow-hidden rounded-[24px] bg-white shadow-2xl">
             <div class="h-2 bg-gradient-to-r from-marca to-[#A9DDF5]"></div>
             <div class="p-6 text-center sm:p-8">
@@ -71,11 +74,11 @@
                 <p class="mt-1 break-all text-sm text-slate-500">{{ $cuenta?->email }}</p>
                 <div class="mt-6 flex flex-col-reverse justify-center gap-3 sm:flex-row">
                     <button type="button" @click="modalAbierto = null" class="rounded-full border-2 border-slate-300 px-5 py-3 text-sm font-bold text-slate-700 transition hover:bg-slate-50">Cerrar</button>
-                    <a href="{{ route('perfil.editar') }}" class="rounded-full border-2 border-marca bg-marca px-5 py-3 text-sm font-extrabold text-noche transition hover:border-carbon hover:bg-carbon hover:text-white">Editar perfil</a>
+                    @if ($puedeEditarPerfil)<a href="{{ route('perfil.editar') }}" class="rounded-full border-2 border-marca bg-marca px-5 py-3 text-sm font-extrabold text-noche transition hover:border-carbon hover:bg-carbon hover:text-white">Editar perfil</a>@endif
                 </div>
             </div>
         </section>
-    </div>
+    </div>@endif
 
     <div x-show="modalAbierto === 'calificaciones'" x-cloak x-transition.opacity class="fixed inset-0 z-[100] flex items-center justify-center bg-noche/65 p-3 backdrop-blur-sm sm:p-6" role="dialog" aria-modal="true" aria-labelledby="calificaciones-modal-titulo" @click.self="modalAbierto = null">
         <section x-transition class="flex max-h-[92vh] w-full max-w-4xl flex-col overflow-hidden rounded-[24px] bg-[#F8FBFD] shadow-2xl">

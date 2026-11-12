@@ -20,6 +20,7 @@ return [
         'store' => 'crear',
         'edit' => 'editar',
         'update' => 'editar',
+        'actualizar' => 'editar',
         'destroy' => 'eliminar',
     ],
 

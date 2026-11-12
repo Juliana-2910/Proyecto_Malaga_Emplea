@@ -15,7 +15,7 @@
 
     @php
         // Obtener la cuenta que inició sesión.
-        $cuenta = auth('empresa')->user() ?? auth('web')->user();
+        $cuenta = request()->user();
 
         // Mostrar el nombre según el tipo de cuenta.
         $nombre = $cuenta?->nombreEmpresa

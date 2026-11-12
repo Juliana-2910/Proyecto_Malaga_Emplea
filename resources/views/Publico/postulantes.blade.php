@@ -45,6 +45,10 @@
         'Rechazado'  => ['texto' => 'Rechazados', 'punto' => 'bg-red-600',   'contador' => 'bg-red-100 text-red-800'],
     ];
     $pestanaActual = request('estado', '');
+    $cuentaActual = request()->user();
+    $empresa = $cuentaActual instanceof \App\Models\Empresa ? $cuentaActual : null;
+    $puedeGestionarPostulaciones = ! $empresa || $empresa->can('editar postulacion');
+    $puedeCalificarPostulantes = ! $empresa || $empresa->can('crear calificacion');
 
     // Iconos redondos: texto del tooltip, colores y dibujo
     $acciones = [
@@ -226,6 +230,11 @@
                 if ($p->calificacion) {
                     $botones = array_values(array_diff($botones, ['calificar']));
                 }
+                $botones = array_values(array_filter($botones, fn ($boton) => match ($boton) {
+                    'aceptar', 'rechazar', 'contratar' => $puedeGestionarPostulaciones,
+                    'calificar' => $puedeCalificarPostulantes,
+                    default => true,
+                }));
             @endphp
 
             <article class="flex flex-wrap items-center gap-5 rounded-2xl border border-slate-200 bg-white p-6 transition hover:shadow-lg hover:shadow-noche/10">
@@ -315,6 +324,6 @@
 
 @include('layouts.Publico.verHojaPostulante')
 
-@include('layouts.Publico.calificarContratacion')
+@if ($puedeCalificarPostulantes)@include('layouts.Publico.calificarContratacion')@endif
 
 @endsection

@@ -25,22 +25,22 @@ use App\Http\Controllers\PerfilController;
 
 Route::middleware(['auth:web,empresa', 'cuenta.activa'])->group(function () {
 
-    Route::get('/mi-perfil', [PerfilController::class, 'editar'])->name('perfil.editar');
-    Route::put('/mi-perfil', [PerfilController::class, 'actualizar'])->name('perfil.actualizar');
-    Route::get('/mi-cuenta/calificaciones', [PerfilController::class, 'calificaciones'])->name('perfil.calificaciones');
+    Route::get('/mi-perfil', [PerfilController::class, 'editar'])->middleware('empresa.permiso:ver perfil')->name('perfil.editar');
+    Route::put('/mi-perfil', [PerfilController::class, 'actualizar'])->middleware('empresa.permiso:editar perfil')->name('perfil.actualizar');
+    Route::get('/mi-cuenta/calificaciones', [PerfilController::class, 'calificaciones'])->middleware('empresa.permiso:ver calificacion')->name('perfil.calificaciones');
 
-    Route::get('/empleos', [OfertaPublicaController::class, 'index'])->name('Publico.ofertas');
+    Route::get('/empleos', [OfertaPublicaController::class, 'index'])->middleware('empresa.permiso:ver ofertas')->name('Publico.ofertas');
     Route::post('/empleos/{id}/postular', [OfertaPublicaController::class, 'postular'])->whereNumber('id')->name('Publico.postular');
     Route::delete('/empleos/postulaciones/{id}', [OfertaPublicaController::class, 'cancelarPostulacion'])->whereNumber('id')->name('Publico.cancelarPostulacion');
     Route::post('/empleos/hoja-de-vida', [OfertaPublicaController::class, 'guardarHojaDeVida'])->name('Publico.guardarHojaDeVida');
-    Route::post('/empleos/publicar', [OfertaPublicaController::class, 'guardarOferta'])->name('Publico.guardarOferta');
+    Route::post('/empleos/publicar', [OfertaPublicaController::class, 'guardarOferta'])->middleware('empresa.permiso:crear ofertas')->name('Publico.guardarOferta');
     Route::get('/mis-postulaciones', [OfertaPublicaController::class, 'misPostulaciones'])->name('Publico.postulaciones');
     Route::post('/mis-postulaciones/{id}/calificar', [OfertaPublicaController::class, 'calificar'])->whereNumber('id')->name('Publico.calificar');
-    Route::get('/mis-ofertas', [OfertaPublicaController::class, 'misOfertas'])->name('Publico.misOfertas');
-    Route::put('/mis-ofertas/{id}', [OfertaPublicaController::class, 'actualizarOferta'])->whereNumber('id')->name('Publico.actualizarOferta');
-    Route::get('/mis-ofertas/{id}/postulantes', [OfertaPublicaController::class, 'postulantes'])->whereNumber('id')->name('Publico.misOfertas.postulantes');
-    Route::post('/mis-ofertas/postulantes/{id}/calificar', [OfertaPublicaController::class, 'calificarPostulante'])->whereNumber('id')->name('Publico.misOfertas.calificarPostulante');
-    Route::patch('/mis-ofertas/postulantes/{id}/estado', [OfertaPublicaController::class, 'actualizarEstadoPostulante'])->whereNumber('id')->name('Publico.misOfertas.actualizarPostulante');
+    Route::get('/mis-ofertas', [OfertaPublicaController::class, 'misOfertas'])->middleware('empresa.permiso:ver ofertas')->name('Publico.misOfertas');
+    Route::put('/mis-ofertas/{id}', [OfertaPublicaController::class, 'actualizarOferta'])->whereNumber('id')->middleware('empresa.permiso:editar ofertas')->name('Publico.actualizarOferta');
+    Route::get('/mis-ofertas/{id}/postulantes', [OfertaPublicaController::class, 'postulantes'])->whereNumber('id')->middleware('empresa.permiso:ver postulacion')->name('Publico.misOfertas.postulantes');
+    Route::post('/mis-ofertas/postulantes/{id}/calificar', [OfertaPublicaController::class, 'calificarPostulante'])->whereNumber('id')->middleware('empresa.permiso:crear calificacion')->name('Publico.misOfertas.calificarPostulante');
+    Route::patch('/mis-ofertas/postulantes/{id}/estado', [OfertaPublicaController::class, 'actualizarEstadoPostulante'])->whereNumber('id')->middleware('empresa.permiso:editar postulacion')->name('Publico.misOfertas.actualizarPostulante');
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 

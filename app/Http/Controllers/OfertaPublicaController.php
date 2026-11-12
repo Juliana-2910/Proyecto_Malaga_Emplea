@@ -33,7 +33,7 @@ class OfertaPublicaController extends Controller
         try {
             $datos = $this->ofertasService->datosListadoUsuario(
                 $request->only(['q', 'categoria', 'contrato', 'publica', 'orden']),
-                auth('empresa')->user() ?? auth('web')->user()
+                $request->user()
             );
 
             return view('Publico.UsuarioOfertas', $datos);
@@ -45,10 +45,10 @@ class OfertaPublicaController extends Controller
 
         public function postular(int $id)
     {
-    // Solo los usuarios pueden postularse.
-    $usuario = auth('web')->user();
+    // Solo las cuentas personales pueden postularse.
+    $usuario = request()->user();
 
-    if (!$usuario) {
+    if (!$usuario instanceof \App\Models\Usuario) {
         return redirect('/empleos')
             ->with('error', 'Debes ingresar como usuario para postularte.');
     }
@@ -71,8 +71,8 @@ class OfertaPublicaController extends Controller
     public function cancelarPostulacion(Request $request, int $id)
     {
         // El propietario se obtiene de la sesión autenticada, no del formulario.
-        $usuario = auth('web')->user();
-        abort_unless($usuario, 403, 'Solo los usuarios pueden cancelar postulaciones.');
+        $usuario = $request->user();
+        abort_unless($usuario instanceof \App\Models\Usuario, 403, 'Solo los usuarios pueden cancelar postulaciones.');
 
         try {
             $this->postulacionService->cancelar($id, (int) $usuario->id);
@@ -102,10 +102,11 @@ class OfertaPublicaController extends Controller
             $datos = $request->validated();
             unset($datos['idUsuario'], $datos['idEmpresa']);
 
-            if ($empresa = auth('empresa')->user()) {
+            if (($cuenta = $request->user()) instanceof \App\Models\Empresa) {
+                $empresa = $cuenta;
                 $datos['idEmpresa'] = $empresa->id;
             } else {
-                $usuario = auth('web')->user();
+                $usuario = $cuenta;
                 abort_unless($usuario, 403);
                 $datos['idUsuario'] = $usuario->id;
             }
@@ -120,7 +121,7 @@ class OfertaPublicaController extends Controller
     public function actualizarOferta(OfertaUpdateRequest $request, int $id)
     {
         try {
-            $cuenta = auth('empresa')->user() ?? auth('web')->user();
+            $cuenta = $request->user();
             abort_unless($cuenta, 403);
             $this->ofertasService->actualizarMiOferta($id, $request->validated(), $cuenta);
         } catch (Exception $e) {
@@ -132,8 +133,8 @@ class OfertaPublicaController extends Controller
 
     public function misPostulaciones(Request $request)
     {
-        $usuario = auth('web')->user();
-        if (! $usuario) {
+        $usuario = $request->user();
+        if (! $usuario instanceof \App\Models\Usuario) {
             return redirect()->route('Publico.ofertas')->with('error', 'Mis postulaciones está disponible para cuentas de usuario.');
         }
 
@@ -152,8 +153,8 @@ class OfertaPublicaController extends Controller
 
     public function calificar(Request $request, int $id)
     {
-        $usuario = auth('web')->user();
-        abort_unless($usuario, 403, 'Solo los usuarios pueden enviar esta calificación.');
+        $usuario = $request->user();
+        abort_unless($usuario instanceof \App\Models\Usuario, 403, 'Solo los usuarios pueden enviar esta calificación.');
 
         // Los errores van en su propio "bolsillo" para no abrir otros modales.
         $datos = $request->validateWithBag('calificar', [
@@ -184,7 +185,7 @@ class OfertaPublicaController extends Controller
     public function misOfertas(Request $request)
     {
         try {
-            $cuenta = auth('empresa')->user() ?? auth('web')->user();
+            $cuenta = $request->user();
             abort_unless($cuenta, 403);
             $datos = $this->ofertasService->datosMisOfertas(
                 $request->only(['estado', 'orden']),
@@ -202,7 +203,7 @@ class OfertaPublicaController extends Controller
         $datos = $request->validate([
             'estado' => ['required', 'in:Aceptado,Rechazado,Contratado'],
         ]);
-        $publicador = auth('empresa')->user() ?? auth('web')->user();
+        $publicador = $request->user();
         abort_unless($publicador, 403);
 
         try {
@@ -220,7 +221,7 @@ class OfertaPublicaController extends Controller
 
     public function calificarPostulante(Request $request, int $id)
     {
-        $publicador = auth('empresa')->user() ?? auth('web')->user();
+        $publicador = $request->user();
         abort_unless($publicador, 403);
 
         $datos = $request->validateWithBag('calificar', [
@@ -251,7 +252,7 @@ class OfertaPublicaController extends Controller
         public function postulantes(Request $request, int $id)
     {
         try {
-            $cuenta = auth('empresa')->user() ?? auth('web')->user();
+            $cuenta = $request->user();
             abort_unless($cuenta, 403);
             $datos = $this->ofertasService->datosPostulantes(
                 $id,

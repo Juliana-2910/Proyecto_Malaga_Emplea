@@ -29,10 +29,10 @@
             <div class="absolute left-0 top-0 h-2 w-full bg-gradient-to-r from-[#333333] via-[#4DB6E8] to-[#333333]"></div>
 
             {{-- LOGO CENTRADO --}}
-        <div class="login-logo mx-auto mb-5 flex size-16 items-center justify-center rounded-2xl border border-gray-100 bg-white shadow-lg">
+        <div class="login-logo mx-auto mb-5 flex size-24 items-center justify-center rounded-[1.75rem] border border-gray-100 bg-white p-2 shadow-xl shadow-[#333333]/10">
             <img src="{{ asset('images/Logo Malaga Emplea.png') }}"
                 alt="Málaga Emplea"
-                class="size-16 object-contain">
+                class="size-full object-contain">
         </div>
 
             {{-- ENCABEZADO --}}
@@ -42,7 +42,7 @@
                 </p>
 
                 <h1 class="text-3xl font-extrabold tracking-tight text-[#333333]">
-                    Málaga Emplea
+                    Inicia sesión
                 </h1>
 
                 <p class="mt-2 text-sm leading-relaxed text-gray-500">
@@ -62,6 +62,27 @@
                             <li>{{ $error }}</li>
                         @endforeach
                     </ul>
+                </div>
+            @endif
+
+            @if (session()->has('loginIntentosRestantes'))
+                @php $intentosRestantes = (int) session('loginIntentosRestantes'); @endphp
+                <div class="mb-5 rounded-xl border px-4 py-3 text-sm leading-relaxed {{ $intentosRestantes > 0 ? 'border-amber-200 bg-amber-50 text-amber-900' : 'border-red-200 bg-red-50 text-red-800' }}" role="status">
+                    @if ($intentosRestantes > 0)
+                        Te quedan <strong>{{ $intentosRestantes }} {{ $intentosRestantes === 1 ? 'intento' : 'intentos' }}</strong> antes de que se active el bloqueo temporal. El límite se restablece después de un minuto.
+                    @else
+                        Llegaste al límite de <strong>5 intentos</strong>. Espera un minuto antes de volver a ingresar.
+                    @endif
+                </div>
+            @elseif (session()->has('loginBloqueoSegundos'))
+                <div class="mb-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm leading-relaxed text-red-800" role="alert">
+                    El acceso está bloqueado temporalmente. Inténtalo de nuevo en <strong>{{ max(1, (int) session('loginBloqueoSegundos')) }} segundos</strong>.
+                </div>
+            @endif
+
+            @if (session('statusRecuperacion') || session('successRecuperacion'))
+                <div class="mb-5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm leading-relaxed text-emerald-800" role="status">
+                    {{ session('statusRecuperacion') ?? session('successRecuperacion') }}
                 </div>
             @endif
 
@@ -153,12 +174,10 @@
                             Contraseña
                         </label>
 
-                        @if (Route::has('password.request'))
-                            <a href="{{ route('password.request') }}"
-                            class="text-xs font-semibold text-[#4DB6E8] transition hover:text-[#333333]">
+                        <button type="button" data-abrir-recuperacion
+                            class="text-xs font-semibold text-[#2386B5] transition hover:text-[#333333] hover:underline">
                             ¿Olvidaste tu contraseña?
-                            </a>
-                        @endif
+                        </button>
                     </div>
 
                     <div class="relative">
@@ -256,12 +275,77 @@
 
         {{-- PIE DE PÁGINA --}}
         <p class="mt-6 text-center text-xs font-medium text-gray-400">
-            Málaga Emplea · Conectando oportunidades en nuestra región.
+            Conectando talento y oportunidades en nuestra región.
         </p>
 
     </div> {{-- Cierra el contenedor de la tarjeta --}}
 
 </div> {{-- Cierra el fondo principal --}}
+
+{{-- MODAL PARA SOLICITAR EL ENLACE DE RESTABLECIMIENTO --}}
+<div id="modalRecuperarContrasena"
+    data-abrir-al-cargar="{{ $errors->getBag('recovery')->any() ? '1' : '0' }}"
+    class="fixed inset-0 z-[110] hidden items-center justify-center bg-[#17232c]/70 px-4 py-6 backdrop-blur-sm"
+    role="dialog" aria-modal="true" aria-labelledby="tituloRecuperacion">
+    <div class="relative w-full max-w-md overflow-hidden rounded-[1.75rem] border border-white/80 bg-white shadow-[0_28px_90px_rgba(10,25,35,.35)]">
+        <div class="h-2 w-full bg-gradient-to-r from-[#333333] via-[#4DB6E8] to-[#333333]"></div>
+        <div class="flex items-start justify-between gap-4 border-b border-slate-100 px-6 py-5 sm:px-7">
+            <div class="flex items-start gap-3">
+                <span class="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-[#EAF6FD] text-[#2386B5]">
+                    <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/></svg>
+                </span>
+                <div>
+                    <h2 id="tituloRecuperacion" class="text-lg font-extrabold text-[#333333]">Recupera tu acceso</h2>
+                    <p class="mt-1 text-sm leading-relaxed text-slate-500">Te enviaremos un enlace seguro para crear una contraseña nueva.</p>
+                </div>
+            </div>
+            <button type="button" data-cerrar-recuperacion aria-label="Cerrar ventana"
+                class="flex size-9 shrink-0 items-center justify-center rounded-full text-slate-500 transition hover:bg-slate-100 hover:text-[#333333]">
+                <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+
+        <form method="POST" action="{{ route('password.email') }}" class="space-y-5 px-6 py-6 sm:px-7">
+            @csrf
+            <fieldset>
+                <legend class="mb-2 block text-sm font-bold text-[#333333]">Tipo de cuenta</legend>
+                <div class="grid grid-cols-2 gap-3">
+                    @foreach ($tiposCuenta as $tipo => $configuracion)
+                        @php $tipoRecuperacionActual = old('tipo_recuperacion', $tipoSeleccionado); @endphp
+                        <input id="tipo_recuperacion_{{ $tipo }}" class="sr-only" type="radio" name="tipo_recuperacion" value="{{ $tipo }}"
+                            @checked($tipoRecuperacionActual === $tipo)>
+                        <button type="button" data-tipo-recuperacion="{{ $tipo }}"
+                            aria-pressed="{{ $tipoRecuperacionActual === $tipo ? 'true' : 'false' }}"
+                            onclick="seleccionarTipoRecuperacion('{{ $tipo }}')"
+                            class="opcion-tipo w-full rounded-xl border-2 border-gray-200 bg-white p-4 text-center transition focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#4DB6E8]/20 {{ $tipoRecuperacionActual === $tipo ? 'seleccionado' : '' }}">
+                            <span class="block font-bold text-[#333333]">{{ $tipo === 'usuario' ? 'Persona natural' : 'Empresa' }}</span>
+                            <span class="mt-1 block text-xs text-gray-500">{{ $tipo === 'usuario' ? 'Ingresar como persona' : 'Ingresar como empresa' }}</span>
+                        </button>
+                    @endforeach
+                </div>
+                @error('tipo_recuperacion', 'recovery')
+                    <p class="mt-2 text-xs font-medium text-red-600">{{ $message }}</p>
+                @enderror
+            </fieldset>
+
+            <div>
+                <label for="emailRecuperacion" class="mb-2 block text-sm font-bold text-[#333333]">Correo registrado</label>
+                <input id="emailRecuperacion" name="email_recuperacion" type="email" required autocomplete="email"
+                    value="{{ old('email_recuperacion', old('email')) }}" placeholder="ejemplo@correo.com"
+                    class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3.5 text-sm text-[#333333] outline-none transition placeholder:text-slate-400 focus:border-[#4DB6E8] focus:bg-white focus:ring-4 focus:ring-[#4DB6E8]/15">
+                @error('email_recuperacion', 'recovery')
+                    <p class="mt-2 text-xs font-medium text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <p class="rounded-xl bg-slate-50 px-4 py-3 text-xs leading-relaxed text-slate-500">Si el correo corresponde a una cuenta activa, recibirás un enlace válido por 60 minutos.</p>
+            <div class="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+                <button type="button" data-cerrar-recuperacion class="rounded-xl border-2 border-slate-200 px-4 py-3 text-sm font-bold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50">Volver al inicio</button>
+                <button type="submit" class="rounded-xl bg-[#333333] px-5 py-3 text-sm font-extrabold text-white shadow-lg shadow-[#333333]/15 transition hover:-translate-y-0.5 hover:bg-[#4DB6E8] hover:text-[#333333]">Enviar enlace</button>
+            </div>
+        </form>
+    </div>
+</div>
 
 {{-- MOSTRAR / OCULTAR CONTRASEÑA Y SELECCIONAR CUENTA --}}
 <script>
@@ -297,13 +381,68 @@
 
         radio.checked = true;
 
-        document.querySelectorAll('.opcion-tipo').forEach(boton => {
+        document.querySelectorAll('.login-form .opcion-tipo').forEach(boton => {
             const seleccionado = boton.dataset.tipo === tipo;
 
             boton.classList.toggle('seleccionado', seleccionado);
             boton.setAttribute('aria-pressed', seleccionado ? 'true' : 'false');
         });
     }
+
+    function seleccionarTipoRecuperacion(tipo) {
+        const radio = document.getElementById(`tipo_recuperacion_${tipo}`);
+        if (!radio) return;
+
+        radio.checked = true;
+        document.querySelectorAll('[data-tipo-recuperacion]').forEach(boton => {
+            const seleccionado = boton.dataset.tipoRecuperacion === tipo;
+            boton.classList.toggle('seleccionado', seleccionado);
+            boton.setAttribute('aria-pressed', seleccionado ? 'true' : 'false');
+        });
+    }
+
+    const modalRecuperacion = document.getElementById('modalRecuperarContrasena');
+    const campoEmailRecuperacion = document.getElementById('emailRecuperacion');
+
+    function abrirModalRecuperacion(sincronizarCuenta = true) {
+        const tipoLogin = sincronizarCuenta ? document.querySelector('input[name="tipo"]:checked')?.value : null;
+        if (tipoLogin) {
+            seleccionarTipoRecuperacion(tipoLogin);
+        }
+
+        if (campoEmailRecuperacion && !campoEmailRecuperacion.value) {
+            campoEmailRecuperacion.value = document.getElementById('email')?.value ?? '';
+        }
+
+        modalRecuperacion.classList.remove('hidden');
+        modalRecuperacion.classList.add('flex');
+        document.body.classList.add('overflow-hidden');
+        window.setTimeout(() => campoEmailRecuperacion?.focus(), 50);
+    }
+
+    function cerrarModalRecuperacion() {
+        modalRecuperacion.classList.add('hidden');
+        modalRecuperacion.classList.remove('flex');
+        document.body.classList.remove('overflow-hidden');
+        document.querySelector('[data-abrir-recuperacion]')?.focus();
+    }
+
+    document.querySelectorAll('[data-abrir-recuperacion]').forEach(boton => {
+        boton.addEventListener('click', abrirModalRecuperacion);
+    });
+    modalRecuperacion.querySelectorAll('[data-cerrar-recuperacion]').forEach(boton => {
+        boton.addEventListener('click', cerrarModalRecuperacion);
+    });
+    modalRecuperacion.addEventListener('click', evento => {
+        if (evento.target === modalRecuperacion) cerrarModalRecuperacion();
+    });
+    document.addEventListener('keydown', evento => {
+        if (evento.key === 'Escape' && !modalRecuperacion.classList.contains('hidden')) {
+            cerrarModalRecuperacion();
+        }
+    });
+
+    if (modalRecuperacion.dataset.abrirAlCargar === '1') abrirModalRecuperacion(false);
 </script>
 
 <style>
@@ -678,8 +817,8 @@
     }
 
     .login-logo {
-        width: clamp(2.75rem, 7dvh, 4rem);
-        height: clamp(2.75rem, 7dvh, 4rem);
+        width: clamp(4.5rem, 11dvh, 6rem);
+        height: clamp(4.5rem, 11dvh, 6rem);
         margin-bottom: clamp(0.5rem, 1.5dvh, 1.25rem);
     }
 
@@ -721,10 +860,10 @@
     }
 
     .login-logo {
-        width: 2.75rem;
-        height: 2.75rem;
-        margin-bottom: 0.35rem;
-        border-radius: 0.75rem;
+        width: 4rem;
+        height: 4rem;
+        margin-bottom: 0.45rem;
+        border-radius: 1rem;
     }
 
     .login-logo img {
@@ -740,10 +879,7 @@
         display: none;
     }
 
-    .login-header h1 {
-        font-size: 1.5rem;
-        line-height: 1.9rem;
-    }
+    .login-header h1 { font-size: 1.5rem; line-height: 1.9rem; }
 
     .login-header > p:first-child {
         margin-bottom: 0.15rem;
@@ -786,10 +922,8 @@
     }
 }
 
-@media (max-height: 570px) {
-    .login-logo {
-        display: none;
-    }
+@media (max-height: 500px) {
+    .login-logo { width: 3rem; height: 3rem; margin-bottom: 0.25rem; }
 
     .login-card {
         padding-block: 0.5rem !important;

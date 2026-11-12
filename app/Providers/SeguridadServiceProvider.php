@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Http\Middleware\Seguridad\AutorizarModulo;
+use App\Http\Middleware\Seguridad\AutorizarPermisoEmpresa;
 use App\Http\Middleware\Seguridad\VerificarCuentaActiva;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
@@ -25,6 +26,7 @@ class SeguridadServiceProvider extends ServiceProvider
         });
 
         $this->app['router']->aliasMiddleware('modulo', AutorizarModulo::class);
+        $this->app['router']->aliasMiddleware('empresa.permiso', AutorizarPermisoEmpresa::class);
         $this->app['router']->aliasMiddleware('cuenta.activa', VerificarCuentaActiva::class);
 
         $this->loadRoutesFrom(base_path('routes/seguridad.php'));

@@ -9,6 +9,7 @@ use App\Services\empresasServices;
 use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
@@ -86,7 +87,7 @@ public function registrarEmpresa(Request $request, empresasServices $empresasSer
 
     return response()->json([
         'mensaje' => 'La empresa fue registrada correctamente.',
-        'redirect' => route('Publico.ofertas'),
+        'redirect' => route('Publico.misOfertas'),
     ], 201);
 }
 
@@ -119,23 +120,37 @@ public function registrarEmpresa(Request $request, empresasServices $empresasSer
         }
 
         if (! $autenticado) {
+            $intentosRestantes = max(0, 5 - RateLimiter::attempts($this->loginRateLimitKey($request)));
+            $mensaje = $intentosRestantes > 0
+                ? "Las credenciales no coinciden. Te quedan {$intentosRestantes} intentos antes de un bloqueo temporal."
+                : 'Las credenciales no coinciden. Se agotaron tus intentos y el acceso quedó bloqueado temporalmente.';
+
             return back()
-                ->withErrors(['email' => 'Las credenciales no coinciden con nuestros registros.'])
+                ->withErrors(['email' => $mensaje])
+                ->with('loginIntentosRestantes', $intentosRestantes)
                 ->onlyInput('email', 'tipo');
         }
 
+        RateLimiter::clear($this->loginRateLimitKey($request));
         $request->session()->regenerate();
+        $tipo = $credenciales['tipo'] ?? 'usuario';
+
+        if ($tipo === 'empresa') {
+            return redirect()->route('Publico.misOfertas');
+        }
 
         $cuenta = auth('web')->user();
 
-        if (
-            ($credenciales['tipo'] ?? 'usuario') === 'usuario'
-            && ! $cuenta?->hasRole(config('seguridad.rol_admin'))
-        ) {
+        if (! $cuenta?->hasRole(config('seguridad.rol_admin'))) {
             return redirect()->route('Publico.ofertas');
         }
 
-                return redirect()->intended(config('seguridad.redirect_despues_login'));
+        return redirect()->intended(config('seguridad.redirect_despues_login'));
+    }
+
+    private function loginRateLimitKey(Request $request): string
+    {
+        return md5('login' . $request->ip());
     }
 
     // Cerrar sesión

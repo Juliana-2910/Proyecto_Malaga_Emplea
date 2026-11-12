@@ -61,7 +61,7 @@ class PerfilController extends Controller
 
     private function cuentaActual(): Usuario|Empresa
     {
-        $cuenta = auth('empresa')->user() ?? auth('web')->user();
+        $cuenta = request()->user();
         abort_unless($cuenta instanceof Usuario || $cuenta instanceof Empresa, 403);
 
         return $cuenta;

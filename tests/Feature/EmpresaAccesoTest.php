@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Empresa;
 use App\Models\Usuario;
 use Database\Seeders\RolEmpresaSeeder;
+use Database\Seeders\PermisosEmpresaSeeder;
 use Database\Seeders\SeguridadSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
@@ -23,6 +24,7 @@ class EmpresaAccesoTest extends TestCase
         $this->seed(SeguridadSeeder::class);
         $this->seed(RolEmpresaSeeder::class);
         $this->artisan('seguridad:modulo', ['nombres' => ['ofertas', 'usuarios', 'empresas']]);
+        $this->seed(PermisosEmpresaSeeder::class);
     }
 
     private function admin(): Usuario
@@ -80,7 +82,7 @@ class EmpresaAccesoTest extends TestCase
         $this->get(route('login'))->assertOk()->assertSee('Persona natural')->assertSee('Empresa')->assertSee('¿Cómo deseas ingresar?');
 
         $this->post(route('login.store'), ['tipo' => 'empresa', 'email' => 'e@e.com', 'password' => '12345678'])
-            ->assertRedirect();
+            ->assertRedirect(route('Publico.misOfertas'));
         $this->assertAuthenticatedAs($empresa, 'empresa');
         $this->assertGuest('web');
 
@@ -90,6 +92,25 @@ class EmpresaAccesoTest extends TestCase
         $this->post(route('login.store'), ['tipo' => 'usuario', 'email' => 'admin@admin.com', 'password' => '12345678'])
             ->assertRedirect();
         $this->assertAuthenticatedAs($this->admin(), 'web');
+    }
+
+    public function test_ingresar_con_otra_guardia_limpia_la_sesion_anterior(): void
+    {
+        $this->crearEmpresa();
+        $this->loginEmpresa();
+        $this->assertAuthenticated('empresa');
+
+        $admin = $this->admin();
+        $ingresoAdmin = app(\App\Services\Seguridad\AuthService::class)->autenticar(
+            config('seguridad.admin.email'),
+            config('seguridad.admin.password'),
+            false,
+            'usuario'
+        );
+
+        $this->assertTrue($ingresoAdmin);
+        $this->assertGuest('empresa');
+        $this->assertAuthenticatedAs($admin, 'web');
     }
 
     public function test_el_tipo_de_cuenta_importa_y_las_claves_malas_fallan(): void
@@ -242,6 +263,9 @@ class EmpresaAccesoTest extends TestCase
     {
         $this->crearEmpresa();
         $this->loginEmpresa();
+        Role::findByName('empresa', 'web')->syncPermissions([]);
+        app(PermissionRegistrar::class)->forgetCachedPermissions();
+        $this->app['auth']->forgetGuards();
 
         $this->get('/ofertas')->assertForbidden();
         $this->get('/usuarios')->assertForbidden();

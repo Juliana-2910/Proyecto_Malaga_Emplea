@@ -4,6 +4,9 @@
 
     $activo = 'border-b-[3px] border-marca text-marca-texto';
     $inactivo = 'transition hover:text-marca-texto';
+    $cuentaActual = request()->user();
+    $empresa = $cuentaActual instanceof \App\Models\Empresa ? $cuentaActual : null;
+    $puedeVerOfertas = ! $empresa || $empresa->can('ver ofertas');
 @endphp
 
 {{-- NAVBAR --}}
@@ -16,11 +19,11 @@
         </a>
 
         <nav class="hidden items-center gap-7 text-[15px] font-semibold md:flex">
-            <a href="{{ url('/empleos') }}" class="py-3 {{ request()->is('empleos') ? $activo : $inactivo }}">Ofertas</a>
-            @unless (auth('empresa')->check())
+            @if ($puedeVerOfertas)<a href="{{ url('/empleos') }}" class="py-3 {{ request()->is('empleos') ? $activo : $inactivo }}">Ofertas</a>@endif
+            @unless ($empresa)
                 <a href="{{ url('/mis-postulaciones') }}" class="py-3 {{ request()->is('mis-postulaciones') ? $activo : $inactivo }}">Mis postulaciones</a>
             @endunless
-            <a href="{{ url('/mis-ofertas') }}" class="py-3 {{ request()->is('mis-ofertas') ? $activo : $inactivo }}">Mis ofertas</a>
+            @if ($puedeVerOfertas)<a href="{{ url('/mis-ofertas') }}" class="py-3 {{ request()->is('mis-ofertas') ? $activo : $inactivo }}">Mis ofertas</a>@endif
         </nav>
 
         <div class="flex flex-wrap items-center gap-3">
@@ -41,11 +44,11 @@
     <details class="border-t border-slate-100 px-6 py-2 md:hidden">
         <summary class="cursor-pointer py-2 text-sm font-bold text-noche">Navegación</summary>
         <nav class="flex flex-col gap-1 pb-2 text-sm font-semibold" aria-label="Navegación móvil">
-            <a href="{{ route('Publico.ofertas') }}" class="rounded-lg px-3 py-2 {{ request()->is('empleos') ? 'bg-[#EAF6FD] text-marca-texto' : 'text-slate-700' }}">Ofertas</a>
-            @unless (auth('empresa')->check())
+            @if ($puedeVerOfertas)<a href="{{ route('Publico.ofertas') }}" class="rounded-lg px-3 py-2 {{ request()->is('empleos') ? 'bg-[#EAF6FD] text-marca-texto' : 'text-slate-700' }}">Ofertas</a>@endif
+            @unless ($empresa)
                 <a href="{{ route('Publico.postulaciones') }}" class="rounded-lg px-3 py-2 {{ request()->is('mis-postulaciones') ? 'bg-[#EAF6FD] text-marca-texto' : 'text-slate-700' }}">Mis postulaciones</a>
             @endunless
-            <a href="{{ route('Publico.misOfertas') }}" class="rounded-lg px-3 py-2 {{ request()->is('mis-ofertas*') ? 'bg-[#EAF6FD] text-marca-texto' : 'text-slate-700' }}">Mis ofertas</a>
+            @if ($puedeVerOfertas)<a href="{{ route('Publico.misOfertas') }}" class="rounded-lg px-3 py-2 {{ request()->is('mis-ofertas*') ? 'bg-[#EAF6FD] text-marca-texto' : 'text-slate-700' }}">Mis ofertas</a>@endif
         </nav>
     </details>
 </header>
