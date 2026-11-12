@@ -204,7 +204,7 @@
     class="fixed inset-0 z-[100] hidden items-center justify-center bg-[#17232c]/80 px-3 py-4 backdrop-blur-md">
 
     <div id="contenidoModal"
-        class="modal-contenido relative flex max-h-[90vh] w-full max-w-xl flex-col overflow-hidden rounded-3xl border border-white/70 bg-[#F4F4F4] shadow-[0_28px_90px_rgba(10,25,35,0.45)]">
+        class="modal-contenido relative flex max-h-[90vh] w-full max-w-xl flex-col overflow-hidden rounded-3xl border border-white/70 bg-[#F8FCFF] shadow-[0_28px_90px_rgba(10,25,35,0.45)]">
 
         {{-- ENCABEZADO --}}
         <div class="flex items-center justify-between border-b border-gray-200 bg-white px-5 py-4">
@@ -532,6 +532,14 @@
             transition: none !important;
         }
     }
+
+    #modalRegistro { background-color: rgba(7, 39, 68, .70); }
+    #contenidoModal { border-radius: 1.75rem; background: #F8FCFF; }
+    #modalRegistro .bg-white { background-color: #F5FAFE; }
+    #modalRegistro .tarjeta-registro { border-radius: 1rem; border-color: rgba(24, 101, 167, .18); }
+    #modalRegistro .tarjeta-registro:hover { border-color: #1686D9; }
+    #modalRegistro .boton-registro { border-radius: 999px; background: #087DCA; color: white; }
+    #modalRegistro .boton-registro:hover { background: #0566A8; color: white; }
 </style>
 
 <script>

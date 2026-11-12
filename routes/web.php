@@ -28,6 +28,7 @@ Route::middleware(['auth:web,empresa', 'cuenta.activa'])->group(function () {
     Route::get('/mi-perfil', [PerfilController::class, 'editar'])->middleware('empresa.permiso:ver perfil')->name('perfil.editar');
     Route::put('/mi-perfil', [PerfilController::class, 'actualizar'])->middleware('empresa.permiso:editar perfil')->name('perfil.actualizar');
     Route::get('/mi-cuenta/calificaciones', [PerfilController::class, 'calificaciones'])->middleware('empresa.permiso:ver calificacion')->name('perfil.calificaciones');
+    Route::get('/calificaciones/{tipo}/{id}', [PerfilController::class, 'calificacionesPublicas'])->whereNumber('id')->middleware('empresa.permiso:ver calificacion')->name('perfil.calificaciones.publicas');
 
     Route::get('/empleos', [OfertaPublicaController::class, 'index'])->middleware('empresa.permiso:ver ofertas')->name('Publico.ofertas');
     Route::post('/empleos/{id}/postular', [OfertaPublicaController::class, 'postular'])->whereNumber('id')->name('Publico.postular');

@@ -46,6 +46,11 @@ class hojaDeVidaService
         return $this->hojaDeVidaRepository->buscarPorId($id);
     }
 
+    public function buscarPorUsuario(int $idUsuario)
+    {
+        return $this->hojaDeVidaRepository->buscarPorUsuario($idUsuario);
+    }
+
     public function actualizar(int $id, array $datos)
     {
         $hojaDeVida = $this->hojaDeVidaRepository->buscarPorId($id);

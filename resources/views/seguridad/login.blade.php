@@ -11,7 +11,7 @@
     $tipoSeleccionado = old('tipo', array_key_first($tiposCuenta));
 @endphp
 
-<div class="login-page relative isolate flex min-h-screen items-center justify-center overflow-hidden bg-[#F4F4F4] px-4 py-6 sm:px-6">
+<div class="login-page relative isolate flex min-h-screen items-center justify-center overflow-hidden bg-[#F4F4F4] px-4 py-6 sm:px-6" style="--login-fondo: url('{{ asset('images/Login Malaga Emplea.jpeg') }}')">
 
     {{-- FONDO DECORATIVO --}}
     <div class="absolute -left-32 -top-32 -z-10 size-96 rounded-full bg-[#4DB6E8]/20 blur-3xl"></div>
@@ -19,16 +19,20 @@
 
     
     {{-- CONTENEDOR DE LA TARJETA --}}
-    <div class="relative w-full max-w-sm">
+    <div class="login-shell relative w-full max-w-sm">
 
     {{-- TARJETA PRINCIPAL --}}
     <div class="login-card relative mx-auto w-full overflow-hidden rounded-[2rem] border border-white/80 bg-white/95 px-5 pb-5 pt-6 shadow-2xl backdrop-blur-xl sm:px-6">
 
 
-            {{-- DETALLE SUPERIOR --}}
-            <div class="absolute left-0 top-0 h-2 w-full bg-gradient-to-r from-[#333333] via-[#4DB6E8] to-[#333333]"></div>
+            <div class="login-return">
+                <a href="{{ url('/') }}" class="inline-flex items-center gap-2 font-semibold text-[#0B4F8A] transition hover:text-[#087DCA]">
+                    <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m15 18-6-6 6-6M9 12h12"/></svg>
+                    Volver al inicio
+                </a>
+            </div>
 
-            {{-- LOGO CENTRADO --}}
+            {{-- La marca se integra al fondo fotográfico de la pantalla. --}}
         <div class="login-logo mx-auto mb-5 flex size-24 items-center justify-center rounded-[1.75rem] border border-gray-100 bg-white p-2 shadow-xl shadow-[#333333]/10">
             <img src="{{ asset('images/Logo Malaga Emplea.png') }}"
                 alt="Málaga Emplea"
@@ -41,50 +45,14 @@
                     Bienvenido de nuevo
                 </p>
 
-                <h1 class="text-3xl font-extrabold tracking-tight text-[#333333]">
-                    Inicia sesión
+                <h1 class="text-3xl font-extrabold tracking-tight text-[#0B2D5C]">
+                    Iniciar sesión
                 </h1>
 
                 <p class="mt-2 text-sm leading-relaxed text-gray-500">
                     Ingresa a tu cuenta y continúa conectando con nuevas oportunidades.
                 </p>
             </div>
-
-            {{-- MENSAJES DE ERROR --}}
-            @if ($errors->any())
-                <div class="mb-5 rounded-xl border border-red-200 bg-red-50 p-3">
-                    <p class="text-sm font-semibold text-red-700">
-                        No fue posible iniciar sesión.
-                    </p>
-
-                    <ul class="mt-1 list-inside list-disc text-xs text-red-600">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-
-            @if (session()->has('loginIntentosRestantes'))
-                @php $intentosRestantes = (int) session('loginIntentosRestantes'); @endphp
-                <div class="mb-5 rounded-xl border px-4 py-3 text-sm leading-relaxed {{ $intentosRestantes > 0 ? 'border-amber-200 bg-amber-50 text-amber-900' : 'border-red-200 bg-red-50 text-red-800' }}" role="status">
-                    @if ($intentosRestantes > 0)
-                        Te quedan <strong>{{ $intentosRestantes }} {{ $intentosRestantes === 1 ? 'intento' : 'intentos' }}</strong> antes de que se active el bloqueo temporal. El límite se restablece después de un minuto.
-                    @else
-                        Llegaste al límite de <strong>5 intentos</strong>. Espera un minuto antes de volver a ingresar.
-                    @endif
-                </div>
-            @elseif (session()->has('loginBloqueoSegundos'))
-                <div class="mb-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm leading-relaxed text-red-800" role="alert">
-                    El acceso está bloqueado temporalmente. Inténtalo de nuevo en <strong>{{ max(1, (int) session('loginBloqueoSegundos')) }} segundos</strong>.
-                </div>
-            @endif
-
-            @if (session('statusRecuperacion') || session('successRecuperacion'))
-                <div class="mb-5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm leading-relaxed text-emerald-800" role="status">
-                    {{ session('statusRecuperacion') ?? session('successRecuperacion') }}
-                </div>
-            @endif
 
             {{-- FORMULARIO DE INICIO DE SESIÓN --}}
             <form action="{{ route('login.store') }}" method="POST" class="login-form space-y-5">
@@ -162,9 +130,6 @@
                         >
                     </div>
 
-                    @error('email')
-                        <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
-                    @enderror
                 </div>
 
                 {{-- CONTRASEÑA --}}
@@ -210,9 +175,25 @@
                         </button>
                     </div>
 
-                    @error('password')
-                        <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
-                    @enderror
+                    @php
+                        $mensajeAcceso = $errors->first('password') ?: $errors->first('email');
+                        $intentosRestantes = session('loginIntentosRestantes');
+                    @endphp
+                    @if ($mensajeAcceso)
+                        <p class="mt-2 text-xs font-semibold text-red-700" role="alert">{{ $mensajeAcceso }}</p>
+                    @elseif (session()->has('loginBloqueoSegundos'))
+                        <p class="mt-2 text-xs font-semibold text-red-700" role="alert">Acceso temporalmente bloqueado. Inténtalo de nuevo en {{ max(1, (int) session('loginBloqueoSegundos')) }} segundos.</p>
+                    @elseif ($intentosRestantes !== null)
+                        <p class="mt-2 text-xs font-semibold text-amber-800" role="status">
+                            @if ((int) $intentosRestantes > 0)
+                                Te quedan {{ $intentosRestantes }} {{ (int) $intentosRestantes === 1 ? 'intento' : 'intentos' }} antes del bloqueo temporal.
+                            @else
+                                Llegaste al límite de 5 intentos. Espera un minuto antes de volver a ingresar.
+                            @endif
+                        </p>
+                    @elseif (session('statusRecuperacion') || session('successRecuperacion'))
+                        <p class="mt-2 text-xs font-semibold text-emerald-800" role="status">{{ session('statusRecuperacion') ?? session('successRecuperacion') }}</p>
+                    @endif
                 </div>
 
                 {{-- RECORDAR SESIÓN --}}
@@ -263,18 +244,10 @@
                 </button>
 
 
-            {{-- VOLVER --}}
-            <div class="mt-5 text-center">
-                <a href="{{ url('/') }}"
-                    class="text-xs font-semibold text-gray-400 transition hover:text-[#333333]">
-                    ← Volver al inicio
-                </a>
-            </div>
-
         </div> {{-- Cierra la tarjeta principal --}}
 
         {{-- PIE DE PÁGINA --}}
-        <p class="mt-6 text-center text-xs font-medium text-gray-400">
+        <p class="login-footnote mt-6 text-center text-xs font-medium text-white">
             Conectando talento y oportunidades en nuestra región.
         </p>
 
@@ -287,8 +260,7 @@
     data-abrir-al-cargar="{{ $errors->getBag('recovery')->any() ? '1' : '0' }}"
     class="fixed inset-0 z-[110] hidden items-center justify-center bg-[#17232c]/70 px-4 py-6 backdrop-blur-sm"
     role="dialog" aria-modal="true" aria-labelledby="tituloRecuperacion">
-    <div class="relative w-full max-w-md overflow-hidden rounded-[1.75rem] border border-white/80 bg-white shadow-[0_28px_90px_rgba(10,25,35,.35)]">
-        <div class="h-2 w-full bg-gradient-to-r from-[#333333] via-[#4DB6E8] to-[#333333]"></div>
+    <div class="recovery-card relative w-full max-w-md overflow-hidden rounded-[1.75rem] border border-white/80 bg-white shadow-[0_28px_90px_rgba(10,25,35,.35)]">
         <div class="flex items-start justify-between gap-4 border-b border-slate-100 px-6 py-5 sm:px-7">
             <div class="flex items-start gap-3">
                 <span class="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-[#EAF6FD] text-[#2386B5]">
@@ -928,6 +900,129 @@
     .login-card {
         padding-block: 0.5rem !important;
     }
+}
+
+/* Presentación inspirada en la referencia, conservando los formularios y sus flujos. */
+.login-page {
+    justify-content: flex-end;
+    background-image: linear-gradient(90deg, rgba(5, 38, 72, .02), rgba(7, 74, 132, .08)), var(--login-fondo);
+    background-position: center;
+    background-size: cover;
+    padding: clamp(.75rem, 2.5vw, 2rem);
+}
+
+.login-page > .absolute { display: none; }
+
+.login-shell {
+    width: min(100%, 450px);
+    max-width: 450px;
+    margin-right: clamp(0rem, 3vw, 3rem);
+}
+
+.login-card {
+    border: 1px solid rgba(255, 255, 255, .82) !important;
+    border-radius: 2.25rem !important;
+    background: rgba(235, 247, 255, .76) !important;
+    box-shadow: 0 28px 80px rgba(9, 45, 86, .24) !important;
+    backdrop-filter: blur(22px);
+    padding: clamp(.85rem, 1.8vw, 1.35rem) clamp(1rem, 2vw, 1.5rem) !important;
+}
+
+.login-card > .absolute { display: none; }
+.login-logo { display: none; }
+.login-return { display: flex; justify-content: flex-end; margin: 0 0 .8rem; font-size: .9rem; }
+.login-header { margin-bottom: .9rem; }
+.login-header > p:first-child { display: none; }
+.login-header h1 { color: #0B2D5C !important; font-size: clamp(2rem, 3vw, 2.7rem); }
+.login-header > p:last-child { color: #24496E; font-size: 1rem; }
+.login-form > div > label,
+.login-form > div > .mb-2 label { color: #163C69 !important; }
+
+.login-form .opcion-tipo {
+    min-height: 3.25rem;
+    border-color: rgba(24, 101, 167, .18);
+    border-radius: 1rem;
+    background: rgba(255, 255, 255, .72);
+}
+
+.login-form .opcion-tipo.seleccionado {
+    border-color: #1686D9;
+    background: rgba(77, 182, 232, .17);
+    box-shadow: 0 0 0 2px rgba(22, 134, 217, .12);
+}
+
+.login-form input[type="email"],
+.login-form input[type="password"] {
+    border-color: rgba(24, 74, 119, .16);
+    border-radius: 1rem;
+    background: rgba(255, 255, 255, .83);
+    color: #12303F;
+}
+
+.login-form > button[type="submit"] {
+    border-radius: 999px;
+    background: linear-gradient(100deg, #0877D1, #078FE1) !important;
+    box-shadow: 0 10px 24px rgba(8, 119, 209, .22) !important;
+    padding-block: .75rem;
+}
+
+.login-form > button[type="submit"]:hover { color: white !important; }
+.login-card > button[onclick="abrirModalRegistro()"] { border-radius: 999px; background: rgba(255,255,255,.45); }
+.login-card .my-6 span { color: #24496E; }
+.login-card .my-6 div { background: rgba(24,74,119,.22); }
+.login-footnote { color: white !important; text-shadow: 0 2px 12px rgba(0,35,70,.8); }
+
+#modalRegistro { background-color: rgba(7, 39, 68, .70); }
+#contenidoModal { border-radius: 1.75rem; background: #F8FCFF; }
+#modalRegistro .bg-white { background-color: #F5FAFE; }
+#modalRegistro .boton-registro { border-radius: 999px; }
+#modalRegistro form button[type="submit"] { background: #087DCA; color: white; }
+#modalRegistro form button[type="submit"]:hover { background: #0566A8; color: white; }
+
+#modalRecuperarContrasena { background-color: rgba(7, 39, 68, .70); }
+#modalRecuperarContrasena .recovery-card { border-radius: 1.75rem; background: #F8FCFF; }
+#modalRecuperarContrasena button[type="submit"] { border-radius: 999px; background: #087DCA; }
+#modalRecuperarContrasena button[type="submit"]:hover { background: #0566A8; }
+
+@media (max-width: 760px) {
+    .login-page { justify-content: center; background-position: 36% center; padding: 1rem; }
+    .login-shell { width: min(100%, 400px); max-width: 400px; margin: auto; }
+    .login-card { border-radius: 1.5rem !important; background: rgba(245, 250, 255, .88) !important; padding: 1rem !important; }
+    .login-header { margin-bottom: .65rem; }
+    .login-return { margin-bottom: .65rem; }
+    .login-form > :not([hidden]) ~ :not([hidden]) { margin-top: .7rem; }
+}
+
+@media (max-width: 420px) {
+    .login-page { padding: .65rem; }
+    .login-shell { width: 100%; }
+    .login-card { border-radius: 1.35rem !important; padding: 1rem !important; }
+    .login-form .opcion-tipo { min-height: 3.35rem; padding-inline: .5rem; }
+    .login-header h1 { font-size: 1.8rem; }
+}
+
+@media (max-height: 720px) {
+    .login-page { align-items: center; overflow-y: auto; padding-block: .5rem; }
+    .login-shell { max-width: 390px; }
+    .login-card { padding: .8rem 1rem !important; border-radius: 1.3rem !important; }
+    .login-return { margin-bottom: .4rem; font-size: .8rem; }
+    .login-header { margin-bottom: .45rem; }
+    .login-header h1 { font-size: 1.7rem; line-height: 1.9rem; }
+    .login-form > :not([hidden]) ~ :not([hidden]) { margin-top: .5rem; }
+    .login-form .opcion-tipo { min-height: 2.75rem; }
+    .login-form input[type="email"],
+    .login-form input[type="password"] { padding-block: .5rem; }
+    .login-form > button[type="submit"] { padding-block: .6rem; }
+    .login-card .my-6 { margin-block: .35rem; }
+    .login-card > button[onclick="abrirModalRegistro()"] { padding-block: .55rem; }
+    .login-shell { margin-block: auto; }
+    .login-footnote { margin-top: .35rem; }
+}
+
+@media (max-height: 600px) {
+    .login-page { align-items: flex-start; }
+    .login-header > p:last-child { display: none; }
+    .login-footnote { display: none; }
 }
 
 </style>

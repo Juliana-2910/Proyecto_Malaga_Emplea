@@ -202,7 +202,7 @@
                                     </p>
 
                                     <p class="mt-1 text-sm font-medium text-gray-700">
-                                        {{ $usuario->fechaRegistro }}
+                                        {{ $usuario->fechaRegistro ? \Carbon\Carbon::parse($usuario->fechaRegistro)->format('d/m/Y') : '—' }}
                                     </p>
                                 </div>
 

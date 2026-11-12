@@ -40,6 +40,7 @@
     $plural = fn (int $n, string $singular) => $n . ' ' . ($n === 1 ? $singular : $singular . 's');
 
     $promedio = (float) ($calificacion['promedio'] ?? 0);
+    $promedioTexto = rtrim(rtrim(number_format($promedio, 2, '.', ''), '0'), '.');
     $cuentaActual = request()->user();
     $empresa = $cuentaActual instanceof \App\Models\Empresa ? $cuentaActual : null;
     $esEmpresa = $empresa !== null;
@@ -148,9 +149,13 @@
                             @endfor
                         </span>
 
-                        <span class="text-base font-extrabold text-noche">
-                            {{ (int) round($promedio) }}/5
-                        </span>
+                        @if (($calificacion['total'] ?? 0) > 0)
+                            <span class="text-base font-extrabold text-noche" aria-label="Promedio {{ $promedioTexto }} de 5">
+                                {{ $promedioTexto }}/5
+                            </span>
+                        @else
+                            <span class="text-sm font-semibold text-slate-500">Sin calificaciones</span>
+                        @endif
                     </div>
 
                     <span class="text-sm font-semibold text-slate-500">

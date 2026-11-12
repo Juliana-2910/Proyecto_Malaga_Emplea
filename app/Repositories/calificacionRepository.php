@@ -10,6 +10,15 @@ use Illuminate\Support\Facades\DB;
 
 class calificacionRepository{
 
+    public function buscarCuentaCalificable(string $tipo, int $id): Usuario|Empresa
+    {
+        return match ($tipo) {
+            'usuario' => Usuario::findOrFail($id),
+            'empresa' => Empresa::findOrFail($id),
+            default => abort(404),
+        };
+    }
+
     public function listarTodos()
     {
         return Calificacion::with(['usuario','empresa','usuarioCalificado','empresaCalificada',
@@ -20,7 +29,6 @@ class calificacionRepository{
     public function historialDeCuenta(Usuario|Empresa $cuenta)
     {
         $esEmpresa = $cuenta instanceof Empresa;
-        $columnaAutor = $esEmpresa ? 'idEmpresa' : 'idUsuario';
         $columnaDestino = $esEmpresa ? 'idEmpresaCalificada' : 'idUsuarioCalificado';
 
         return Calificacion::with([
@@ -28,15 +36,24 @@ class calificacionRepository{
             'empresa',
             'usuarioCalificado',
             'empresaCalificada',
-            'postulacion.oferta',
+            'postulacion.oferta.empresa',
+            'postulacion.oferta.usuario',
         ])
             ->whereHas('postulacion', fn ($query) => $query->where('estado', 'Contratado'))
-            ->where(fn ($query) => $query
-                ->where($columnaAutor, $cuenta->id)
-                ->orWhere($columnaDestino, $cuenta->id))
+            ->where($columnaDestino, $cuenta->id)
             ->orderByDesc('fecha')
             ->orderByDesc('id')
-            ->get();
+            ->paginate(5)
+            ->withQueryString();
+    }
+
+    public function promedioRecibido(Usuario|Empresa $cuenta): array
+    {
+        $columna = $cuenta instanceof Empresa ? 'idEmpresaCalificada' : 'idUsuarioCalificado';
+        $fila = Calificacion::where($columna, $cuenta->id)
+            ->selectRaw('AVG(puntuacion) as promedio, COUNT(*) as total')->first();
+
+        return ['promedio' => (float) ($fila->promedio ?? 0), 'total' => (int) ($fila->total ?? 0)];
     }
 
     public function guardar(array $datos)
@@ -126,6 +143,16 @@ class calificacionRepository{
     {
         return Calificacion::where('idPostulacion', $idPostulacion)
             ->where('idUsuario', $idUsuario)
+            ->where('tipoCalificador', 'usuario')
+            ->exists();
+    }
+
+    /** ¿Ya calificó quien publicó esta oferta, sea empresa o usuario? */
+    public function yaCalificadaPorPublicador(int $idPostulacion, int $idPublicador, bool $esEmpresa): bool
+    {
+        return Calificacion::where('idPostulacion', $idPostulacion)
+            ->where('tipoCalificador', $esEmpresa ? 'empresa' : 'usuario')
+            ->where($esEmpresa ? 'idEmpresa' : 'idUsuario', $idPublicador)
             ->exists();
     }
 

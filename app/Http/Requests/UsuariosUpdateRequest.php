@@ -27,12 +27,11 @@ class UsuariosUpdateRequest extends FormRequest
             'apellidos' => 'required|string|max:255',
             'fotoPerfil' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'fechaNacimiento' => 'required|date',
-            'tipoDocumento' => 'required|in:CC,CE,PPT,PEP',
+            'tipoDocumento' => 'required|in:CC,CE,PPT,PEP,PASAPORTE',
             'numeroDocumento' => 'required|string|max:255',
             'email' => 'required|string|email|max:255',
             'password' => 'nullable|string|min:8',
             'telefono' => 'required|string|max:20',
-            'fechaRegistro' => 'required|date',
             'estado' => 'required|in:activo,inactivo',
         ];
     }
@@ -73,8 +72,6 @@ class UsuariosUpdateRequest extends FormRequest
             'telefono.string' => 'El campo teléfono debe ser una cadena de texto.',
             'telefono.max' => 'El campo teléfono no debe exceder los 20 caracteres.',
 
-            'fechaRegistro.required' => 'El campo fecha de registro es obligatorio.',
-            'fechaRegistro.date' => 'El campo fecha de registro debe ser una fecha válida.',
 
             'estado.required' => 'El campo estado es obligatorio.',
             'estado.in' => 'El campo estado debe ser uno de los valores permitidos.',

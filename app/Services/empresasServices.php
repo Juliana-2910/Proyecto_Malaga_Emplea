@@ -56,12 +56,17 @@ class empresasServices
     {
         $empresa = $this->empresasrepository->buscarporid($id);
 
+        $eliminarFoto = (bool) ($datos['eliminarFotoPerfil'] ?? false);
+        unset($datos['eliminarFotoPerfil']);
         if (isset($datos['fotoPerfil'])) {
             $nuevaFoto = $this->guardarFoto($datos['fotoPerfil']); // Guardar la nueva foto
             if ($empresa->fotoPerfil) {
                 Storage::disk('public')->delete('empresas/' . $empresa->fotoPerfil); // Eliminar la foto anterior
             }
             $datos['fotoPerfil'] = $nuevaFoto;
+        } elseif ($eliminarFoto && $empresa->fotoPerfil) {
+            Storage::disk('public')->delete('empresas/' . $empresa->fotoPerfil);
+            $datos['fotoPerfil'] = null;
         }
         return $this->empresasrepository->actualizar($id, $datos);
     }

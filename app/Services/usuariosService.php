@@ -42,6 +42,7 @@ class usuariosService{
 
     public function guardar(array $datos)
     {
+        $datos['fechaRegistro'] = now('America/Bogota');
         $fechaNacimiento = Carbon::parse($datos['fechaNacimiento']); // Validar que el usuario sea mayor de edad
         if ($fechaNacimiento->age < 18) {
             throw ValidationException::withMessages([
@@ -90,6 +91,8 @@ class usuariosService{
                 'fechaNacimiento' => 'El usuario debe tener mínimo 18 años para actualizar sus datos.'
         ]);
     }
+        $eliminarFoto = (bool) ($datos['eliminarFotoPerfil'] ?? false);
+        unset($datos['eliminarFotoPerfil']);
         if (isset($datos['fotoPerfil'])) {
             $foto = $datos['fotoPerfil'];
             $nombreFoto = time() . '_' . $foto->getClientOriginalName();
@@ -104,6 +107,9 @@ class usuariosService{
                 ); // Eliminar foto anterior
             }
             $datos['fotoPerfil'] = $ruta;
+        } elseif ($eliminarFoto && $usuario->fotoPerfil) {
+            Storage::disk('public')->delete($usuario->fotoPerfil);
+            $datos['fotoPerfil'] = null;
         }
         return $this->usuariosRepository->actualizar($id, $datos);
     }

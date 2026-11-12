@@ -130,13 +130,23 @@ class ofertasService
         $ofertas = $this->ofertasrepository->listarActivas($filtros, self::POR_PAGINA);
 
         $categoriasPorOferta = $this->ofertasrepository->categoriasPorOferta($ofertas->pluck('id')->all());
+        $reputaciones = $this->ofertasrepository->reputacionesDePublicadores(
+            $ofertas->pluck('idUsuario')->filter()->unique()->values()->all(),
+            $ofertas->pluck('idEmpresa')->filter()->unique()->values()->all()
+        );
         $postulaciones = $idUsuario ? $this->ofertasrepository->postulacionesPorOferta($idUsuario) : [];
 
-        $ofertas->through(function ($oferta) use ($categoriasPorOferta, $postulaciones) {
+        $ofertas->through(function ($oferta) use ($categoriasPorOferta, $postulaciones, $reputaciones) {
             $oferta->publicador = $this->nombrePublicador($oferta);
             $oferta->categoria = $categoriasPorOferta[$oferta->id] ?? null;
             $oferta->postulacion = $postulaciones[$oferta->id] ?? null;
             $oferta->postulado = $oferta->postulacion !== null;
+            $tipoPublicador = $oferta->idEmpresa ? 'empresa' : 'usuario';
+            $idPublicador = $oferta->idEmpresa ?: $oferta->idUsuario;
+            $oferta->reputacionPublicador = $reputaciones[$tipoPublicador . ':' . $idPublicador] ?? [
+                'promedio' => 0.0,
+                'total' => 0,
+            ];
             return $oferta;
         });
 
@@ -247,6 +257,10 @@ class ofertasService
 
     private function validarFiltrosPostulaciones(array $filtros): void
     {
+        if (! empty($filtros['destacar']) && ! ctype_digit((string) $filtros['destacar'])) {
+            throw new InvalidArgumentException('La postulación seleccionada no es válida.');
+        }
+
         if (! empty($filtros['estado']) && ! in_array($filtros['estado'], self::ESTADOS_POSTULACION, true)) {
             throw new InvalidArgumentException('El estado seleccionado no es válido.');
         }
@@ -365,12 +379,14 @@ class ofertasService
         $postulantes = $this->ofertasrepository->listarPostulantesPaginados($idOferta, $filtros, self::POR_PAGINA);
         $hojas = $this->ofertasrepository->hojasDeVidaPorUsuario($postulantes->pluck('idUsuario')->all());
         $calificaciones = $this->ofertasrepository->calificacionesPorPostulacionDePublicador($postulantes->pluck('id')->all(), $idPublicador, $esEmpresa);
-        $postulantes->through(function ($postulacion) use ($hojas) {
+        $reputaciones = $this->ofertasrepository->reputacionesDeUsuarios($postulantes->pluck('idUsuario')->unique()->values()->all());
+        $postulantes->through(function ($postulacion) use ($hojas, $reputaciones, $calificaciones) {
             $hoja = $hojas[$postulacion->idUsuario] ?? null;
 
             $postulacion->hojaDeVida = $hoja;
             $postulacion->perfilCompleto = $this->perfilCompleto($hoja);
             $postulacion->calificacion = $calificaciones[$postulacion->id] ?? null; // puntuación, o null si aún no calificas
+            $postulacion->reputacionUsuario = $reputaciones[$postulacion->idUsuario] ?? ['promedio' => 0.0, 'total' => 0];
 
             return $postulacion;
         });

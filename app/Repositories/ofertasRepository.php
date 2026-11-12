@@ -153,6 +153,51 @@ class ofertasRepository
             ->all();
     }
 
+    /** Promedio y cantidad de calificaciones recibidas por los publicadores indicados. */
+    public function reputacionesDePublicadores(array $idsUsuarios, array $idsEmpresas): array
+    {
+        $reputaciones = [];
+
+        if ($idsUsuarios !== []) {
+            Calificacion::whereIn('idUsuarioCalificado', $idsUsuarios)
+                ->selectRaw('idUsuarioCalificado as id, AVG(puntuacion) as promedio, COUNT(*) as total')
+                ->groupBy('idUsuarioCalificado')
+                ->get()
+                ->each(function ($fila) use (&$reputaciones): void {
+                    $reputaciones['usuario:' . $fila->id] = [
+                        'promedio' => (float) $fila->promedio,
+                        'total' => (int) $fila->total,
+                    ];
+                });
+        }
+
+        if ($idsEmpresas !== []) {
+            Calificacion::whereIn('idEmpresaCalificada', $idsEmpresas)
+                ->selectRaw('idEmpresaCalificada as id, AVG(puntuacion) as promedio, COUNT(*) as total')
+                ->groupBy('idEmpresaCalificada')
+                ->get()
+                ->each(function ($fila) use (&$reputaciones): void {
+                    $reputaciones['empresa:' . $fila->id] = [
+                        'promedio' => (float) $fila->promedio,
+                        'total' => (int) $fila->total,
+                    ];
+                });
+        }
+
+        return $reputaciones;
+    }
+
+    /** Promedio y cantidad de valoraciones recibidas por postulantes. */
+    public function reputacionesDeUsuarios(array $idsUsuarios): array
+    {
+        if ($idsUsuarios === []) return [];
+        return Calificacion::whereIn('idUsuarioCalificado', $idsUsuarios)
+            ->selectRaw('idUsuarioCalificado as id, AVG(puntuacion) as promedio, COUNT(*) as total')
+            ->groupBy('idUsuarioCalificado')->get()
+            ->mapWithKeys(fn ($fila) => [$fila->id => ['promedio' => (float) $fila->promedio, 'total' => (int) $fila->total]])
+            ->all();
+    }
+
     public function listarCategorias()
     {
         return Categoria::orderBy('nombre')->get(['id', 'nombre']);
@@ -213,6 +258,10 @@ class ofertasRepository
             ->where('idUsuario', $idUsuario)
             ->when($filtros['estado'] ?? null, fn ($q, $estado) => $q->where('estado', $estado));
 
+        if (! empty($filtros['destacar'])) {
+            $consulta->orderByRaw('CASE WHEN id = ? THEN 0 ELSE 1 END', [(int) $filtros['destacar']]);
+        }
+
         match ($filtros['orden'] ?? 'recientes') {
             'antiguas' => $consulta->orderBy('fecha')->orderBy('id'),
             default    => $consulta->orderByDesc('fecha')->orderByDesc('id'),
@@ -226,6 +275,7 @@ class ofertasRepository
     {
         return Calificacion::whereIn('idPostulacion', $idsPostulaciones)
             ->where('idUsuario', $idUsuario)
+            ->where('tipoCalificador', 'usuario')
             ->pluck('puntuacion', 'idPostulacion')
             ->all();
     }
@@ -344,11 +394,12 @@ class ofertasRepository
     public function reputacionDePublicador(int $id, bool $esEmpresa): array
     {
         $fila = Calificacion::where($esEmpresa ? 'idEmpresaCalificada' : 'idUsuarioCalificado', $id)
-            ->selectRaw('AVG(puntuacion) as promedio, COUNT(*) as total')
+            ->selectRaw('AVG(puntuacion) as promedio, SUM(puntuacion) as suma, COUNT(*) as total')
             ->first();
 
         return [
             'promedio' => (float) ($fila->promedio ?? 0),
+            'suma' => (int) ($fila->suma ?? 0),
             'total' => (int) ($fila->total ?? 0),
         ];
     }
@@ -479,6 +530,10 @@ class ofertasRepository
         $consulta = Postulacion::with('usuario')
             ->where('idOferta', $idOferta)
             ->when($filtros['estado'] ?? null, fn ($q, $estado) => $q->where('estado', $estado));
+
+        if (! empty($filtros['destacar'])) {
+            $consulta->orderByRaw('CASE WHEN id = ? THEN 0 ELSE 1 END', [(int) $filtros['destacar']]);
+        }
 
         match ($filtros['orden'] ?? 'recientes') {
             'antiguas' => $consulta->orderBy('fecha')->orderBy('id'),

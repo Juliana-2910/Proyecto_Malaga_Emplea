@@ -117,14 +117,21 @@
 
                 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;align-items:end">
                     <label style="{{ $labelO }}">Fecha límite para postularse
-                        <input type="date" name="fechaLimite" min="{{ now('America/Bogota')->toDateString() }}"
-                                value="{{ $v('fechaLimite') }}" style="{{ $campoO }}">
+                        <div style="position:relative;display:flex;align-items:center">
+                            <input id="co-fecha-limite" type="date" name="fechaLimite" min="{{ now('America/Bogota')->toDateString() }}"
+                                value="{{ $v('fechaLimite') }}" required style="{{ $campoO }};padding-right:54px">
+                            <button id="co-abrir-calendario" type="button" aria-label="Abrir calendario de fecha límite" title="Elegir fecha en el calendario"
+                                style="position:absolute;right:6px;top:50%;transform:translateY(-50%);width:40px;height:40px;border:0;border-radius:9px;background:#EAF6FD;color:#1A75A8;display:flex;align-items:center;justify-content:center;cursor:pointer">
+                                <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg>
+                            </button>
+                        </div>
+                        <span style="font-size:12px;color:#52606D">El calendario no permite elegir fechas anteriores a hoy.</span>
                         @if ($err('fechaLimite')) <span style="{{ $errorO }}">{{ $err('fechaLimite') }}</span> @endif
                     </label>
 
                     <div style="background:#EAF6FD;border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:10px;font-size:13px;line-height:1.45;color:#12303F">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1A75A8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:0 0 auto"><path d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"/></svg>
-                        <span>Se publicará hoy <strong>{{ now('America/Bogota')->format('d/m/Y') }}</strong>.</span>
+                        <span>Fecha de publicación automática: <strong>{{ now('America/Bogota')->format('d/m/Y') }}</strong>.</span>
                     </div>
                 </div>
             </div>
@@ -147,6 +154,8 @@
         const categoria = document.getElementById('co-categoria');
         const servicio = document.getElementById('co-servicio');
         const salario = document.getElementById('co-salario');
+        const fechaLimite = document.getElementById('co-fecha-limite');
+        const abrirCalendario = document.getElementById('co-abrir-calendario');
         const servicios = JSON.parse(servicio.dataset.servicios);
         let botonOrigen = null;
 
@@ -179,6 +188,16 @@
             salario.value = digitos ? Number(digitos).toLocaleString('es-CO') : '';
         }
         salario.addEventListener('input', formatearSalario);
+
+        abrirCalendario.addEventListener('click', function () {
+            fechaLimite.min = '{{ now('America/Bogota')->toDateString() }}';
+            if (typeof fechaLimite.showPicker === 'function') {
+                fechaLimite.showPicker();
+            } else {
+                fechaLimite.focus();
+                fechaLimite.click();
+            }
+        });
 
         // Si el servidor devolvió el formulario con datos, se restauran categoría y servicio
         const viejo = servicio.dataset.viejo;

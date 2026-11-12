@@ -6,6 +6,7 @@ use App\Repositories\postulacionRepository;
 use App\Models\Empresa;
 use App\Models\Usuario;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\DB;
 use Exception;
 use Carbon\Carbon;
 
@@ -89,6 +90,28 @@ class postulacionService
         $datos['estado']
     );
 
+        if ($datos['estado'] === 'Contratado') {
+            DB::transaction(function () use ($id, $usuario, $oferta, $datos): void {
+                $this->postulacionrepository->bloquearOfertaParaContratar((int) $oferta->id);
+                $actual = $this->postulacionrepository->buscarConOfertaBloqueada($id);
+
+                $this->validarCambioEstado($actual->estado, $datos['estado']);
+
+                if ($this->postulacionrepository->existeOtraContratacion((int) $oferta->id, $id)) {
+                    throw new Exception('Esta oferta ya tiene una persona contratada.');
+                }
+
+                $this->postulacionrepository->actualizar($id, [
+                    'idUsuario' => $usuario->id,
+                    'idOferta' => $oferta->id,
+                    'estado' => $datos['estado'],
+                ]);
+                $this->postulacionrepository->rechazarPendientesDeOferta((int) $oferta->id, $id);
+            });
+
+            return;
+        }
+
         $this->postulacionrepository->actualizar($id, [
             'idUsuario' => $usuario->id,
             'idOferta'  => $oferta->id,
@@ -98,25 +121,43 @@ class postulacionService
 
     public function cambiarEstadoDesdePanel(int $idPostulacion, string $nuevoEstado, Usuario|Empresa $publicador): void
     {
-        $postulacion = $this->postulacionrepository->buscarConOferta($idPostulacion);
-        $oferta = $postulacion->oferta;
+        DB::transaction(function () use ($idPostulacion, $nuevoEstado, $publicador): void {
+            $postulacion = $this->postulacionrepository->buscarConOferta($idPostulacion);
+            $this->validarPublicadorDeOferta($postulacion->oferta, $publicador);
+
+            if ($nuevoEstado === 'Contratado') {
+                $this->postulacionrepository->bloquearOfertaParaContratar((int) $postulacion->idOferta);
+
+                // Otra contratación puede haberse completado mientras esta solicitud esperaba el bloqueo.
+                $postulacion = $this->postulacionrepository->buscarConOfertaBloqueada($idPostulacion);
+                $this->validarPublicadorDeOferta($postulacion->oferta, $publicador);
+            }
+
+            $this->validarCambioEstado($postulacion->estado, $nuevoEstado);
+
+            if (
+                $nuevoEstado === 'Contratado'
+                && $this->postulacionrepository->existeOtraContratacion((int) $postulacion->idOferta, (int) $postulacion->id)
+            ) {
+                throw new Exception('Esta oferta ya tiene una persona contratada.');
+            }
+
+            $this->postulacionrepository->actualizar($idPostulacion, ['estado' => $nuevoEstado]);
+
+            if ($nuevoEstado === 'Contratado') {
+                $this->postulacionrepository->rechazarPendientesDeOferta((int) $postulacion->idOferta, $idPostulacion);
+            }
+        });
+    }
+
+    private function validarPublicadorDeOferta($oferta, Usuario|Empresa $publicador): void
+    {
         $esEmpresa = $publicador instanceof Empresa;
         $idPublicadorOferta = $esEmpresa ? $oferta?->idEmpresa : $oferta?->idUsuario;
 
         if (! $oferta || (int) $idPublicadorOferta !== (int) $publicador->id) {
             throw new Exception('No tienes permiso para gestionar postulaciones de esta oferta.');
         }
-
-        $this->validarCambioEstado($postulacion->estado, $nuevoEstado);
-
-        if (
-            $nuevoEstado === 'Contratado'
-            && $this->postulacionrepository->existeOtraContratacion((int) $postulacion->idOferta, (int) $postulacion->id)
-        ) {
-            throw new Exception('Esta oferta ya tiene una persona contratada.');
-        }
-
-        $this->postulacionrepository->actualizar($idPostulacion, ['estado' => $nuevoEstado]);
     }
 
     private function validarUsuarioPuedePostular($usuario)
