@@ -50,18 +50,16 @@
 
         {{-- Sidebar Estilo Panel de Control --}}
         <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'" class="fixed inset-y-0 left-0 z-40 flex w-64 flex-col bg-[#333333] text-white transition-transform duration-300 ease-in-out lg:translate-x-0">
-            <div class="flex h-20 items-center gap-3 border-b border-white/10 px-5">
-                <span class="flex size-11 items-center justify-center overflow-hidden rounded-xl bg-white p-1.5">
-                    <img src="{{ asset('images/Logo Malaga Emplea.png') }}" alt="" class="h-full w-full object-contain">
-                </span>
-                <span>
-                    <span class="block text-sm font-extrabold tracking-wide">Málaga Emplea</span>
-                    <span class="mt-0.5 block text-xs text-white/60">Panel de seguridad</span>
-                </span>
-            </div>
+            <div class="flex items-center gap-3 h-16 px-6 border-b border-[#444444]">
+        <div class="w-12 h-12 flex items-center justify-center">
+        <img
+            src="{{ asset('images/Logo Malaga Emplea.png') }}" >
+        </div>
+            <span class="text-white font-semibold text-lg tracking-tight">{{ config('app.name', 'AdminPanel') }}</span>
+        </div>
 
             <div class="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
-                <div class="mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-white/50">Administración</div>
+                <div class="mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-white/50">Seguridad</div>
 
                 @foreach ([
                     ['seguridad.roles.index', 'Roles', 'seguridad.roles.*', '<path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />'],
@@ -76,7 +74,7 @@
                 @endforeach
 
                 <div class="mt-4 border-t border-white/10 pt-4">
-                    <a href="{{ url('/') }}" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-white/60 transition-colors hover:bg-white/10 hover:text-white">
+                    <a href="{{ url('/dashboard') }}" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-white/60 transition-colors hover:bg-white/10 hover:text-white">
                         <svg class="w-5 h-5 opacity-80" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3"/></svg>
                         Volver a la app
                     </a>

@@ -284,23 +284,40 @@ class ofertasService
         $categorias = $this->ofertasrepository->categoriasPorOferta($ids);
         $postulantes = $this->ofertasrepository->contarPostulantesPorOferta($ids);
         $contratados = $this->ofertasrepository->nombresContratadosPorOferta($ids);
+        $ofertasPendientesCalificar = $this->ofertasrepository->ofertasConContratacionesPendientesDeCalificar($ids, $idPublicador, $esEmpresa);
+        $ofertasPendientesCalificar = array_fill_keys(array_map('intval', $ofertasPendientesCalificar),true);
 
-        $ofertas->through(function ($oferta) use ($categorias, $postulantes, $contratados) {
-            $porEstado = $postulantes[$oferta->id] ?? [];
-            $contratadas = $porEstado['Contratado'] ?? 0;
+        $ofertas->through(function ($oferta) use (
+    $categorias,
+    $postulantes,
+    $contratados,
+    $ofertasPendientesCalificar
+) {
+    $porEstado = $postulantes[$oferta->id] ?? [];
+    $contratadas = $porEstado['Contratado'] ?? 0;
 
-            $oferta->categoria = $categorias[$oferta->id] ?? null;
-            $oferta->resumenPostulantes = [
-                'enviadas'    => $porEstado['Enviado'] ?? 0,
-                'aceptadas'   => $porEstado['Aceptado'] ?? 0,
-                'rechazadas'  => $porEstado['Rechazado'] ?? 0,
-                'contratadas' => $contratadas,
-            ];
-            $oferta->nombreContratado = $contratados[$oferta->id] ?? null;
-            $oferta->estadoOferta = $this->estadoDeOferta($contratadas, $oferta->fechaLimite);
+    $oferta->categoria = $categorias[$oferta->id] ?? null;
 
-            return $oferta;
-        });
+    $oferta->resumenPostulantes = [
+        'enviadas'    => $porEstado['Enviado'] ?? 0,
+        'aceptadas'   => $porEstado['Aceptado'] ?? 0,
+        'rechazadas'  => $porEstado['Rechazado'] ?? 0,
+        'contratadas' => $contratadas,
+    ];
+
+    $oferta->nombreContratado = $contratados[$oferta->id] ?? null;
+
+    $oferta->estadoOferta = $this->estadoDeOferta(
+        $contratadas,
+        $oferta->fechaLimite
+    );
+
+    // La estrella solo se muestra cuando existe una contratación.
+    $oferta->yaCalifico = $contratadas > 0
+        && ! isset($ofertasPendientesCalificar[(int) $oferta->id]);
+
+    return $oferta;
+});
 
         return [
             'nombre'        => $esEmpresa ? $cuenta->nombreEmpresa : trim($cuenta->nombres . ' ' . $cuenta->apellidos),

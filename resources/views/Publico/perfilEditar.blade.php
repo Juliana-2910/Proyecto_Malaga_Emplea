@@ -5,7 +5,9 @@
 @section('content')
 <section class="bg-[#EAF6FD] px-4 py-8 sm:px-6 sm:py-12">
     <div class="mx-auto max-w-4xl">
-        <a href="{{ route('Publico.ofertas') }}" class="text-sm font-bold text-marca-texto hover:underline">← Volver</a>
+        <a href="{{ route('Publico.ofertas') }}" class="text-sm font-bold text-marca-texto hover:underline">
+            <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75 3 12m0 0 3.75-3.75M3 12h18" /></svg>
+                Volver</a>
         <div class="mb-6 mt-4">
             <p class="text-sm font-bold uppercase tracking-wide text-marca-texto">Tu cuenta</p>
             <h1 class="mt-1 text-3xl font-extrabold text-noche">Editar perfil</h1>

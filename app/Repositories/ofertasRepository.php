@@ -553,4 +553,28 @@ class ofertasRepository
             ->all();
     }
 
+    /** Devuelve los IDs de las ofertas que tienen contrataciones pendientes de calificar por su publicador. */
+    public function ofertasConContratacionesPendientesDeCalificar(
+        array $idsOfertas,
+        int $idPublicador,
+        bool $esEmpresa
+    ): array {
+        if ($idsOfertas === []) {
+            return [];
+        }
+
+        return Postulacion::query()
+            ->leftJoin('calificacion as c', function ($join) use ($idPublicador, $esEmpresa) {
+                $join->on('c.idPostulacion', '=', 'postulacion.id')
+                    ->where('c.tipoCalificador', $esEmpresa ? 'empresa' : 'usuario')
+                    ->where($esEmpresa ? 'c.idEmpresa' : 'c.idUsuario', $idPublicador);
+            })
+            ->whereIn('postulacion.idOferta', $idsOfertas)
+            ->where('postulacion.estado', 'Contratado')
+            ->whereNull('c.id')
+            ->distinct()
+            ->pluck('postulacion.idOferta')
+            ->all();
+    }
+
 }

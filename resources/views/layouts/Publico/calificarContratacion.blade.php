@@ -8,7 +8,7 @@
 <div id="modal-calificar" hidden data-viejo-id="{{ $reabrirCal ? old('idPostulacion') : '' }}" data-vieja-puntuacion="{{ $reabrirCal ? old('puntuacion') : '' }}"
     style="display:none;position:fixed;top:0;right:0;bottom:0;left:0;z-index:55;align-items:center;justify-content:center;padding:16px;box-sizing:border-box;background:rgba(18,48,63,0.6)">
     <div role="dialog" aria-modal="true" aria-labelledby="cal-titulo"
-        style="width:100%;max-width:640px;max-height:100%;display:flex;flex-direction:column;overflow:hidden;border-radius:20px;background:#FFFFFF;box-shadow:0 24px 64px rgba(18,48,63,0.35);font-family:inherit">
+        style="width:100%;max-width:600px;max-height:100%;display:flex;flex-direction:column;overflow:hidden;border-radius:20px;background:#FFFFFF;box-shadow:0 24px 64px rgba(18,48,63,0.35);font-family:inherit">
 
         {{-- Encabezado --}}
         <div style="padding:28px 28px 20px;display:flex;align-items:flex-start;gap:16px;border-bottom:1px solid #E3E8EF">
@@ -17,7 +17,7 @@
             </span>
             <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:4px">
                 <h2 id="cal-titulo" style="margin:0;font-size:24px;font-weight:700;color:#12303F;line-height:1.25">Calificación</h2>
-                <span id="cal-subtitulo" style="font-size:15px;line-height:1.5;color:#52606D">Comparte tu experiencia con quien realizaste la contratación.</span>
+                <span id="cal-subtitulo" style="font-size:15px;line-height:1.5;color:#52606D"></span>
             </div>
             <button type="button" data-cerrar-calificar aria-label="Cerrar"
                     style="width:44px;height:44px;flex:0 0 auto;border-radius:12px;border:none;background:#F5F7FA;color:#1F2933;display:flex;align-items:center;justify-content:center;cursor:pointer">
@@ -45,7 +45,6 @@
                             <span id="cal-nombre" style="font-size:16px;font-weight:700;color:#12303F"></span>
                             <span id="cal-tipo" style="padding:3px 10px;border-radius:999px;background:#F5F7FA;color:#52606D;font-size:12px;font-weight:700"></span>
                         </span>
-                        <span id="cal-leyenda" style="font-size:13px;color:#52606D"></span>
                         <span style="font-size:13px;font-weight:600;color:#1A75A8">Oferta: <span id="cal-oferta"></span></span>
                     </div>
                 </div>
@@ -54,7 +53,7 @@
                 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;align-items:stretch">
 
                     <div style="display:flex;flex-direction:column;gap:10px;">
-                        <span style="font-size:13px;font-weight:500;color:#52606D">Tu calificación</span>
+                        <span style="display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:500;color:#52606D">Tu calificación</span>
                         <div style="display:flex;gap:6px;justify-content:center;width:100%">
                             @for ($i = 1; $i <= 5; $i++)
                                 <button type="button" data-estrella="{{ $i }}" aria-label="{{ $i }} {{ $i === 1 ? 'estrella' : 'estrellas' }}"
@@ -64,13 +63,13 @@
                             @endfor
                         </div>
                         <span style="font-size:14px;color:#52606D"><strong id="cal-etiqueta" style="color:#12303F">Elige una calificación</strong><span id="cal-etiqueta-resto"></span></span>
-                        <span id="cal-error-estrellas" @if (! $bolsaCal->has('puntuacion')) hidden @endif style="font-size:12px;font-weight:600;color:#B42318">{{ $bolsaCal->first('puntuacion') }}</span>
+                        <span id="cal-error-estrellas" @if (! $bolsaCal->has('puntuacion')) hidden @endif style="font-size:12px;font-weight:700;color:#B42318">{{ $bolsaCal->first('puntuacion') }}</span>
                     </div>
 
                     <div style="background:#EAF6FD;border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:12px">
                         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1A75A8" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:0 0 auto"><path d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/></svg>
                         <div style="display:flex;flex-direction:column;gap:2px">
-                            <span style="font-size:14px;font-weight:700;color:#12303F">Una sola oportunidad</span>
+                            <span style="font-size:14px;font-weight:800;color:#12303F">Una sola oportunidad</span>
                             <span style="font-size:13px;line-height:1.45;color:#3E4C59">Después de enviarla no podrás editarla.</span>
                         </div>
                     </div>
@@ -81,10 +80,9 @@
                     <label style="display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:500;color:#52606D">
                         <span style="display:flex;justify-content:space-between;gap:12px">
                             <span>Tu comentario</span>
-                            <span id="cal-contador" style="font-weight:600;color:#7B8794">0/255</span>
+                            <span id="cal-contador" style="font-weight:600;color:#7B8794">0/100</span>
                         </span>
-                        <textarea id="cal-comentario" name="comentario" rows="4" maxlength="255"
-                                placeholder="Cuenta cómo fue el trato, el pago y las condiciones del trabajo"
+                        <textarea id="cal-comentario" name="comentario" rows="2" maxlength="100"
                                 style='font-family:inherit;font-size:15px;padding:12px 14px;border:1.5px solid #CBD2D9;border-radius:10px;color:#1F2933;background:#FFFFFF;width:100%;box-sizing:border-box'>{{ $reabrirCal ? old('comentario') : '' }}</textarea>
                         @if ($bolsaCal->has('comentario')) <span style="font-size:12px;font-weight:600;color:#B42318">{{ $bolsaCal->first('comentario') }}</span> @endif
                     </label>
@@ -140,7 +138,7 @@
         }
 
         function actualizarContador() {
-            contador.textContent = comentario.value.length + '/255';
+            contador.textContent = comentario.value.length + '/100';
         }
 
         function abrir(boton, conservar) {
@@ -150,7 +148,6 @@
             texto('cal-nombre', d.nombre);
             texto('cal-tipo', d.tipo);
             texto('cal-oferta', d.titulo);
-            texto('cal-leyenda', d.leyenda || 'Sobre la oferta «' + d.titulo + '»');
             texto('cal-subtitulo', d.subtitulo || 'Cuéntanos cómo fue la experiencia.');
             comentario.placeholder = d.placeholder || 'Cuéntanos cómo fue la experiencia.';
             document.getElementById('cal-id').value = d.id;
