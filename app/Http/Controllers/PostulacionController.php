@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Services\postulacionService;
 use App\Services\usuariosService;
 use App\Services\ofertasService;
+use InvalidArgumentException;
 use App\Http\Requests\PostulacionStoreRequest;
 use App\Http\Requests\PostulacionUpdateRequest;
 
@@ -28,10 +29,15 @@ class PostulacionController extends Controller
         $this->ofertasService = $ofertasService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $postulaciones = $this->postulacionService->listarTodos();
-        return view('Postulacion.index', compact('postulaciones'));
+        try {
+            $postulaciones = $this->postulacionService->listarPaginado($request->only('buscar'));
+
+            return view('Postulacion.index', compact('postulaciones'));
+        } catch (InvalidArgumentException $e) {
+            return redirect()->route('postulacion.index')->with('error', $e->getMessage());
+        }
     }
 
     public function misPostulaciones()

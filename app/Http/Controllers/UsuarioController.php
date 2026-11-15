@@ -6,6 +6,8 @@ use App\Models\Usuario;
 use App\Services\usuariosService;
 use App\Http\Requests\UsuariosStoreRequest;
 use App\Http\Requests\UsuariosUpdateRequest;
+use Illuminate\Http\Request;
+use InvalidArgumentException;
 
 class UsuarioController extends Controller
 {
@@ -15,10 +17,15 @@ class UsuarioController extends Controller
         $this->usuariosService = $usuariosService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $usuarios = $this->usuariosService->listarTodos();
-        return view('Usuarios.index', compact('usuarios'));
+        try {
+            $usuarios = $this->usuariosService->listarPaginado($request->only('buscar'));
+
+            return view('Usuarios.index', compact('usuarios'));
+        } catch (InvalidArgumentException $e) {
+            return redirect()->route('usuarios.index')->with('error', $e->getMessage());
+        }
     }
 
 

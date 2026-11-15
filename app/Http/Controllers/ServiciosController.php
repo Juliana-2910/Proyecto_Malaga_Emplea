@@ -7,6 +7,7 @@ use App\Services\serviciosService;
 use App\Services\categoriasService;
 use App\Http\Requests\ServiciosStoreRequest;
 use App\Http\Requests\ServiciosUpdateRequest;
+use InvalidArgumentException;
 use Illuminate\Http\Request;
 
 class ServiciosController extends Controller
@@ -20,10 +21,15 @@ class ServiciosController extends Controller
         $this->categoriaService = $categoriaService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $servicios = $this->serviciosService->listarTodos();
-        return view('Servicios.index', compact('servicios'));
+        try {
+            $servicios = $this->serviciosService->listarPaginado($request->only('buscar'));
+
+            return view('Servicios.index', compact('servicios'));
+        } catch (InvalidArgumentException $e) {
+            return redirect()->route('servicios.index')->with('error', $e->getMessage());
+        }
     }
 
     public function create()

@@ -7,204 +7,198 @@
 
 @section('content')
 
-<div class="min-h-screen bg-gray-100 py-8">
+<div class="min-h-screen py-8">
 
-<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
-    {{-- Encabezado --}}
-    <div class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        {{-- ENCABEZADO --}}
+        <div class="mb-7 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
 
-        <div>
+            <div>
+                <h1 class="text-2xl font-bold tracking-tight text-gray-800 sm:text-3xl">
+                    Empresas
+                </h1>
 
-            <h1 class="text-2xl font-bold text-gray-800 sm:text-3xl">
-                Empresas
-            </h1>
-
-            <p class="mt-1 text-sm text-gray-500">
-                Administración de empresas registradas
-            </p>
+                <p class="mt-1 text-sm text-gray-500">
+                    Administración de empresas registradas
+                </p>
+            </div>
 
         </div>
 
-        <a href="{{ route('empresas.create') }}"
-            class="inline-flex items-center justify-center gap-2 rounded-xl bg-[#4DB6E8] px-5 py-3 text-sm font-semibold text-white shadow-sm transition duration-200 hover:bg-[#333333]">
+        {{-- BUSCADOR --}}
+        <form method="GET" action="{{ route('empresas.index') }}"
+            class="mb-6 flex w-full flex-wrap items-center gap-3">
 
-            @php($icon = 'plus')
-            @include('layouts.partials.icons')
+            <div class="flex h-11 w-3/4 items-center gap-2.5 rounded-full border border-gray-200 bg-white pl-4 pr-1.5 shadow-sm transition focus-within:border-[#4DB6E8] focus-within:ring-[3px] focus-within:ring-[#4DB6E8]/25">
 
-            Nueva Empresa
+                @php($icon = 'magnifying-glass')
+                @include('layouts.partials.icons')
 
-        </a>
+                <input type="text" name="buscar" value="{{ request('buscar') }}" maxlength="100" autocomplete="off"
+                    placeholder="Buscar por nombre, NIT, dirección o correo..."
+                    class="min-w-0 flex-1 border-0 bg-transparent p-0 text-sm text-gray-700 placeholder:text-gray-400 focus:outline-none focus:ring-0">
 
-    </div>
-
-
-    {{-- Contenedor principal --}}
-    <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-[0_10px_35px_rgba(77,182,232,0.12)] sm:p-6">
-
-        {{-- Encabezado de sección --}}
-        <div class="mb-6 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-
-            <div>
-
-                <h2 class="text-lg font-semibold text-gray-800">
-                    Registradas
-                </h2>
-
-                <p class="mt-1 text-sm text-gray-500">
-                    Consulta la información de las empresas registradas.
-                </p>
+                <button type="submit"
+                    class="h-[34px] shrink-0 rounded-full bg-[#4DB6E8] px-4 text-[13px] font-semibold text-white transition duration-200 hover:bg-[#333333]">
+                    Buscar
+                </button>
 
             </div>
 
-            @if ($empresas->count() > 0)
+            @if (request('buscar'))
+                <a href="{{ route('empresas.index') }}"
+                    class="inline-flex items-center gap-1.5 text-[13px] font-semibold text-gray-500 transition hover:text-gray-800">
 
-                <div class="inline-flex w-fit items-center gap-2 rounded-full bg-[#4DB6E8]/10 px-3 py-1.5 text-xs font-semibold text-[#3199CC]">
+                    @php($icon = 'equisfiltros')
+                    @include('layouts.partials.icons')
 
-                    <span class="h-2 w-2 rounded-full bg-[#4DB6E8]"></span>
-
-                    {{ $empresas->count() }}
-
-                    {{ $empresas->count() == 1 ? 'registro' : 'registros' }}
-
-                </div>
-
+                    Limpiar
+                </a>
             @endif
 
-        </div>
+            <a href="{{ route('empresas.create') }}"
+                class="ml-auto inline-flex items-center justify-center gap-2 rounded-full bg-[#4DB6E8] px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition duration-200 hover:bg-[#333333]">
+
+                @php($icon = 'plus')
+                @include('layouts.partials.icons')
+
+                Nueva Empresa
+            </a>
+
+        </form>
 
 
-        {{-- Tarjetas --}}
-        <div class="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
+        {{-- CONTENEDOR PRINCIPAL --}}
+        <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-[0_10px_35px_rgba(77,182,232,0.12)] sm:p-6">
 
-            @forelse ($empresas as $empresa)
+            {{-- Encabezado de sección --}}
+            <div class="mb-6 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
 
-                <div class="flex h-full flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition duration-200 hover:border-[#4DB6E8]/40 hover:shadow-[0_8px_25px_rgba(77,182,232,0.12)]">
+                <div>
+                    <h2 class="text-lg font-semibold text-gray-800">
+                        Registradas
+                    </h2>
 
+                    <p class="mt-1 text-sm text-gray-500">
+                        Consulta la información de las empresas registradas.
+                    </p>
+                </div>
 
-                    {{-- Encabezado de tarjeta --}}
-                    <div class="border-b border-gray-100 bg-gradient-to-r from-[#4DB6E8]/5 to-white px-4 py-4">
+                @if ($empresas->total() > 0)
 
-                        <div class="flex items-center gap-3">
+                    <div class="inline-flex w-fit items-center gap-2 rounded-full bg-[#4DB6E8]/10 px-3 py-1.5 text-xs font-semibold text-[#3199CC]">
 
+                        <span class="h-2 w-2 rounded-full bg-[#4DB6E8]"></span>
 
-                            {{-- Foto de empresa --}}
-                            <div class="flex h-16 w-16 flex-shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-white bg-[#4DB6E8]/10 text-[#4DB6E8] shadow-sm">
-
-                                @if (!empty($empresa->fotoPerfil))
-
-                                    <img
-                                        src="{{ asset('storage/empresas/' . $empresa->fotoPerfil) }}"
-                                        alt="Foto de {{ $empresa->nombreEmpresa }}"
-                                        class="h-full w-full object-cover"
-                                    >
-
-                                @else
-                                    @php($icon = 'building-office-3')
-                                    @include('layouts.partials.icons')
-
-                                @endif
-
-                            </div>
-
-
-                            {{-- Nombre de empresa --}}
-                            <div class="min-w-0 flex-1">
-
-                                <p class="text-[10px] font-bold uppercase tracking-wider text-[#4DB6E8]">
-                                    Empresa
-                                </p>
-
-                                <h3 class="mt-1 truncate text-base font-bold text-gray-800">
-                                    {{ $empresa->nombreEmpresa }}
-                                </h3>
-
-                            </div>
-
-
-                            {{-- ID --}}
-                            <span class="self-start rounded-full bg-gray-100 px-2.5 py-1 text-xs font-semibold text-gray-600">
-
-                                #{{ $empresa->id }}
-
-                            </span>
-
-                        </div>
+                        {{ $empresas->total() }}
+                        {{ $empresas->total() == 1 ? 'registro' : 'registros' }}
 
                     </div>
 
+                @endif
 
-                    {{-- Datos de la empresa --}}
-                    <div class="flex-1 px-5 py-5">
-
-                        <div class="grid grid-cols-1 gap-x-5 gap-y-4 sm:grid-cols-2">
+            </div>
 
 
-                            {{-- NIT --}}
-                            <div>
+            {{-- Tarjetas --}}
+            <div class="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
 
-                                <p class="text-xs font-medium text-gray-400">
-                                    NIT
-                                </p>
+                @forelse ($empresas as $empresa)
 
-                                <p class="mt-1 break-words text-sm font-medium text-gray-700">
-                                    {{ $empresa->nit }}
-                                </p>
+                    <div class="flex h-full flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition duration-200 hover:border-[#4DB6E8]/40 hover:shadow-[0_8px_25px_rgba(77,182,232,0.12)]">
 
-                            </div>
+                        {{-- Encabezado de tarjeta --}}
+                        <div class="border-b border-gray-100 bg-gradient-to-r from-[#4DB6E8]/5 to-white px-4 py-4">
 
+                            <div class="flex items-center gap-3">
 
-                            {{-- Dirección --}}
-                            <div>
+                                {{-- Foto de empresa --}}
+                                <div class="flex h-16 w-16 flex-shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-white bg-[#4DB6E8]/10 text-[#4DB6E8] shadow-sm">
 
-                                <p class="text-xs font-medium text-gray-400">
-                                    Dirección
-                                </p>
+                                    @if (!empty($empresa->fotoPerfil))
 
-                                <p class="mt-1 break-words text-sm font-medium text-gray-700">
-                                    {{ $empresa->direccion }}
-                                </p>
+                                        <img
+                                            src="{{ asset('storage/empresas/' . $empresa->fotoPerfil) }}"
+                                            alt="Foto de {{ $empresa->nombreEmpresa }}"
+                                            class="h-full w-full object-cover">
 
-                            </div>
+                                    @else
 
+                                        @php($icon = 'building-office-3')
+                                        @include('layouts.partials.icons')
 
-                            {{-- Correo electrónico --}}
-                            <div>
+                                    @endif
 
-                                <p class="text-xs font-medium text-gray-400">
-                                    Correo electrónico
-                                </p>
-
-                                <p class="mt-1 break-all text-sm font-medium text-gray-700">
-                                    {{ $empresa->email }}
-                                </p>
-
-                            </div>
+                                </div>
 
 
-                            {{-- Fecha de registro --}}
-                            <div>
+                                {{-- Nombre de empresa --}}
+                                <div class="min-w-0 flex-1">
 
-                                <p class="text-xs font-medium text-gray-400">
-                                    Fecha de registro
-                                </p>
+                                    <p class="text-[10px] font-bold uppercase tracking-wider text-[#4DB6E8]">
+                                        Empresa
+                                    </p>
 
-                                <p class="mt-1 text-sm font-medium text-gray-700">
-                                    {{ $empresa->created_at ? $empresa->created_at->format('d/m/Y') : 'No registrada' }}
-                                </p>
+                                    <h3 class="mt-1 truncate text-base font-bold text-gray-800">
+                                        {{ $empresa->nombreEmpresa }}
+                                    </h3>
+
+                                </div>
+
+
+                                {{-- ID --}}
+                                <span class="self-start rounded-full bg-gray-100 px-2.5 py-1 text-xs font-semibold text-gray-600">
+                                    #{{ $empresa->id }}
+                                </span>
 
                             </div>
 
                         </div>
 
 
-                        {{-- Estado --}}
-                        <div class="mt-5 border-t border-gray-100 pt-4">
+                        {{-- Datos de la empresa --}}
+                        <div class="flex-1 px-5 py-5">
 
-                            <p class="mb-2 text-xs font-medium text-gray-400">
-                                Estado
-                            </p>
+                            <div class="grid grid-cols-1 gap-x-5 gap-y-4 sm:grid-cols-2">
 
+                                <div>
+                                    <p class="text-xs font-medium text-gray-400">NIT</p>
+                                    <p class="mt-1 break-words text-sm font-medium text-gray-700">
+                                        {{ $empresa->nit }}
+                                    </p>
+                                </div>
+
+                                <div>
+                                    <p class="text-xs font-medium text-gray-400">Dirección</p>
+                                    <p class="mt-1 break-words text-sm font-medium text-gray-700">
+                                        {{ $empresa->direccion }}
+                                    </p>
+                                </div>
+
+                                <div>
+                                    <p class="text-xs font-medium text-gray-400">Correo electrónico</p>
+                                    <p class="mt-1 break-all text-sm font-medium text-gray-700">
+                                        {{ $empresa->email }}
+                                    </p>
+                                </div>
+
+                                <div>
+                                    <p class="text-xs font-medium text-gray-400">Fecha de registro</p>
+                                    <p class="mt-1 text-sm font-medium text-gray-700">
+                                        {{ $empresa->created_at ? $empresa->created_at->format('d/m/Y') : 'No registrada' }}
+                                    </p>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        {{-- BOTONES: ESTADO (izquierda) + ACCIONES (derecha) --}}
+                        <div class="flex items-center justify-between gap-3 border-t border-gray-100 bg-gray-50/60 px-4 py-3">
+
+                            {{-- Estado --}}
                             @if (strtolower($empresa->estado) === 'activo')
 
                                 <span class="inline-flex items-center rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">
@@ -219,181 +213,158 @@
 
                             @endif
 
+
+                            {{-- Botones --}}
+                            <div class="flex items-center gap-2">
+
+                                {{-- EDITAR --}}
+                                <a
+                                    href="{{ route('empresas.edit', $empresa->id) }}"
+                                    title="Editar empresa"
+                                    class="inline-flex items-center gap-1.5 rounded-lg bg-[#4DB6E8]/10 px-3 py-2 text-xs font-semibold text-[#4DB6E8] transition duration-200 hover:bg-[#4DB6E8] hover:text-white">
+
+                                    @php($icon = 'pencil')
+                                    @include('layouts.partials.icons')
+
+                                    <span>Editar</span>
+
+                                </a>
+
+                                {{-- ELIMINAR --}}
+                                <button
+                                    type="button"
+                                    title="Eliminar empresa"
+                                    @click="$dispatch('open-modal', 'delete-{{ $empresa->id }}')"
+                                    class="inline-flex items-center gap-1.5 rounded-lg bg-red-50 px-3 py-2 text-xs font-semibold text-red-500 transition duration-200 hover:bg-red-500 hover:text-white">
+
+                                    @php($icon = 'trash')
+                                    @include('layouts.partials.icons')
+
+                                    <span>Eliminar</span>
+
+                                </button>
+
+                            </div>
+
                         </div>
 
                     </div>
 
 
-                    {{-- ACCIONES --}}
-                    <div class="flex justify-end border-t border-gray-100 bg-gray-50/60 px-4 py-3">
+                    {{-- MODAL ELIMINAR --}}
+                    <x-modal
+                        name="delete-{{ $empresa->id }}"
+                        title="Eliminar empresa"
+                        maxWidth="sm">
 
-                        <div class="flex items-center justify-center gap-2">
+                        <div class="text-center">
 
-
-                            {{-- EDITAR --}}
-                            <a
-                                href="{{ route('empresas.edit', $empresa->id) }}"
-                                title="Editar empresa"
-                                class="inline-flex items-center gap-1.5 rounded-lg bg-[#4DB6E8]/10 px-3 py-2 text-xs font-semibold text-[#4DB6E8] transition duration-200 hover:bg-[#4DB6E8] hover:text-white">
-
-                                @php($icon = 'pencil')
+                            <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-100 text-red-600">
+                                @php($icon = 'exclamation-triangle')
                                 @include('layouts.partials.icons')
+                            </div>
 
-                                <span>Editar</span>
+                            <p class="text-sm leading-6 text-gray-500">
 
-                            </a>
+                                ¿Seguro que deseas eliminar la empresa de
 
+                                <strong class="text-gray-800">
+                                    {{ $empresa->nombreEmpresa }}
+                                </strong>?
 
-                            {{-- ELIMINAR --}}
-                            <button
-                                type="button"
-                                title="Eliminar empresa"
-                                @click="$dispatch('open-modal', 'delete-{{ $empresa->id }}')"
-                                class="inline-flex items-center gap-1.5 rounded-lg bg-red-50 px-3 py-2 text-xs font-semibold text-red-500 transition duration-200 hover:bg-red-500 hover:text-white">
+                                <br>
 
-                                @php($icon = 'trash')
-                                @include('layouts.partials.icons')
+                                Esta acción no se puede deshacer.
 
-                                <span>Eliminar</span>
-
-                            </button>
+                            </p>
 
                         </div>
 
-                    </div>
-
-                </div>
-
-
-                {{-- MODAL ELIMINAR --}}
-                <x-modal
-                    name="delete-{{ $empresa->id }}"
-                    title="Eliminar empresa"
-                    maxWidth="sm"
-                >
-
-                    <div class="text-center">
-
-                        <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-100 text-red-600">
-
-                            @php($icon = 'exclamation-triangle')
-                            @include('layouts.partials.icons')
-
-                        </div>
-
-                        <p class="text-sm leading-6 text-gray-500">
-
-                            ¿Seguro que deseas eliminar la empresa de
-
-                            <strong class="text-gray-800">
-                                {{ $empresa->nombreEmpresa }}
-                            </strong>?
-
-                            <br>
-
-                            Esta acción no se puede deshacer.
-
-                        </p>
-
-                    </div>
-
-
-                    <x-slot:footer>
-
-                        <x-button
-                            variant="secondary"
-                            @click="show = false"
-                        >
-                            Cancelar
-                        </x-button>
-
-
-                        <form
-                            action="{{ route('empresas.destroy', $empresa->id) }}"
-                            method="POST"
-                        >
-
-                            @csrf
-
-                            @method('DELETE')
+                        <x-slot:footer>
 
                             <x-button
-                                variant="danger"
-                                type="submit"
-                            >
-                                Eliminar
+                                variant="secondary"
+                                @click="show = false">
+                                Cancelar
                             </x-button>
 
-                        </form>
+                            <form
+                                action="{{ route('empresas.destroy', $empresa->id) }}"
+                                method="POST">
 
-                    </x-slot:footer>
+                                @csrf
+                                @method('DELETE')
 
-                </x-modal>
+                                <x-button
+                                    variant="danger"
+                                    type="submit">
+                                    Eliminar
+                                </x-button>
 
+                            </form>
 
-            @empty
+                        </x-slot:footer>
 
-                {{-- ESTADO VACÍO --}}
-                <div class="col-span-full rounded-2xl border border-dashed border-gray-300 bg-gray-50 px-6 py-14 text-center">
+                    </x-modal>
 
-                    <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#4DB6E8]/10 text-[#4DB6E8]">
+                @empty
 
-                        @php($icon = 'building')
-                        @include('layouts.partials.icons')
+                    {{-- ESTADO VACÍO --}}
+                    <div class="col-span-full rounded-2xl border border-dashed border-gray-300 bg-gray-50 px-6 py-14 text-center">
+
+                        <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#4DB6E8]/10 text-[#4DB6E8]">
+                            @php($icon = 'building')
+                            @include('layouts.partials.icons')
+                        </div>
+
+                        @if (request('buscar'))
+
+                            <h3 class="text-lg font-semibold text-gray-800">
+                                No se encontraron resultados
+                            </h3>
+
+                            <p class="mx-auto mt-2 max-w-md text-sm leading-6 text-gray-500">
+                                No hay empresas que coincidan con «{{ request('buscar') }}».
+                            </p>
+
+                        @else
+
+                            <h3 class="text-lg font-semibold text-gray-800">
+                                No hay empresas registradas
+                            </h3>
+
+                            <p class="mx-auto mt-2 max-w-md text-sm leading-6 text-gray-500">
+                                Aún no se han registrado empresas en Málaga Emplea.
+                            </p>
+
+                            <a href="{{ route('empresas.create') }}"
+                                class="mt-5 inline-flex items-center gap-2 rounded-xl bg-[#4DB6E8] px-5 py-2.5 text-sm font-semibold text-white transition duration-200 hover:bg-[#333333]">
+
+                                @php($icon = 'plus')
+                                @include('layouts.partials.icons')
+
+                                Registrar Empresa
+                            </a>
+
+                        @endif
 
                     </div>
 
-                    <h3 class="text-lg font-semibold text-gray-800">
-                        No hay empresas registradas
-                    </h3>
+                @endforelse
 
-                    <p class="mx-auto mt-2 max-w-md text-sm leading-6 text-gray-500">
-                        Aún no se han registrado empresas en Málaga Emplea.
-                    </p>
-
-                    <a href="{{ route('empresas.create') }}"
-                        class="mt-5 inline-flex items-center gap-2 rounded-xl bg-[#4DB6E8] px-5 py-2.5 text-sm font-semibold text-white transition duration-200 hover:bg-[#333333]">
-
-                        @php($icon = 'plus')
-                        @include('layouts.partials.icons')
-
-                        Registrar Empresa
-
-                    </a>
-
-                </div>
-
-            @endforelse
+            </div>
 
         </div>
 
 
-        {{-- Contador --}}
-        @if ($empresas->count() > 0)
-
-            <div class="mt-6 border-t border-gray-100 pt-4">
-
-                <p class="text-sm text-gray-500">
-
-                    Mostrando
-
-                    <span class="font-semibold text-gray-700">
-                        {{ $empresas->count() }}
-                    </span>
-
-                    {{ $empresas->count() == 1 ? 'empresa' : 'empresas' }}
-                    registrada(s).
-
-                </p>
-
-            </div>
-
-        @endif
+        {{-- CONTADOR + PAGINADO + MARCA --}}
+        @include('layouts.partials.paginacion', [
+            'paginador' => $empresas,
+            'singular'  => 'empresa registrada',
+            'plural'    => 'empresas registradas',
+        ])
 
     </div>
-
-</div>
-
 
 </div>
 

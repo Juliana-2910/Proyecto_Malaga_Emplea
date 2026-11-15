@@ -33,6 +33,7 @@ class UsuariosUpdateRequest extends FormRequest
             'password' => 'nullable|string|min:8',
             'telefono' => 'required|string|max:20',
             'estado' => 'required|in:activo,inactivo',
+            'eliminarFotoPerfil' => 'nullable|boolean',
         ];
     }
 

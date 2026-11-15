@@ -51,4 +51,22 @@ public function listarTodos()
         ");
     }
 
+    public function listarPaginado(string $buscar, int $porPagina)
+    {
+        return Empresa::query()
+            ->when($buscar !== '', function ($q) use ($buscar) {
+                foreach (preg_split('/\s+/', $buscar) as $palabra) {
+                    $q->where(function ($q) use ($palabra) {
+                        $q->where('nombreEmpresa', 'like', "%{$palabra}%")
+                        ->orWhere('nit', 'like', "%{$palabra}%")
+                        ->orWhere('direccion', 'like', "%{$palabra}%")
+                        ->orWhere('email', 'like', "%{$palabra}%");
+                    });
+                }
+            })
+            ->orderBy('id')
+            ->paginate($porPagina)
+            ->withQueryString();
+    }
+
 }

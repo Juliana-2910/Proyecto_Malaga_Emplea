@@ -91,4 +91,22 @@ class usuariosRepository{
         ");
     }
 
+    public function listarPaginado(string $buscar, int $porPagina)
+    {
+        return Usuario::with('roles')
+            ->when($buscar !== '', function ($q) use ($buscar) {
+                foreach (preg_split('/\s+/', $buscar) as $palabra) {
+                    $q->where(function ($q) use ($palabra) {
+                        $q->where('nombres', 'like', "%{$palabra}%")
+                        ->orWhere('apellidos', 'like', "%{$palabra}%")
+                        ->orWhere('numeroDocumento', 'like', "%{$palabra}%")
+                        ->orWhere('email', 'like', "%{$palabra}%");
+                    });
+                }
+            })
+            ->orderBy('id')
+            ->paginate($porPagina)
+            ->withQueryString();
+    }
+
 }

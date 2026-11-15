@@ -6,6 +6,7 @@ use App\Http\Requests\CalificacionStoreRequest;
 use App\Http\Requests\CalificacionUpdateRequest;
 use App\Models\Calificacion;
 use App\Services\calificacionService;
+use InvalidArgumentException;
 use Illuminate\Http\Request;
 
 class CalificacionController extends Controller
@@ -17,10 +18,15 @@ class CalificacionController extends Controller
         $this->calificacionService = $calificacionService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $calificacion = $this->calificacionService->listarTodos();
-        return view('Calificacion.index', compact('calificacion'));
+        try {
+            $calificacion = $this->calificacionService->listarPaginado($request->only('buscar'));
+
+            return view('Calificacion.index', compact('calificacion'));
+        } catch (InvalidArgumentException $e) {
+            return redirect()->route('calificacion.index')->with('error', $e->getMessage());
+        }
     }
 
     public function create()

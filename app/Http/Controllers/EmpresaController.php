@@ -6,6 +6,8 @@ use App\Models\Empresa;
 use App\Services\empresasServices;
 use App\Http\Requests\EmpresaStoreRequest;
 use App\Http\Requests\EmpresaUpdateRequest;
+use Illuminate\Http\Request;
+use InvalidArgumentException;
 
 class EmpresaController extends Controller
 {
@@ -16,10 +18,15 @@ class EmpresaController extends Controller
             $this->empresasServices = $empresasServices;
         }
 
-        public function index()
+        public function index(Request $request)
         {
-            $empresas = $this->empresasServices->listarTodos();
-            return view('Empresa.index', compact('empresas'));
+            try {
+                $empresas = $this->empresasServices->listarPaginado($request->only('buscar'));
+
+                return view('Empresa.index', compact('empresas'));
+            } catch (InvalidArgumentException $e) {
+                return redirect()->route('empresas.index')->with('error', $e->getMessage());
+            }
         }
 
         public function empresasConOfertas()

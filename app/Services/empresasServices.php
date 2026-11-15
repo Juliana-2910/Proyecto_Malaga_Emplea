@@ -4,11 +4,13 @@ namespace App\Services;
 
 use App\Repositories\empresasRepository;
 use Illuminate\Support\Facades\Storage;
+use InvalidArgumentException;
 use Exception;
 
 class empresasServices
 {
     private empresasRepository $empresasrepository;
+    private const POR_PAGINA = 9;
 
     public function __construct(empresasRepository $empresasrepository)
     {
@@ -79,5 +81,16 @@ class empresasServices
         $nombreFoto = $foto->hashName();
         $foto->storeAs('empresas', $nombreFoto, 'public');
         return $nombreFoto;
+    }
+
+    public function listarPaginado(array $filtros)
+    {
+        $buscar = trim((string) ($filtros['buscar'] ?? ''));
+
+        if (mb_strlen($buscar) > 100) {
+            throw new InvalidArgumentException('La búsqueda no puede superar los 100 caracteres.');
+        }
+
+        return $this->empresasrepository->listarPaginado($buscar, self::POR_PAGINA);
     }
 }

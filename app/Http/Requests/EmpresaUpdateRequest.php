@@ -29,6 +29,7 @@ class EmpresaUpdateRequest extends FormRequest
         'estado' => 'required|in:activo,inactivo',
         'email' => 'required|string|email|max:255|unique:empresas,email,' . $this->route('empresa'),
         'password' => 'nullable|string|min:8',
+        'eliminarFotoPerfil' => 'nullable|boolean',
     ];
 }
 

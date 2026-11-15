@@ -7,7 +7,7 @@
 
 @section('content')
 
-<div class="min-h-screen bg-[#F5F7FA] py-8">
+<div class="min-h-screen py-8">
 
     <div class="mx-auto max-w-4xl px-6">
 

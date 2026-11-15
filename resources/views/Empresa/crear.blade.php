@@ -7,7 +7,7 @@
 
 @section('content')
 
-<div class="min-h-screen bg-gray-100 py-10">
+<div class="min-h-screen py-10">
 
 <div class="mx-auto max-w-5xl px-6">
 
@@ -309,7 +309,7 @@
     <button type="submit"
         class="rounded-lg bg-[#4DB6E8] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#333333]">
 
-        Guardar empresa
+        Guardar
 
     </button>
 

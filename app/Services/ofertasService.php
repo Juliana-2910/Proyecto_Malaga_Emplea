@@ -16,6 +16,7 @@ class ofertasService
 {
     private ofertasRepository $ofertasrepository;
     private ofertaServiciosRepository $ofertaServiciosRepository;
+    private const POR_PAGINA_ADMIN = 9;
 
     public function __construct(ofertasRepository $ofertasrepository, ofertaServiciosRepository $ofertaServiciosRepository)
     {
@@ -449,5 +450,16 @@ class ofertasService
 
         return collect(['ubicacion', 'nivelEducativo', 'perfilProfesional', 'experienciaLaboral'])
             ->every(fn ($campo) => filled($hoja->{$campo}));
+    }
+
+    public function listarPaginadoAdmin(array $filtros)
+    {
+        $buscar = trim((string) ($filtros['buscar'] ?? ''));
+
+        if (mb_strlen($buscar) > 100) {
+            throw new InvalidArgumentException('La búsqueda no puede superar los 100 caracteres.');
+        }
+
+        return $this->ofertasrepository->listarPaginadoAdmin($buscar, self::POR_PAGINA_ADMIN);
     }
 }

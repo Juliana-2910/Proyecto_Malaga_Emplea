@@ -40,5 +40,21 @@ class serviciosRepository{
         $servicio = Servicios::findOrFail($id);
         $servicio->update($datos);
     }
+
+    public function listarPaginado(string $buscar, int $porPagina)
+    {
+        return Servicios::query()
+            ->with('categoria') // evita consultas repetidas por cada fila
+            ->when($buscar !== '', function ($q) use ($buscar) {
+                $q->where(function ($q) use ($buscar) {
+                    $q->where('nombre', 'like', "%{$buscar}%")
+                    ->orWhere('descripcion', 'like', "%{$buscar}%")
+                    ->orWhereHas('categoria', fn ($c) => $c->where('nombre', 'like', "%{$buscar}%"));
+                });
+            })
+            ->orderBy('id')
+            ->paginate($porPagina)
+            ->withQueryString(); // conserva ?buscar=... al cambiar de página
+    }
 }
 

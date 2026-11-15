@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="es" class="h-full bg-[#F4F4F4]">
+<html lang="es" class="bg-[#F4F4F4]">
 
 <head>
 
@@ -112,7 +112,7 @@
 
 </head>
 
-<body class="h-full text-slate-800 antialiased">
+<body class="min-h-screen bg-[#F4F4F4] text-slate-800 antialiased">
 
 
 <div x-data="{ sidebarOpen: false }" class="min-h-screen flex">

@@ -7,6 +7,7 @@ use App\Services\hojaDeVidaService;
 use App\Services\usuariosService;
 use App\Http\Requests\HojaDeVidaStoreRequest;
 use App\Http\Requests\HojaDeVidaUpdateRequest;
+use InvalidArgumentException;
 use Illuminate\Http\Request;
 
 class HojaDeVidaController extends Controller
@@ -20,10 +21,15 @@ class HojaDeVidaController extends Controller
         $this->usuariosService = $usuariosService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $hojaDeVida = $this->hojaDeVidaService->listarTodos();
-        return view('HojaDeVida.index', compact('hojaDeVida'));
+        try {
+            $hojaDeVida = $this->hojaDeVidaService->listarPaginado($request->only('buscar'));
+
+            return view('HojaDeVida.index', compact('hojaDeVida'));
+        } catch (InvalidArgumentException $e) {
+            return redirect()->route('hojaDeVida.index')->with('error', $e->getMessage());
+        }
     }
 
     public function create()

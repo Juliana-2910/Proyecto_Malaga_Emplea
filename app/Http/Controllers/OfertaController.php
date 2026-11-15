@@ -10,6 +10,7 @@ use App\Services\serviciosService;
 use App\Http\Requests\OfertaStoreRequest;
 use App\Http\Requests\OfertaUpdateRequest;
 use App\Services\empresasServices;
+use InvalidArgumentException;
 use Illuminate\Http\Request;
 
 class OfertaController extends Controller
@@ -29,10 +30,15 @@ class OfertaController extends Controller
         $this->serviciosService = $serviciosService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $ofertas = $this->ofertasService->listarTodos();
-        return view('Ofertas.index', compact('ofertas'));
+        try {
+            $ofertas = $this->ofertasService->listarPaginadoAdmin($request->only('buscar'));
+
+            return view('Ofertas.index', compact('ofertas'));
+        } catch (InvalidArgumentException $e) {
+            return redirect()->route('ofertas.index')->with('error', $e->getMessage());
+        }
     }
 
 

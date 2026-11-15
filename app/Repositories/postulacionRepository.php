@@ -105,4 +105,23 @@ class postulacionRepository
             ->whereIn('estado', ['Enviado', 'Aceptado'])
             ->exists();
     }
+
+    public function listarPaginado(string $buscar, int $porPagina)
+    {
+        return Postulacion::with(['usuario', 'oferta'])
+            ->when($buscar !== '', function ($q) use ($buscar) {
+                foreach (preg_split('/\s+/', $buscar) as $palabra) {
+                    $q->where(function ($q) use ($palabra) {
+                        $q->where('estado', 'like', "%{$palabra}%")
+                        ->orWhere('fecha', 'like', "%{$palabra}%")
+                        ->orWhereHas('usuario', fn ($u) => $u->where('nombres', 'like', "%{$palabra}%")
+                                                            ->orWhere('apellidos', 'like', "%{$palabra}%"))
+                        ->orWhereHas('oferta', fn ($o) => $o->where('titulo', 'like', "%{$palabra}%"));
+                    });
+                }
+            })
+            ->orderBy('id')
+            ->paginate($porPagina)
+            ->withQueryString();
+    }
 }

@@ -577,4 +577,24 @@ class ofertasRepository
             ->all();
     }
 
+    public function listarPaginadoAdmin(string $buscar, int $porPagina)
+    {
+        return Oferta::with(['empresa', 'usuario'])
+            ->when($buscar !== '', function ($q) use ($buscar) {
+                foreach (preg_split('/\s+/', $buscar) as $palabra) {
+                    $q->where(function ($q) use ($palabra) {
+                        $q->where('titulo', 'like', "%{$palabra}%")
+                        ->orWhere('ubicacion', 'like', "%{$palabra}%")
+                        ->orWhere('tipoContrato', 'like', "%{$palabra}%")
+                        ->orWhereHas('empresa', fn ($e) => $e->where('nombreEmpresa', 'like', "%{$palabra}%"))
+                        ->orWhereHas('usuario', fn ($u) => $u->where('nombres', 'like', "%{$palabra}%")
+                                                            ->orWhere('apellidos', 'like', "%{$palabra}%"));
+                    });
+                }
+            })
+            ->orderBy('id')
+            ->paginate($porPagina)
+            ->withQueryString();
+    }
+
 }

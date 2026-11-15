@@ -7,8 +7,6 @@
 
 @section('content')
 
-<div class="min-h-screen bg-gray-100 py-10">
-
 <div class="mx-auto max-w-5xl px-6">
 
 {{-- Encabezado --}}
@@ -36,6 +34,9 @@
 
         @method('PUT')
 
+        {{-- 1 = eliminar la foto actual al guardar --}}
+        <input type="hidden" name="eliminarFotoPerfil" id="eliminarFotoPerfil" value="0">
+
 
 {{-- Información principal --}}
 <div class="mb-8 grid grid-cols-1 gap-6 md:grid-cols-3">
@@ -52,37 +53,18 @@
         {{-- Vista previa --}}
         <div class="h-32 w-32 overflow-hidden rounded-full border-2 border-[#4DB6E8] bg-gray-100 shadow-sm">
 
-            @if($empresa->fotoPerfil)
+            <img id="previewFoto"
+                src="{{ $empresa->fotoPerfil ? asset('storage/empresas/' . $empresa->fotoPerfil) : '' }}"
+                alt="Foto de perfil"
+                class="{{ $empresa->fotoPerfil ? '' : 'hidden' }} h-full w-full object-cover">
 
-                <img id="previewFoto"
-                    src="{{ asset('storage/empresas/' . $empresa->fotoPerfil) }}"
-                    alt="Foto de perfil"
-                    class="h-full w-full object-cover">
+            <div id="placeholderFoto"
+                class="{{ $empresa->fotoPerfil ? 'hidden' : 'flex' }} h-full w-full items-center justify-center text-gray-400">
 
-                <div id="placeholderFoto"
-                    class="hidden h-full w-full items-center justify-center text-gray-400">
+                @php($icon = 'building-office-2')
+                @include('layouts.partials.icons')
 
-                    @php($icon = 'building-office-2')
-                    @include('layouts.partials.icons')
-
-                </div>
-
-            @else
-
-                <img id="previewFoto"
-                    src=""
-                    alt="Vista previa de la foto"
-                    class="hidden h-full w-full object-cover">
-
-                <div id="placeholderFoto"
-                    class="flex h-full w-full items-center justify-center text-gray-400">
-
-                    @php($icon = 'building-office-2')
-                    @include('layouts.partials.icons')
-
-                </div>
-
-            @endif
+            </div>
 
         </div>
 
@@ -105,6 +87,14 @@
             @endif
 
         </p>
+
+
+        {{-- Eliminar foto --}}
+        <button type="button"
+            id="btnEliminarFoto"
+            class="{{ $empresa->fotoPerfil ? '' : 'hidden' }} mt-1 text-xs font-semibold text-red-500 transition hover:text-red-700 hover:underline">
+            Eliminar foto
+        </button>
 
 
         <input type="file"
@@ -333,7 +323,7 @@
     <button type="submit"
         class="rounded-lg bg-[#4DB6E8] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#333333]">
 
-        Actualizar empresa
+        Actualizar
 
     </button>
 
@@ -346,68 +336,74 @@
 
 </div>
 
-</div>
 
-
-{{-- Vista previa de la foto --}}
-
+{{-- Vista previa y eliminación de la foto --}}
 <script>
 
-    document.getElementById('fotoPerfil').addEventListener('change', function(event) {
+    const inputFoto      = document.getElementById('fotoPerfil');
+    const preview        = document.getElementById('previewFoto');
+    const placeholder    = document.getElementById('placeholderFoto');
+    const nombreFoto     = document.getElementById('nombreFoto');
+    const btnEliminar    = document.getElementById('btnEliminarFoto');
+    const flagEliminar   = document.getElementById('eliminarFotoPerfil');
+
+    // Foto que la empresa tiene guardada actualmente (null si no tiene)
+    const fotoOriginal   = @json($empresa->fotoPerfil ? asset('storage/empresas/' . $empresa->fotoPerfil) : null);
+    const nombreOriginal = @json($empresa->fotoPerfil ? basename($empresa->fotoPerfil) : '');
+
+    function mostrarFoto(src, nombre) {
+        preview.src = src;
+        preview.classList.remove('hidden');
+        placeholder.classList.add('hidden');
+        placeholder.classList.remove('flex');
+        nombreFoto.textContent = nombre;
+        btnEliminar.classList.remove('hidden');
+    }
+
+    function mostrarPlaceholder() {
+        preview.src = '';
+        preview.classList.add('hidden');
+        placeholder.classList.remove('hidden');
+        placeholder.classList.add('flex');
+        nombreFoto.textContent = '';
+        btnEliminar.classList.add('hidden');
+    }
+
+    // Al elegir una foto nueva
+    inputFoto.addEventListener('change', function (event) {
 
         const archivo = event.target.files[0];
-
-        const preview = document.getElementById('previewFoto');
-
-        const placeholder = document.getElementById('placeholderFoto');
-
-        const nombreFoto = document.getElementById('nombreFoto');
-
 
         if (archivo) {
 
             const lector = new FileReader();
 
-
-            lector.onload = function(e) {
-
-                preview.src = e.target.result;
-
-                preview.classList.remove('hidden');
-
-                placeholder.classList.add('hidden');
-
+            lector.onload = function (e) {
+                mostrarFoto(e.target.result, archivo.name);
             };
-
 
             lector.readAsDataURL(archivo);
 
-            nombreFoto.textContent = archivo.name;
+            flagEliminar.value = '0'; // la foto nueva reemplaza a la anterior
 
+        } else if (fotoOriginal && flagEliminar.value === '0') {
+
+            mostrarFoto(fotoOriginal, nombreOriginal); // canceló la selección: vuelve la actual
 
         } else {
 
-            @if($empresa->fotoPerfil)
-
-                preview.src = "{{ asset('storage/empresas/' . $empresa->fotoPerfil) }}";
-
-                preview.classList.remove('hidden');
-
-                placeholder.classList.add('hidden');
-
-            @else
-
-                preview.src = '';
-
-                preview.classList.add('hidden');
-
-                placeholder.classList.remove('hidden');
-
-            @endif
-
-            nombreFoto.textContent = '';
+            mostrarPlaceholder();
 
         }
+
+    });
+
+    // Al presionar "Eliminar foto"
+    btnEliminar.addEventListener('click', function () {
+
+        inputFoto.value = '';                          // descarta cualquier foto recién elegida
+        flagEliminar.value = fotoOriginal ? '1' : '0'; // si había foto guardada, se borra al guardar
+        mostrarPlaceholder();
 
     });
 

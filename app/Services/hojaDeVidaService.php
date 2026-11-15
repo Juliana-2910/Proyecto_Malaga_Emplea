@@ -6,12 +6,14 @@ use App\Repositories\hojaDeVidaRepository;
 use App\Repositories\postulacionRepository;
 use Exception;
 use Illuminate\Http\UploadedFile;
+use InvalidArgumentException;
 use Illuminate\Support\Facades\Storage;
 
 class hojaDeVidaService
 {
     private hojaDeVidaRepository $hojaDeVidaRepository;
     private postulacionRepository $postulacionRepository;
+    private const POR_PAGINA = 6;
 
     public function __construct(hojaDeVidaRepository $hojaDeVidaRepository, postulacionRepository $postulacionRepository)
     {
@@ -135,5 +137,16 @@ class hojaDeVidaService
     private function eliminarArchivo(?string $ruta): void
     {
         if ($ruta) {Storage::disk('public')->delete($ruta);}
+    }
+
+    public function listarPaginado(array $filtros)
+    {
+        $buscar = trim((string) ($filtros['buscar'] ?? ''));
+
+        if (mb_strlen($buscar) > 100) {
+            throw new InvalidArgumentException('La búsqueda no puede superar los 100 caracteres.');
+        }
+
+        return $this->hojaDeVidaRepository->listarPaginado($buscar, self::POR_PAGINA);
     }
 }

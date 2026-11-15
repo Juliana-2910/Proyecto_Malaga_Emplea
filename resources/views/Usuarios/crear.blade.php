@@ -7,379 +7,379 @@
 
 @section('content')
 
-<div class="min-h-screen bg-gray-100 py-10">
+<div class="min-h-screen py-10">
 
-<div class="mx-auto max-w-5xl px-6">
+    <div class="mx-auto max-w-5xl px-6">
 
-{{-- Encabezado --}}
-<div class="mb-6">
+        {{-- Encabezado --}}
+        <div class="mb-6">
 
-    <h1 class="text-3xl font-bold text-gray-800">
-        Crear usuario
-    </h1>
+            <h1 class="text-3xl font-bold text-gray-800">
+                Crear usuario
+            </h1>
 
-    <p class="mt-1 text-sm text-gray-500">
-        Registro de un nuevo usuario en el sistema
-    </p>
-
-</div>
-
-
-{{-- Formulario --}}
-<div class="rounded-xl bg-white p-8 shadow">
-
-    <form action="{{ route('usuarios.store') }}" method="POST" enctype="multipart/form-data">
-
-        @csrf
-
-        @if ($errors->any())
-    <div class="mb-4 rounded-lg bg-red-100 p-4 text-sm text-red-700">
-        <ul class="list-disc pl-5">
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
-
-{{-- Información principal --}}
-<div class="mb-8 grid grid-cols-1 gap-6 md:grid-cols-3">
-
-    {{-- Foto de perfil --}}
-    <div class="flex flex-col items-center justify-center">
-
-        <label class="mb-3 block text-sm font-semibold text-gray-700">
-            Foto de perfil
-        </label>
-
-        {{-- Vista previa --}}
-        <div class="h-32 w-32 overflow-hidden rounded-full border-2 border-[#4DB6E8] bg-gray-100 shadow-sm">
-
-            <img id="previewFoto"
-                src=""
-                alt="Vista previa de la foto"
-                class="hidden h-full w-full object-cover">
-
-            {{-- Icono cuando no hay foto --}}
-            <div id="placeholderFoto"
-                class="flex h-full w-full items-center justify-center text-gray-400">
-
-                @php($icon ='user')
-                @include('layouts.partials.icons')
-
-            </div>
-
-        </div>
-
-        {{-- Botón seleccionar foto --}}
-        <label for="fotoPerfil"
-            class="mt-4 cursor-pointer rounded-lg bg-[#4DB6E8] px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-[#333333]">
-
-            Seleccionar foto
-
-        </label>
-
-        <p  id="nombreFoto"
-            class="mt-2 max-w-[220px] truncate text-center text-sm text-gray-600">
-        </p>
-
-        <input type="file"
-            name="fotoPerfil"
-            id="fotoPerfil"
-            accept="image/jpeg,image/png,image/jpg"
-            class="hidden">
-
-        <p class="mt-2 text-center text-xs text-gray-500">
-            JPG, JPEG o PNG<br>
-            Máximo 2 MB
-        </p>
-
-        @error('fotoPerfil')
-            <p class="mt-1 text-center text-sm text-red-500">
-                {{ $message }}
+            <p class="mt-1 text-sm text-gray-500">
+                Registro de un nuevo usuario en el sistema
             </p>
-        @enderror
-
-    </div>
-
-
-    {{-- Datos personales --}}
-    <div class="md:col-span-2 flex flex-col gap-5">
-
-        {{-- Nombres --}}
-        <div>
-
-            <label for="nombres"
-                class="mb-2 block text-sm font-semibold text-gray-700">
-                Nombres
-            </label>
-
-            <input type="text"
-                name="nombres"
-                id="nombres"
-                value="{{ old('nombres') }}"
-                placeholder="Ingrese los nombres"
-                class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
-
-            @error('nombres')
-                <p class="mt-1 text-sm text-red-500">
-                    {{ $message }}
-                </p>
-            @enderror
 
         </div>
 
 
-        {{-- Apellidos --}}
-        <div>
+        {{-- Formulario --}}
+        <div class="rounded-xl bg-white p-8 shadow">
 
-            <label for="apellidos"
-                class="mb-2 block text-sm font-semibold text-gray-700">
-                Apellidos
-            </label>
+            <form action="{{ route('usuarios.store') }}" method="POST" enctype="multipart/form-data">
 
-            <input type="text"
-                name="apellidos"
-                id="apellidos"
-                value="{{ old('apellidos') }}"
-                placeholder="Ingrese los apellidos"
-                class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
+                @csrf
 
-            @error('apellidos')
-                <p class="mt-1 text-sm text-red-500">
-                    {{ $message }}
-                </p>
-            @enderror
+                @if ($errors->any())
+            <div class="mb-4 rounded-lg bg-red-100 p-4 text-sm text-red-700">
+                <ul class="list-disc pl-5">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
-        </div>
+        {{-- Información principal --}}
+        <div class="mb-8 grid grid-cols-1 gap-6 md:grid-cols-3">
 
+            {{-- Foto de perfil --}}
+            <div class="flex flex-col items-center justify-center">
 
-        {{-- Fecha de nacimiento --}}
-        <div>
-
-            <label for="fechaNacimiento"
-                class="mb-2 block text-sm font-semibold text-gray-700">
-                Fecha de nacimiento
-            </label>
-
-            <input type="date"
-                name="fechaNacimiento"
-                id="fechaNacimiento"
-                value="{{ old('fechaNacimiento') }}"
-                class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
-
-            @error('fechaNacimiento')
-                <p class="mt-1 text-sm text-red-500">
-                    {{ $message }}
-                </p>
-            @enderror
-
-        </div>
-
-    </div>
-
-</div>
-
-
-        {{-- Resto del formulario --}}
-        <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-
-
-            {{-- Tipo de documento --}}
-            <div>
-
-                <label for="tipoDocumento"
-                    class="mb-2 block text-sm font-semibold text-gray-700">
-                    Tipo de documento
+                <label class="mb-3 block text-sm font-semibold text-gray-700">
+                    Foto de perfil
                 </label>
 
-                <select name="tipoDocumento"
-                        id="tipoDocumento"
+                {{-- Vista previa --}}
+                <div class="h-32 w-32 overflow-hidden rounded-full border-2 border-[#4DB6E8] bg-gray-100 shadow-sm">
+
+                    <img id="previewFoto"
+                        src=""
+                        alt="Vista previa de la foto"
+                        class="hidden h-full w-full object-cover">
+
+                    {{-- Icono cuando no hay foto --}}
+                    <div id="placeholderFoto"
+                        class="flex h-full w-full items-center justify-center text-gray-400">
+
+                        @php($icon ='user')
+                        @include('layouts.partials.icons')
+
+                    </div>
+
+                </div>
+
+                {{-- Botón seleccionar foto --}}
+                <label for="fotoPerfil"
+                    class="mt-4 cursor-pointer rounded-lg bg-[#4DB6E8] px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-[#333333]">
+
+                    Seleccionar foto
+
+                </label>
+
+                <p  id="nombreFoto"
+                    class="mt-2 max-w-[220px] truncate text-center text-sm text-gray-600">
+                </p>
+
+                <input type="file"
+                    name="fotoPerfil"
+                    id="fotoPerfil"
+                    accept="image/jpeg,image/png,image/jpg"
+                    class="hidden">
+
+                <p class="mt-2 text-center text-xs text-gray-500">
+                    JPG, JPEG o PNG<br>
+                    Máximo 2 MB
+                </p>
+
+                @error('fotoPerfil')
+                    <p class="mt-1 text-center text-sm text-red-500">
+                        {{ $message }}
+                    </p>
+                @enderror
+
+            </div>
+
+
+            {{-- Datos personales --}}
+            <div class="md:col-span-2 flex flex-col gap-5">
+
+                {{-- Nombres --}}
+                <div>
+
+                    <label for="nombres"
+                        class="mb-2 block text-sm font-semibold text-gray-700">
+                        Nombres
+                    </label>
+
+                    <input type="text"
+                        name="nombres"
+                        id="nombres"
+                        value="{{ old('nombres') }}"
+                        placeholder="Ingrese los nombres"
                         class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
 
-                    <option value="">
-                        Seleccione un tipo de documento
-                    </option>
+                    @error('nombres')
+                        <p class="mt-1 text-sm text-red-500">
+                            {{ $message }}
+                        </p>
+                    @enderror
 
-                    <option value="CC" {{ old('tipoDocumento') == 'CC' ? 'selected' : '' }}>
-                        Cédula de ciudadanía (CC)
-                    </option>
-
-                    <option value="CE" {{ old('tipoDocumento') == 'CE' ? 'selected' : '' }}>
-                        Cédula de extranjería (CE)
-                    </option>
-
-                    <option value="PPT" {{ old('tipoDocumento') == 'PPT' ? 'selected' : '' }}>
-                        Permiso por Protección Temporal (PPT)
-                    </option>
-
-                    <option value="PEP" {{ old('tipoDocumento') == 'PEP' ? 'selected' : '' }}>
-                        Permiso Especial de Permanencia (PEP)
-                    </option>
-
-                    <option value="PASAPORTE" {{ old('tipoDocumento') == 'PASAPORTE' ? 'selected' : '' }}>
-                        Pasaporte
-                    </option>
-
-                </select>
-
-                @error('tipoDocumento')
-                    <p class="mt-1 text-sm text-red-500">
-                        {{ $message }}
-                    </p>
-                @enderror
-
-            </div>
+                </div>
 
 
-            {{-- Número de documento --}}
-            <div>
+                {{-- Apellidos --}}
+                <div>
 
-                <label for="numeroDocumento"
-                    class="mb-2 block text-sm font-semibold text-gray-700">
-                    Número de documento
-                </label>
+                    <label for="apellidos"
+                        class="mb-2 block text-sm font-semibold text-gray-700">
+                        Apellidos
+                    </label>
 
-                <input type="text"
-                    name="numeroDocumento"
-                    id="numeroDocumento"
-                    value="{{ old('numeroDocumento') }}"
-                    placeholder="Ingrese el número de documento"
-                    class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
-
-                @error('numeroDocumento')
-                    <p class="mt-1 text-sm text-red-500">
-                        {{ $message }}
-                    </p>
-                @enderror
-
-            </div>
-
-
-            {{-- Correo electrónico --}}
-            <div>
-
-                <label for="email"
-                    class="mb-2 block text-sm font-semibold text-gray-700">
-                    Correo electrónico
-                </label>
-
-                <input type="email"
-                    name="email"
-                    id="email"
-                    value="{{ old('email') }}"
-                    placeholder="ejemplo@gmail.com"
-                    class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
-
-                @error('email')
-                    <p class="mt-1 text-sm text-red-500">
-                        {{ $message }}
-                    </p>
-                @enderror
-
-            </div>
-
-
-            {{-- Teléfono --}}
-            <div>
-
-                <label for="telefono"
-                    class="mb-2 block text-sm font-semibold text-gray-700">
-                    Teléfono
-                </label>
-
-                <input type="text"
-                    name="telefono"
-                    id="telefono"
-                    value="{{ old('telefono') }}"
-                    placeholder="Ingrese el número de teléfono"
-                    class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
-
-                @error('telefono')
-                    <p class="mt-1 text-sm text-red-500">
-                        {{ $message }}
-                    </p>
-                @enderror
-
-            </div>
-
-
-            {{-- Contraseña --}}
-            <div>
-
-                <label for="password"
-                    class="mb-2 block text-sm font-semibold text-gray-700">
-                    Contraseña
-                </label>
-
-                <input type="password"
-                    name="password"
-                    id="password"
-                    placeholder="Ingrese una contraseña"
-                    class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
-
-                @error('password')
-                    <p class="mt-1 text-sm text-red-500">
-                        {{ $message }}
-                    </p>
-                @enderror
-
-            </div>
-
-
-            {{-- Estado --}}
-            <div>
-
-                <label for="estado"
-                    class="mb-2 block text-sm font-semibold text-gray-700">
-                    Estado
-                </label>
-
-                <select name="estado"
-                        id="estado"
+                    <input type="text"
+                        name="apellidos"
+                        id="apellidos"
+                        value="{{ old('apellidos') }}"
+                        placeholder="Ingrese los apellidos"
                         class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
 
-                    <option value="">
-                        Seleccione un estado
-                    </option>
+                    @error('apellidos')
+                        <p class="mt-1 text-sm text-red-500">
+                            {{ $message }}
+                        </p>
+                    @enderror
 
-                    <option value="activo">Activo</option>
+                </div>
 
-                    <option value="inactivo">Inactivo</option>
 
-                </select>
+                {{-- Fecha de nacimiento --}}
+                <div>
 
-                @error('estado')
-                    <p class="mt-1 text-sm text-red-500">
-                        {{ $message }}
-                    </p>
-                @enderror
+                    <label for="fechaNacimiento"
+                        class="mb-2 block text-sm font-semibold text-gray-700">
+                        Fecha de nacimiento
+                    </label>
+
+                    <input type="date"
+                        name="fechaNacimiento"
+                        id="fechaNacimiento"
+                        value="{{ old('fechaNacimiento') }}"
+                        class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
+
+                    @error('fechaNacimiento')
+                        <p class="mt-1 text-sm text-red-500">
+                            {{ $message }}
+                        </p>
+                    @enderror
+
+                </div>
 
             </div>
 
         </div>
 
 
-        {{-- Botones --}}
-        <div class="mt-8 flex justify-end gap-3">
+                {{-- Resto del formulario --}}
+                <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
 
-            <a href="{{ route('usuarios.index') }}"
-                class="rounded-lg bg-gray-500 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#333333]">
-                Cancelar
-            </a>
 
-            <button type="submit"
-                    class="rounded-lg bg-[#4DB6E8] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#333333]">
-                Guardar usuario
-            </button>
+                    {{-- Tipo de documento --}}
+                    <div>
+
+                        <label for="tipoDocumento"
+                            class="mb-2 block text-sm font-semibold text-gray-700">
+                            Tipo de documento
+                        </label>
+
+                        <select name="tipoDocumento"
+                                id="tipoDocumento"
+                                class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
+
+                            <option value="">
+                                Seleccione un tipo de documento
+                            </option>
+
+                            <option value="CC" {{ old('tipoDocumento') == 'CC' ? 'selected' : '' }}>
+                                Cédula de ciudadanía (CC)
+                            </option>
+
+                            <option value="CE" {{ old('tipoDocumento') == 'CE' ? 'selected' : '' }}>
+                                Cédula de extranjería (CE)
+                            </option>
+
+                            <option value="PPT" {{ old('tipoDocumento') == 'PPT' ? 'selected' : '' }}>
+                                Permiso por Protección Temporal (PPT)
+                            </option>
+
+                            <option value="PEP" {{ old('tipoDocumento') == 'PEP' ? 'selected' : '' }}>
+                                Permiso Especial de Permanencia (PEP)
+                            </option>
+
+                            <option value="PASAPORTE" {{ old('tipoDocumento') == 'PASAPORTE' ? 'selected' : '' }}>
+                                Pasaporte
+                            </option>
+
+                        </select>
+
+                        @error('tipoDocumento')
+                            <p class="mt-1 text-sm text-red-500">
+                                {{ $message }}
+                            </p>
+                        @enderror
+
+                    </div>
+
+
+                    {{-- Número de documento --}}
+                    <div>
+
+                        <label for="numeroDocumento"
+                            class="mb-2 block text-sm font-semibold text-gray-700">
+                            Número de documento
+                        </label>
+
+                        <input type="text"
+                            name="numeroDocumento"
+                            id="numeroDocumento"
+                            value="{{ old('numeroDocumento') }}"
+                            placeholder="Ingrese el número de documento"
+                            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
+
+                        @error('numeroDocumento')
+                            <p class="mt-1 text-sm text-red-500">
+                                {{ $message }}
+                            </p>
+                        @enderror
+
+                    </div>
+
+
+                    {{-- Correo electrónico --}}
+                    <div>
+
+                        <label for="email"
+                            class="mb-2 block text-sm font-semibold text-gray-700">
+                            Correo electrónico
+                        </label>
+
+                        <input type="email"
+                            name="email"
+                            id="email"
+                            value="{{ old('email') }}"
+                            placeholder="ejemplo@gmail.com"
+                            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
+
+                        @error('email')
+                            <p class="mt-1 text-sm text-red-500">
+                                {{ $message }}
+                            </p>
+                        @enderror
+
+                    </div>
+
+
+                    {{-- Teléfono --}}
+                    <div>
+
+                        <label for="telefono"
+                            class="mb-2 block text-sm font-semibold text-gray-700">
+                            Teléfono
+                        </label>
+
+                        <input type="text"
+                            name="telefono"
+                            id="telefono"
+                            value="{{ old('telefono') }}"
+                            placeholder="Ingrese el número de teléfono"
+                            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
+
+                        @error('telefono')
+                            <p class="mt-1 text-sm text-red-500">
+                                {{ $message }}
+                            </p>
+                        @enderror
+
+                    </div>
+
+
+                    {{-- Contraseña --}}
+                    <div>
+
+                        <label for="password"
+                            class="mb-2 block text-sm font-semibold text-gray-700">
+                            Contraseña
+                        </label>
+
+                        <input type="password"
+                            name="password"
+                            id="password"
+                            placeholder="Ingrese una contraseña"
+                            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
+
+                        @error('password')
+                            <p class="mt-1 text-sm text-red-500">
+                                {{ $message }}
+                            </p>
+                        @enderror
+
+                    </div>
+
+
+                    {{-- Estado --}}
+                    <div>
+
+                        <label for="estado"
+                            class="mb-2 block text-sm font-semibold text-gray-700">
+                            Estado
+                        </label>
+
+                        <select name="estado"
+                                id="estado"
+                                class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
+
+                            <option value="">
+                                Seleccione un estado
+                            </option>
+
+                            <option value="activo">Activo</option>
+
+                            <option value="inactivo">Inactivo</option>
+
+                        </select>
+
+                        @error('estado')
+                            <p class="mt-1 text-sm text-red-500">
+                                {{ $message }}
+                            </p>
+                        @enderror
+
+                    </div>
+
+                </div>
+
+
+                {{-- Botones --}}
+                <div class="mt-8 flex justify-end gap-3">
+
+                    <a href="{{ route('usuarios.index') }}"
+                        class="rounded-lg bg-gray-500 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#333333]">
+                        Cancelar
+                    </a>
+
+                    <button type="submit"
+                            class="rounded-lg bg-[#4DB6E8] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#333333]">
+                        Guardar
+                    </button>
+
+                </div>
+
+            </form>
 
         </div>
 
-    </form>
-
-</div>
-
-</div>
+    </div>
 
 </div>
 
