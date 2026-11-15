@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Models\Postulacion;
 use App\Models\Usuario;
 use App\Models\Oferta;
+use App\Models\Calificacion;
 
 class postulacionRepository
 {
@@ -123,5 +124,10 @@ class postulacionRepository
             ->orderBy('id')
             ->paginate($porPagina)
             ->withQueryString();
+    }
+
+    public function tieneCalificaciones(int $id): bool
+    {
+        return Calificacion::where('idPostulacion', $id)->exists();
     }
 }

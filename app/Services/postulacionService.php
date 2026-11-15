@@ -56,6 +56,10 @@ class postulacionService
 
     public function eliminar(int $id)
     {
+        if ($this->postulacionrepository->tieneCalificaciones($id)) {
+            throw new Exception('No se puede eliminar esta postulación porque tiene calificaciones registradas.');
+        }
+
         $this->postulacionrepository->eliminar($id);
     }
 
