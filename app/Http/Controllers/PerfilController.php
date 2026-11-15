@@ -2,58 +2,50 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CambiarContrasenaRequest;
+use App\Http\Requests\PerfilUpdateRequest;
 use App\Models\Empresa;
 use App\Models\Usuario;
 use App\Services\calificacionService;
-use App\Services\empresasServices;
-use App\Services\usuariosService;
-use App\Services\hojaDeVidaService;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
+use App\Services\perfilService;
+use Exception;
+use Illuminate\Validation\ValidationException;
 
 class PerfilController extends Controller
 {
-    public function editar(hojaDeVidaService $hojaDeVidaService)
+    public function editar(perfilService $perfilService)
     {
-        $cuenta = $this->cuentaActual();
-        $esEmpresa = $cuenta instanceof Empresa;
-
-        $hojaDeVida = $cuenta instanceof Usuario ? $hojaDeVidaService->buscarPorUsuario($cuenta->id) : null;
-        return view('Publico.perfilEditar', compact('cuenta', 'esEmpresa', 'hojaDeVida'));
+        return view('Publico.perfilEditar', $perfilService->datosParaEditar($this->cuentaActual()));
     }
 
-    public function actualizar(Request $request, usuariosService $usuariosService, empresasServices $empresasServices)
+    public function actualizar(PerfilUpdateRequest $request, perfilService $perfilService)
     {
-        $cuenta = $this->cuentaActual();
-
-        if ($cuenta instanceof Empresa) {
-            $datos = $request->validate([
-                'nombreEmpresa' => ['required', 'string', 'max:100'],
-                'nit' => ['required', 'string', 'max:30', Rule::unique('empresas', 'nit')->ignore($cuenta->id)],
-                'direccion' => ['required', 'string', 'max:255'],
-                'email' => ['required', 'email', 'max:255', Rule::unique('empresas', 'email')->ignore($cuenta->id)],
-                'fotoPerfil' => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:2048'],
-                'eliminarFotoPerfil' => ['nullable', 'boolean'],
-            ]);
-
-            $empresasServices->actualizar($cuenta->id, $datos);
-        } else {
-            $datos = $request->validate([
-                'nombres' => ['required', 'string', 'max:100'],
-                'apellidos' => ['required', 'string', 'max:100'],
-                'fechaNacimiento' => ['required', 'date'],
-                'tipoDocumento' => ['required', Rule::in(['CC', 'CE', 'PPT', 'PEP', 'PASAPORTE'])],
-                'numeroDocumento' => ['required', 'string', 'max:30', Rule::unique('usuarios', 'numeroDocumento')->ignore($cuenta->id)],
-                'telefono' => ['required', 'string', 'max:20'],
-                'email' => ['required', 'email', 'max:255', Rule::unique('usuarios', 'email')->ignore($cuenta->id)],
-                'fotoPerfil' => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:2048'],
-                'eliminarFotoPerfil' => ['nullable', 'boolean'],
-            ]);
-
-            $usuariosService->actualizar($cuenta->id, $datos);
+        try {
+            $perfilService->actualizarPerfil($this->cuentaActual(), $request->validated());
+        } catch (ValidationException $e) {
+            throw $e; // errores por campo (ej. menor de edad): Laravel los muestra junto al campo
+        } catch (Exception $e) {
+            return redirect()->route('perfil.editar')->withInput()->with('error', $e->getMessage());
         }
 
         return redirect()->route('perfil.editar')->with('success', 'Tu perfil se actualizó correctamente.');
+    }
+
+    public function cambiarContrasena(CambiarContrasenaRequest $request, perfilService $perfilService)
+    {
+        try {
+            $perfilService->cambiarContrasena(
+                $this->cuentaActual(),
+                $request->validated('contrasena_actual'),
+                $request->validated('password')
+            );
+        } catch (Exception $e) {
+            return redirect(route('perfil.editar') . '#cambiar-contrasena')
+                ->withErrors(['servicio' => $e->getMessage()], 'contrasena');
+        }
+
+        return redirect(route('perfil.editar') . '#seguridad')
+            ->with('contrasenaActualizada', 'Tu contraseña se actualizó correctamente.');
     }
 
     public function calificaciones(calificacionService $calificacionService)

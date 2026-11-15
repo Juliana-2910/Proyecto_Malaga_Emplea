@@ -35,6 +35,7 @@ class HojaDeVidaStoreRequest extends FormRequest
             'perfilProfesional' => 'required|string|max:255',
             'experienciaLaboral' => 'required|string|max:255',
             'archivoCV' => 'nullable|file|mimes:pdf|max:5120',
+            'eliminarArchivoCV' => 'nullable|boolean',
             'idUsuario' => 'required|exists:usuarios,id',
         ];
     }

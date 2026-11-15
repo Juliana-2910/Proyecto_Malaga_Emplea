@@ -57,6 +57,8 @@
 
     <div x-show="open" x-cloak x-transition @click.outside="open = false" class="absolute right-0 z-50 mt-2 w-60 overflow-hidden rounded-2xl border border-slate-100 bg-white p-2 shadow-xl shadow-noche/15">
         @if ($puedeVerPerfil || $puedeEditarPerfil)<button type="button" @click="open = false; modalAbierto = 'perfil'" class="block w-full rounded-xl px-4 py-3 text-left text-sm font-bold text-noche transition hover:bg-[#EAF6FD]">Mi perfil</button>@endif
+        @if ($puedeVerPerfil && $puedeEditarPerfil && ! $esEmpresa)<a href="{{ route('perfil.editar') }}#hoja-de-vida" @click="open = false" class="block w-full rounded-xl px-4 py-3 text-left text-sm font-bold text-noche transition hover:bg-[#EAF6FD]">Hoja de vida</a>@endif
+        @if ($puedeVerPerfil && $puedeEditarPerfil)<a href="{{ route('perfil.editar') }}#cambiar-contrasena" @click="open = false" class="block w-full rounded-xl px-4 py-3 text-left text-sm font-bold text-noche transition hover:bg-[#EAF6FD]">Cambiar contraseña</a>@endif
         @if ($puedeVerCalificaciones)<button type="button" @click="abrirCalificaciones()" class="block w-full rounded-xl px-4 py-3 text-left text-sm font-bold text-noche transition hover:bg-[#EAF6FD]">Mis calificaciones</button>@endif
         @if ($showLogout)
             <hr class="my-1 border-slate-100">

@@ -30,6 +30,7 @@ class hojaDeVidaService
     public function guardar(array $datos)
     {
         $this->validarHojaDeVidaUnica((int) $datos['idUsuario']);
+        $this->extraerBanderaEliminar($datos); // En una hoja nueva no hay nada que eliminar
         $archivo = $this->extraerArchivo($datos);
         $hojaDeVida = $this->hojaDeVidaRepository->guardar($datos);
         $this->asociarArchivo($archivo, $hojaDeVida->id);
@@ -58,13 +59,22 @@ class hojaDeVidaService
     {
         $hojaDeVida = $this->hojaDeVidaRepository->buscarPorId($id);
         $archivoAnterior = $hojaDeVida->archivoCV;
+        $eliminarCV = $this->extraerBanderaEliminar($datos);
         $archivo = $this->extraerArchivo($datos);
 
-        if (!$archivo) {$this->hojaDeVidaRepository->actualizar($id, $datos);
+        if ($archivo) { // si sube uno nuevo, este manda sobre "eliminar"
+            $this->reemplazarArchivo($id, $datos, $archivo, $archivoAnterior);
             return;
         }
 
-        $this->reemplazarArchivo($id, $datos, $archivo,$archivoAnterior);
+        if ($eliminarCV) {
+            $datos['archivoCV'] = null;
+            $this->hojaDeVidaRepository->actualizar($id, $datos);
+            $this->eliminarArchivo($archivoAnterior);
+            return;
+        }
+
+        $this->hojaDeVidaRepository->actualizar($id, $datos);
     }
 
     public function guardarOActualizar(array $datos): void
@@ -151,5 +161,12 @@ class hojaDeVidaService
         }
 
         return $this->hojaDeVidaRepository->listarPaginado($buscar, self::POR_PAGINA);
+    }
+
+    private function extraerBanderaEliminar(array &$datos): bool
+    {
+        $eliminar = (bool) ($datos['eliminarArchivoCV'] ?? false);
+        unset($datos['eliminarArchivoCV']);
+        return $eliminar;
     }
 }

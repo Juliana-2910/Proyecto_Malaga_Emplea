@@ -99,3 +99,35 @@
                 });
             </script>
         @endif
+
+
+        @if (session('contrasenaActualizada'))
+                    <div role="alert"
+                        style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 16px;border-radius:12px;border:1px solid #BBF7D0;background:#F0FDF4;color:#15803D;font-size:14px;box-shadow:0 1px 2px rgba(0,0,0,0.05)">
+                        <div style="display:flex;align-items:center;gap:12px">
+                            <span style="width:32px;height:32px;border-radius:999px;background:#DCFCE7;display:flex;align-items:center;justify-content:center;flex:0 0 auto">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="size-6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 12.75l6 6 9-13.5" /></svg>
+                            </span>
+                            <span>{{ session('contrasenaActualizada') }}</span>
+                        </div>
+                        <button type="button" aria-label="Cerrar aviso" onclick="this.closest('[role=alert]').remove()"
+                                style="border:none;background:transparent;color:#16A34A;cursor:pointer;display:flex;padding:4px">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="size-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 18 6M6 6l12 12" /></svg>
+                        </button>
+                    </div>
+
+                    <script>
+                        document.querySelectorAll('[role="alert"]').forEach((aviso) => {
+                            setTimeout(() => {
+                                aviso.remove();
+                            }, 2000);
+                        });
+                    </script>
+                @endif
+
+
+
+
+
+
+

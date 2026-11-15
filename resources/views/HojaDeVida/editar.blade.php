@@ -210,7 +210,8 @@
                                         target="_blank"
                                         title="Ver hoja de vida"
                                         class="inline-flex shrink-0 items-center gap-2 rounded-lg border border-[#4DB6E8] bg-white px-3 py-2 text-xs font-semibold text-[#4DB6E8] transition hover:bg-[#4DB6E8] hover:text-white">
-                                        @php($icon = 'eye') @include('layouts.partials.icons')
+                                        @php($icon = 'eye')
+                                        @include('layouts.partials.icons')
                                     </a>
 
                                 </div>
