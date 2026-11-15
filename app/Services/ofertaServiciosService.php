@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Services;
-
+use Exception;
 use App\Repositories\ofertaServiciosRepository;
 use InvalidArgumentException;
 
@@ -27,6 +27,12 @@ class ofertaServiciosService
 
     public function eliminar(int $id)
     {
+        $relacion = $this->ofertaServiciosRepository->buscarporid($id);
+
+        if ($this->ofertaServiciosRepository->ofertaTienePostulaciones((int) $relacion->idOferta)) {
+            throw new Exception('No se puede eliminar esta relación porque la oferta ya tiene postulaciones.');
+        }
+
         $this->ofertaServiciosRepository->eliminar($id);
     }
 

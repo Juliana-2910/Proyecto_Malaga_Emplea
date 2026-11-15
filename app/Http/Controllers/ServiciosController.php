@@ -7,6 +7,7 @@ use App\Services\serviciosService;
 use App\Services\categoriasService;
 use App\Http\Requests\ServiciosStoreRequest;
 use App\Http\Requests\ServiciosUpdateRequest;
+use Exception;
 use InvalidArgumentException;
 use Illuminate\Http\Request;
 
@@ -64,7 +65,12 @@ class ServiciosController extends Controller
 
     public function destroy($id)
     {
-        $this->serviciosService->eliminar($id);
+        try {
+            $this->serviciosService->eliminar((int) $id);
+        } catch (Exception $e) {
+            return back()->with('error', $e->getMessage());
+        }
+
         return redirect()->route('servicios.index')->with('eliminar', 'Servicio eliminado exitosamente.');
     }
 }

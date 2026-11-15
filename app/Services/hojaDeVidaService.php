@@ -7,6 +7,7 @@ use App\Repositories\postulacionRepository;
 use Exception;
 use Illuminate\Http\UploadedFile;
 use InvalidArgumentException;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class hojaDeVidaService
@@ -136,7 +137,9 @@ class hojaDeVidaService
 
     private function eliminarArchivo(?string $ruta): void
     {
-        if ($ruta) {Storage::disk('public')->delete($ruta);}
+        if ($ruta) {
+            DB::afterCommit(fn () => Storage::disk('public')->delete($ruta));
+        }
     }
 
     public function listarPaginado(array $filtros)

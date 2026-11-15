@@ -40,6 +40,14 @@ class empresasServices
     {
         $empresa = $this->empresasrepository->buscarporid($id);
 
+        if ($this->empresasrepository->tieneOfertas($id)) {
+            throw new Exception('No se puede eliminar esta empresa porque tiene ofertas publicadas.');
+        }
+
+        if ($this->empresasrepository->tieneCalificaciones($id)) {
+            throw new Exception('No se puede eliminar esta empresa porque tiene calificaciones registradas.');
+        }
+
         $resultado = $this->empresasrepository->eliminar($id);
 
         if ($resultado && $empresa->fotoPerfil) {

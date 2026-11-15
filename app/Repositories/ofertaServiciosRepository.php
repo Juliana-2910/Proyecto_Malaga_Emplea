@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\OfertaServicios;
+use App\Models\Postulacion;
 
 class ofertaServiciosRepository
 {
@@ -52,5 +53,10 @@ class ofertaServiciosRepository
             ->orderBy('id')
             ->paginate($porPagina)
             ->withQueryString();
+    }
+
+    public function ofertaTienePostulaciones(int $idOferta): bool
+    {
+        return Postulacion::where('idOferta', $idOferta)->exists();
     }
 }

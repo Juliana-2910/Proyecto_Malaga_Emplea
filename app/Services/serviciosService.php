@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Repositories\serviciosRepository;
+use Exception;
 use InvalidArgumentException;
 
 class serviciosService{
@@ -32,6 +33,10 @@ class serviciosService{
 
     public function eliminar(int $id)
     {
+        if ($this->serviciosRepository->tieneOfertas($id)) {
+            throw new Exception('No se puede eliminar este servicio porque tiene ofertas relacionadas.');
+        }
+
         $this->serviciosRepository->eliminar($id);
     }
 

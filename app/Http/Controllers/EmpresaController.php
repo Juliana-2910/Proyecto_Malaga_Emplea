@@ -7,6 +7,8 @@ use App\Services\empresasServices;
 use App\Http\Requests\EmpresaStoreRequest;
 use App\Http\Requests\EmpresaUpdateRequest;
 use Illuminate\Http\Request;
+use Exception;
+use Illuminate\Database\QueryException;
 use InvalidArgumentException;
 
 class EmpresaController extends Controller
@@ -68,7 +70,14 @@ class EmpresaController extends Controller
 
         public function destroy(int $id)
         {
-            $this->empresasServices->eliminar($id);
+            try {
+                $this->empresasServices->eliminar($id);
+            } catch (QueryException $e) {
+                return back()->with('error', 'No se puede eliminar la empresa porque tiene información relacionada.');
+            } catch (Exception $e) {
+                return back()->with('error', $e->getMessage());
+            }
+
             return redirect()->route('empresas.index')->with('eliminar', 'Empresa eliminada exitosamente.');
         }
 }

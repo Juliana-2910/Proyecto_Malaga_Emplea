@@ -3,6 +3,8 @@
 namespace App\Repositories;
 
 use App\Models\Empresa;
+use App\Models\Oferta;
+use App\Models\Calificacion;
 use Illuminate\Support\Facades\DB;
 
 class empresasRepository{
@@ -67,6 +69,19 @@ public function listarTodos()
             ->orderBy('id')
             ->paginate($porPagina)
             ->withQueryString();
+    }
+
+    public function tieneOfertas(int $id): bool
+    {
+        return Oferta::where('idEmpresa', $id)->exists();
+    }
+
+    public function tieneCalificaciones(int $id): bool
+    {
+        return Calificacion::where(function ($q) use ($id) {
+            $q->where('idEmpresa', $id)
+            ->orWhere('idEmpresaCalificada', $id);
+        })->exists();
     }
 
 }

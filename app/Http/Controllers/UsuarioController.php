@@ -6,6 +6,8 @@ use App\Models\Usuario;
 use App\Services\usuariosService;
 use App\Http\Requests\UsuariosStoreRequest;
 use App\Http\Requests\UsuariosUpdateRequest;
+use Exception;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use InvalidArgumentException;
 
@@ -74,7 +76,14 @@ class UsuarioController extends Controller
 
     public function destroy($id)
     {
-        $this->usuariosService->eliminar($id);
+        try {
+            $this->usuariosService->eliminar((int) $id);
+        } catch (QueryException $e) {
+            return back()->with('error', 'No se puede eliminar el usuario porque tiene información relacionada (ofertas, postulaciones o calificaciones).');
+        } catch (Exception $e) {
+            return back()->with('error', $e->getMessage());
+        }
+
         return redirect()->route('usuarios.index')->with('eliminar', 'Usuario eliminado exitosamente.');
     }
 }
