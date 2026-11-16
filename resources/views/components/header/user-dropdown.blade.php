@@ -47,7 +47,7 @@
 }" @abrir-calificaciones.window="abrirCalificaciones($event.detail.url)" x-effect="document.body.style.overflow = modalAbierto ? 'hidden' : ''" @keydown.escape.window="modalAbierto = null" class="relative">
     <button type="button" @click="open = !open" @click.outside="open = false" :aria-expanded="open.toString()" aria-haspopup="true" class="flex max-w-[min(72vw,320px)] items-center gap-2 rounded-full p-1.5 pr-3 text-left transition hover:bg-[#EAF6FD] focus:outline-none focus:ring-2 focus:ring-marca">
         @if ($foto)
-            <img src="{{ $foto }}" alt="Foto de {{ $nombreCuenta }}" class="size-10 shrink-0 rounded-full border-2 border-[#EAF6FD] object-cover">
+            <img src="{{ $foto }}" alt="Foto de {{ $nombreCuenta }}" class="size-10 shrink-0 rounded-full border-2 border-black object-cover">
         @else
             <span class="flex size-10 shrink-0 items-center justify-center rounded-full bg-noche text-sm font-extrabold text-white">{{ $inicial }}</span>
         @endif
@@ -73,7 +73,7 @@
         <section x-transition class="w-full max-w-md overflow-hidden rounded-[20px] bg-[#F8FBFD] shadow-2xl">
             <div class="p-6 text-center sm:p-8">
                 @if ($foto)
-                    <img src="{{ $foto }}" alt="Foto de {{ $nombreCuenta }}" class="mx-auto size-24 rounded-full border-4 border-[#EAF6FD] object-cover">
+                    <img src="{{ $foto }}" alt="Foto de {{ $nombreCuenta }}" class="mx-auto size-24 rounded-full border-2 border-black object-cover">
                 @else
                     <span class="mx-auto flex size-24 items-center justify-center rounded-full bg-noche text-3xl font-extrabold text-white">{{ $inicial }}</span>
                 @endif

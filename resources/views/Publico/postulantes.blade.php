@@ -248,7 +248,7 @@
             <article id="postulacion-{{ $p->id }}" class="scroll-mt-24 flex flex-wrap items-center gap-5 rounded-2xl border border-slate-200 bg-white p-6 transition hover:shadow-lg hover:shadow-noche/10 target:border-marca target:ring-2 target:ring-marca/30">
 
                 {{-- Foto o icono --}}
-                <div class="flex size-14 shrink-0 items-center justify-center self-center overflow-hidden rounded-full border-2 border-[#EAF6FD] bg-[#EAF6FD] text-marca-texto">
+                <div class="flex size-14 shrink-0 items-center justify-center self-center overflow-hidden rounded-full border-2 border-black bg-[#EAF6FD] text-marca-texto">
                     @if ($foto)
                         <img src="{{ $foto }}" alt="Foto de {{ $nombrePersona }}" class="size-full object-cover">
                     @else

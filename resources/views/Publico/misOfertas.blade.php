@@ -280,10 +280,12 @@
                     'salario'          => '$' . number_format($oferta->salario, 0, ',', '.'),
                     'ubicacion'        => $oferta->ubicacion,
                     'publicada'        => \Carbon\Carbon::parse($oferta->fechaPublicacion)->format('d/m/Y'),
-                    'diasRestantes'    => max(0, \Carbon\Carbon::today('America/Bogota')->diffInDays(
-                        \Carbon\Carbon::parse($oferta->fechaLimite)->startOfDay(),
-                        false
-                    )),
+                    'diasRestantes' => (int) \Carbon\Carbon::now('America/Bogota')
+                        ->startOfDay()
+                        ->diffInDays(
+                            \Carbon\Carbon::parse($oferta->fechaLimite, 'America/Bogota')->startOfDay(),
+                            false
+                        ),
                     'vence'            => \Carbon\Carbon::parse($oferta->fechaLimite)->format('d/m/Y'),
                     'descripcion'      => $oferta->descripcion,
                     'requisitos'       => array_values(array_filter(

@@ -78,8 +78,7 @@
         <div class="flex flex-col gap-6">
         <aside class="{{ $tarjeta }} text-center">
 
-            <div class="mx-auto flex size-28 items-center justify-center overflow-hidden rounded-full bg-noche text-3xl font-extrabold text-white ring-4 ring-[#EAF6FD]">
-                <img id="foto-preview" data-foto-original="{{ $rutaFoto }}" src="{{ $rutaFoto ?? '' }}" alt="Foto de {{ $nombre }}" class="{{ $rutaFoto ? '' : 'hidden' }} size-full object-cover">
+            <div class="mx-auto flex size-28 items-center justify-center overflow-hidden rounded-full border-2 border-black bg-noche text-3xl font-extrabold text-white">                <img id="foto-preview" data-foto-original="{{ $rutaFoto }}" src="{{ $rutaFoto ?? '' }}" alt="Foto de {{ $nombre }}" class="{{ $rutaFoto ? '' : 'hidden' }} size-full object-cover">
                 <span id="foto-inicial" class="{{ $rutaFoto ? 'hidden' : '' }}">{{ $iniciales }}</span>
             </div>
 

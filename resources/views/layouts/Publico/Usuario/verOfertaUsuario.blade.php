@@ -127,6 +127,7 @@
                     texto('modal-vence', o.vence);
                     texto('modal-descripcion', o.descripcion);
                     texto('modal-postulaciones', o.postulaciones);
+
                     // Estado visual de la fecha de finalización
                     const tarjetaVence = document.getElementById('modal-tarjeta-vence');
                     const tituloVence = document.getElementById('modal-titulo-vence');
