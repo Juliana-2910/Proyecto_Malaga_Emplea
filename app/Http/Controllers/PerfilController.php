@@ -62,13 +62,13 @@ class PerfilController extends Controller
 
     private function mostrarCalificaciones(Usuario|Empresa $cuenta, calificacionService $calificacionService)
     {
-        $calificaciones = $calificacionService->historialDeCuenta($cuenta);
+        $calificaciones = $calificacionService->historialDeCuenta($cuenta, request()->user());
         $reputacion = $calificacionService->promedioRecibido($cuenta);
         $nombreCuenta = $cuenta instanceof Empresa ? $cuenta->nombreEmpresa : trim($cuenta->nombres . ' ' . $cuenta->apellidos);
         $esEmpresa = $cuenta instanceof Empresa;
         $foto = $cuenta->fotoPerfil ? asset('storage/' . ($esEmpresa ? 'empresas/' . $cuenta->fotoPerfil : $cuenta->fotoPerfil)) : null;
 
-        return view('Publico.partials.calificaciones', compact('calificaciones', 'cuenta', 'reputacion', 'nombreCuenta', 'esEmpresa', 'foto'));
+        return view('layouts.Publico.historialCalificaciones', compact('calificaciones', 'cuenta', 'reputacion', 'nombreCuenta', 'esEmpresa', 'foto'));
     }
 
     private function cuentaActual(): Usuario|Empresa

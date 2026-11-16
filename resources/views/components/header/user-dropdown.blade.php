@@ -88,22 +88,27 @@
         </section>
     </div>@endif
 
-    <div x-show="modalAbierto === 'calificaciones'" x-cloak x-transition.opacity class="fixed inset-0 z-[100] flex items-center justify-center bg-noche/65 p-2 backdrop-blur-sm sm:p-4" role="dialog" aria-modal="true" aria-labelledby="calificaciones-modal-titulo" @click.self="modalAbierto = null">
-        <section x-transition class="flex max-h-[92dvh] w-full max-w-5xl flex-col overflow-hidden rounded-[20px] bg-[#F8FBFD] shadow-2xl">
-            <header class="flex shrink-0 items-center justify-between gap-3 border-b border-[#B9E3F6] bg-white px-4 py-3 text-noche sm:px-5 sm:py-4">
-                <div class="flex items-center gap-4">
-                    <span class="flex size-10 shrink-0 items-center justify-center rounded-full bg-[#B9E3F6] text-marca-texto sm:size-11"><svg class="size-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 2.9 5.88 6.49.94-4.7 4.58 1.11 6.47L12 16.82l-5.8 3.05 1.1-6.47-4.7-4.58 6.5-.94L12 2Z"/></svg></span>
-                    <div><h2 id="calificaciones-modal-titulo" class="text-lg font-extrabold sm:text-xl">Calificaciones recibidas</h2><p class="mt-0.5 text-xs text-slate-500 sm:text-sm">Opiniones recibidas en tus contrataciones</p></div>
-                </div>
-                <button type="button" @click="modalAbierto = null" aria-label="Cerrar calificaciones" class="flex size-9 shrink-0 items-center justify-center rounded-full text-slate-600 transition hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-marca sm:size-10">
+        <div x-show="modalAbierto === 'calificaciones'" x-cloak x-transition.opacity class="fixed inset-0 z-[100] flex items-center justify-center bg-noche/65 p-2 backdrop-blur-sm sm:p-4" role="dialog" aria-modal="true" aria-labelledby="calificaciones-modal-titulo" @click.self="modalAbierto = null">
+        <section x-transition class="flex max-h-[92dvh] w-full max-w-[1120px] flex-col overflow-hidden rounded-[20px] bg-white shadow-2xl">
+            <header class="flex shrink-0 items-center gap-4 border-b border-[#D4EAF7] bg-white px-5 py-4 sm:px-7 sm:py-5">
+                <span class="flex size-11 shrink-0 items-center justify-center rounded-full bg-[#B9E3F6] text-marca-texto sm:size-[52px]"><svg class="size-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 2.9 5.88 6.49.94-4.7 4.58 1.11 6.47L12 16.82l-5.8 3.05 1.1-6.47-4.7-4.58 6.5-.94L12 2Z"/></svg></span>
+                <h2 id="calificaciones-modal-titulo" class="flex-1 text-xl font-extrabold text-noche sm:text-2xl">Calificaciones recibidas</h2>
+                <button type="button" @click="modalAbierto = null" aria-label="Cerrar calificaciones" class="flex size-11 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-700 transition hover:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-marca">
                     <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" d="m6 6 12 12M18 6 6 18"/></svg>
                 </button>
             </header>
-            <div x-ref="calificacionesScroll" class="min-h-0 flex-1 touch-pan-y overscroll-contain overflow-y-auto p-3 sm:p-4">
+            <div x-ref="calificacionesScroll" class="min-h-0 flex-1 touch-pan-y overscroll-contain overflow-y-auto px-4 py-4 sm:px-7 sm:py-5">
                 <div x-show="cargandoCalificaciones" class="py-12 text-center text-sm font-semibold text-slate-500">Cargando tu historial...</div>
                 <div x-show="errorCalificaciones" class="rounded-xl bg-red-50 p-4 text-sm font-semibold text-red-700">No pudimos cargar tus calificaciones. Cierra y vuelve a intentarlo.</div>
                 <div x-show="!cargandoCalificaciones && !errorCalificaciones" @click="cambiarPaginaCalificaciones($event)" x-html="htmlCalificaciones"></div>
             </div>
+            <footer class="flex shrink-0 flex-col gap-3 border-t border-slate-200 bg-white px-4 py-4 sm:flex-row sm:items-center sm:gap-5 sm:px-7">
+                <div class="flex flex-1 items-center gap-3 rounded-xl bg-[#EAF6FD] px-4 py-3 text-sm text-noche">
+                    <svg class="size-[22px] shrink-0 text-marca-texto" fill="none" viewBox="0 0 24 24" stroke-width="1.7" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"/></svg>
+                    El historial se actualiza automáticamente con cada nueva calificación.
+                </div>
+                <button type="button" @click="modalAbierto = null" class="rounded-xl border-2 border-marca bg-marca px-9 py-3 text-base font-bold text-noche transition hover:border-carbon hover:bg-carbon hover:text-white">Cerrar</button>
+            </footer>
         </section>
     </div>
 </div>

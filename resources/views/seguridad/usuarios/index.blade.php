@@ -1,6 +1,6 @@
 @extends('seguridad.layout')
 
-@section('title', 'Usuarios y roles')
+@section('title', 'Panel Administrativo')
 
 @section('content')
 <h1 class="text-xl font-semibold">Usuarios y roles</h1>
@@ -42,10 +42,10 @@
                                 <input type="hidden" name="roles[{{ $usuario->getKey() }}][]" value="{{ $rol->name }}">
                             @endif
                             <input type="checkbox" value="{{ $rol->name }}"
-                                   @unless ($bloqueado) name="roles[{{ $usuario->getKey() }}][]" @endunless
-                                   @checked($loTiene) @disabled($bloqueado)
-                                   aria-label="{{ $rol->name }} para {{ $usuario->name }}"
-                                   class="rounded border-slate-300 h-4 w-4 disabled:opacity-50">
+                                    @unless ($bloqueado) name="roles[{{ $usuario->getKey() }}][]" @endunless
+                                    @checked($loTiene) @disabled($bloqueado)
+                                    aria-label="{{ $rol->name }} para {{ $usuario->name }}"
+                                    class="rounded border-slate-300 h-4 w-4 disabled:opacity-50">
                             @if ($bloqueado)
                                 <span class="ml-1 text-xs text-slate-400">tu cuenta</span>
                             @endif
@@ -57,7 +57,7 @@
     </table>
 
     <div class="flex justify-end border-t border-slate-100 px-4 py-3">
-        <button type="submit" class="rounded-xl bg-[#333333] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#4DB6E8] hover:text-[#17232c]">Guardar asignaciones</button>
+        <button type="submit" class="rounded-xl bg-[#4DB6E8] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#333333]">Guardar asignaciones</button>
     </div>
 </form>
 @endsection

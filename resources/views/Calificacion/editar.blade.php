@@ -199,7 +199,7 @@
                         name="comentario"
                         id="comentario"
                         rows="4"
-                        maxlength="255"
+                        maxlength="100"
                         class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-700 placeholder:text-gray-400 focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]"
                         placeholder="Escribe un comentario...">{{ trim(old('comentario', $calificacion->comentario)) }}</textarea>
 

@@ -23,39 +23,6 @@ class calificacionService{
         return $this->calificacionRepository->listarTodos();
     }
 
-    public function historialDeCuenta(Usuario|Empresa $cuenta)
-    {
-        $historial = $this->calificacionRepository->historialDeCuenta($cuenta);
-        $historial->getCollection()->transform(function ($calificacion) {
-                $oferta = $calificacion->postulacion?->oferta;
-                $calificadorEsPublicador = $oferta && (
-                    ($oferta->idEmpresa && (int) $calificacion->idEmpresa === (int) $oferta->idEmpresa)
-                    || ($oferta->idUsuario && (int) $calificacion->idUsuario === (int) $oferta->idUsuario)
-                );
-                $calificacion->esPublicadorCalificador = (bool) $calificadorEsPublicador;
-                $calificacion->nombreCalificador = $calificacion->empresa?->nombreEmpresa
-                    ?? trim(($calificacion->usuario?->nombres ?? '') . ' ' . ($calificacion->usuario?->apellidos ?? ''));
-                $publicador = $oferta?->empresa;
-                $publicador ??= $oferta?->usuario;
-                $calificacion->nombrePublicador = $publicador instanceof Empresa
-                    ? $publicador->nombreEmpresa
-                    : trim(($publicador?->nombres ?? '') . ' ' . ($publicador?->apellidos ?? ''));
-                return $calificacion;
-            });
-
-        return $historial;
-    }
-
-    public function promedioRecibido(Usuario|Empresa $cuenta): array
-    {
-        return $this->calificacionRepository->promedioRecibido($cuenta);
-    }
-
-    public function cuentaCalificable(string $tipo, int $id): Usuario|Empresa
-    {
-        return $this->calificacionRepository->buscarCuentaCalificable($tipo, $id);
-    }
-
     public function guardar(array $datos)
     {
         $idPostulacion = (int) $datos['idPostulacion'];
@@ -261,4 +228,70 @@ class calificacionService{
 
         return $this->calificacionRepository->listarPaginado($buscar, self::POR_PAGINA);
     }
-}
+
+    public function historialDeCuenta(Usuario|Empresa $cuenta, Usuario|Empresa|null $visor = null)
+    {
+        $historial = $this->calificacionRepository->historialDeCuenta($cuenta);
+        $historial->getCollection()->transform(function ($calificacion) use ($visor) {
+                $oferta = $calificacion->postulacion?->oferta;
+                $calificadorEsPublicador = $oferta && (
+                    ($oferta->idEmpresa && (int) $calificacion->idEmpresa === (int) $oferta->idEmpresa)
+                    || ($oferta->idUsuario && (int) $calificacion->idUsuario === (int) $oferta->idUsuario)
+                );
+                $calificacion->esPublicadorCalificador = (bool) $calificadorEsPublicador;
+                $calificacion->nombreCalificador = $calificacion->empresa?->nombreEmpresa
+                    ?? trim(($calificacion->usuario?->nombres ?? '') . ' ' . ($calificacion->usuario?->apellidos ?? ''));
+                $publicador = $oferta?->empresa;
+                $publicador ??= $oferta?->usuario;
+                $calificacion->nombrePublicador = $publicador instanceof Empresa
+                    ? $publicador->nombreEmpresa
+                    : trim(($publicador?->nombres ?? '') . ' ' . ($publicador?->apellidos ?? ''));
+                $calificacion->urlPostulacion = $this->urlPostulacionPara($calificacion, $visor);
+                return $calificacion;
+            });
+
+        return $historial;
+    }
+
+    /** A qué postulación lleva la tarjeta, según quién mira el historial (o null si no corresponde). */
+    private function urlPostulacionPara($calificacion, Usuario|Empresa|null $visor): ?string
+    {
+        $postulacion = $calificacion->postulacion;
+        if (! $visor || ! $postulacion) {
+            return null;
+        }
+
+        $oferta = $postulacion->oferta;
+        $ancla = '#postulacion-' . $postulacion->id;
+
+        if ($visor instanceof Usuario) {
+            // La persona mira su propia postulación.
+            if ((int) $postulacion->idUsuario === (int) $visor->id) {
+                return route('Publico.postulaciones', ['destacar' => $postulacion->id]) . $ancla;
+            }
+            // La persona publicó la oferta y mira a su postulante.
+            if ((int) $oferta?->idUsuario === (int) $visor->id) {
+                return route('Publico.misOfertas.postulantes', ['id' => $oferta->id, 'destacar' => $postulacion->id]) . $ancla;
+            }
+            return null;
+        }
+
+        // La empresa mira a un postulante de su oferta (solo si tiene el permiso).
+        if ((int) $oferta?->idEmpresa === (int) $visor->id && $visor->can('ver postulacion')) {
+            return route('Publico.misOfertas.postulantes', ['id' => $oferta->id, 'destacar' => $postulacion->id]) . $ancla;
+        }
+
+        return null;
+    }
+
+    public function promedioRecibido(Usuario|Empresa $cuenta): array
+    {
+        return $this->calificacionRepository->promedioRecibido($cuenta);
+    }
+
+    public function cuentaCalificable(string $tipo, int $id): Usuario|Empresa
+    {
+        return $this->calificacionRepository->buscarCuentaCalificable($tipo, $id);
+    }
+
+    }

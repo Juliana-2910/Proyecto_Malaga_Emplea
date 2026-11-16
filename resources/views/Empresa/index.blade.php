@@ -186,8 +186,7 @@
                                 <div>
                                     <p class="text-xs font-medium text-gray-400">Fecha de registro</p>
                                     <p class="mt-1 text-sm font-medium text-gray-700">
-                                        {{ $empresa->created_at ? $empresa->created_at->format('d/m/Y') : 'No registrada' }}
-                                    </p>
+                                    {{ $empresa->created_at?->timezone('America/Bogota')->format('d/m/Y') ?? 'No registrada' }}                                    </p>
                                 </div>
 
                             </div>

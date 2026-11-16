@@ -1,6 +1,6 @@
 @extends('seguridad.layout')
 
-@section('title', 'Cuentas y estados')
+@section('title', 'Panel Administrativo')
 
 @section('content')
     <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
@@ -10,7 +10,7 @@
             <p class="mt-1 text-sm text-gray-500">Activa o restringe el acceso de personas y empresas.</p>
         </div>
         <a href="{{ route('seguridad.cuentas.create') }}"
-            class="inline-flex items-center justify-center rounded-xl bg-[#333333] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#4DB6E8] hover:text-[#17232c]">
+            class="inline-flex items-center justify-center rounded-xl bg-[#4DB6E8] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#333333]">
             Crear cuenta de persona
         </a>
     </div>

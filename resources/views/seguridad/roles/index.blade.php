@@ -1,11 +1,11 @@
 @extends('seguridad.layout')
 
-@section('title', 'Roles')
+@section('title', 'Panel Administrativo')
 
 @section('content')
 <div class="flex items-center justify-between">
     <h1 class="text-xl font-semibold">Roles</h1>
-    <a href="{{ route('seguridad.roles.create') }}" class="rounded-xl bg-[#333333] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#4DB6E8] hover:text-[#17232c]">Nuevo rol</a>
+    <a href="{{ route('seguridad.roles.create') }}" class="rounded-xl bg-[#4DB6E8] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#333333]">Nuevo rol</a>
 </div>
 
 <div class="bg-white rounded-xl border border-slate-200 overflow-x-auto">

@@ -79,8 +79,8 @@
     </div>
 
     <div class="flex justify-end gap-3 border-t border-slate-100 pt-4">
-        <a href="{{ route('seguridad.roles.index') }}" class="rounded-md border border-slate-300 px-4 py-2 text-sm text-slate-600">Cancelar</a>
-        <button type="submit" class="rounded-xl bg-[#333333] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#4DB6E8] hover:text-[#17232c]">Guardar</button>
+        <a href="{{ route('seguridad.roles.index') }}" class="rounded-xl bg-gray-500 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-[#333333]">Cancelar</a>
+        <button type="submit" class="rounded-xl bg-[#4DB6E8] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#333333]">Guardar</button>
     </div>
 </form>
 
