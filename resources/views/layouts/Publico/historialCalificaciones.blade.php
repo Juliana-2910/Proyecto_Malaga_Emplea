@@ -29,9 +29,9 @@
     <div class="flex flex-col gap-4 md:flex-row md:items-center md:gap-6">
         <div class="flex min-w-0 items-center gap-4 md:flex-1">
             @if ($foto)
-                <img src="{{ $foto }}" alt="Foto de {{ $nombreCuenta }}" class="size-20 shrink-0 rounded-full border-4 border-[#B9E3F6] object-cover sm:size-24">
+                <img src="{{ $foto }}" alt="Foto de {{ $nombreCuenta }}" class="size-20 shrink-0 rounded-full border-2 border-black object-cover sm:size-24">
             @else
-                <span class="flex size-20 shrink-0 items-center justify-center rounded-full border-4 border-[#B9E3F6] bg-noche text-3xl font-extrabold text-white sm:size-24">{{ $inicial }}</span>
+                <span class="flex size-20 shrink-0 items-center justify-center rounded-full border-2 border-black bg-noche text-3xl font-extrabold text-white sm:size-24">{{ $inicial }}</span>
             @endif
             <div class="flex min-w-0 flex-col items-start gap-2">
                 <h3 class="break-words text-2xl font-extrabold leading-tight text-noche sm:text-[28px]">{{ $nombreCuenta }}</h3>
