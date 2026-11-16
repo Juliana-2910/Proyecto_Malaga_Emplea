@@ -276,6 +276,7 @@
                             'id'          => $oferta->id,
                             'titulo'      => $oferta->titulo,
                             'publicador'  => $oferta->publicador,
+                            'telefono'    => $publicador?->telefono,
                             'foto'        => $fotoPublicador,
                             'categoria'   => $oferta->categoria,
                             'contrato'    => $contratos[$oferta->tipoContrato] ?? $oferta->tipoContrato,

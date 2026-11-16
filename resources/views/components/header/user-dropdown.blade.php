@@ -107,7 +107,6 @@
                     <svg class="size-[22px] shrink-0 text-marca-texto" fill="none" viewBox="0 0 24 24" stroke-width="1.7" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"/></svg>
                     El historial se actualiza automáticamente con cada nueva calificación.
                 </div>
-                <button type="button" @click="modalAbierto = null" class="rounded-xl border-2 border-marca bg-marca px-9 py-3 text-base font-bold text-noche transition hover:border-carbon hover:bg-carbon hover:text-white">Cerrar</button>
             </footer>
         </section>
     </div>
