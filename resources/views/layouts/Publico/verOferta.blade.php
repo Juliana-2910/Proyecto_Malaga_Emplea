@@ -187,7 +187,7 @@
                 fondo = '#FEE2E2';
                 color = '#991B1B';
 
-                titulo.textContent = 'VENCIDA';
+                titulo.textContent = 'VENCIÓ EL';
                 diasTexto.textContent = '';
 
             } else if (dias < 3) {

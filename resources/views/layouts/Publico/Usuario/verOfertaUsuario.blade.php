@@ -1,4 +1,4 @@
-    {{-- MODAL VER OFERTA (la que ve el usuario)--}}
+{{-- MODAL VER OFERTA (la que ve el usuario)--}}
     <div id="modal-oferta" hidden
         style="display:none;position:fixed;top:0;right:0;bottom:0;left:0;z-index:50;align-items:center;justify-content:center;padding:16px;box-sizing:border-box;background:rgba(18,48,63,0.6)">
         <div role="dialog" aria-modal="true" aria-labelledby="modal-titulo"
@@ -90,16 +90,46 @@
 
                     <button type="button" data-cerrar-modal class="{{ $btnSecundario }} cursor-pointer">Cerrar</button>
                     @if (! $esEmpresa)
-                        <button type="submit" class="{{ $btnPrimario }} cursor-pointer">Postularme</button>
+                        <button type="button" data-abrir-aviso-estafas class="{{ $btnPrimario }} cursor-pointer">Postularme</button>
                     @endif
                 </form>
                 @endunless
             </div>
         </div>
 
+        {{-- AVISO ANTIESTAFAS: se muestra antes de enviar la postulación --}}
+        @unless ($esEmpresa)
+            <div id="modal-aviso-estafas" hidden
+                style="display:none;position:fixed;top:0;right:0;bottom:0;left:0;z-index:60;align-items:center;justify-content:center;padding:16px;box-sizing:border-box;background:rgba(18,48,63,0.7)">
+                <div role="alertdialog" aria-modal="true" aria-labelledby="aviso-estafas-titulo" aria-describedby="aviso-estafas-texto"
+                    style="width:100%;max-width:480px;max-height:100%;overflow:auto;border-radius:20px;background:#FFFFFF;box-shadow:0 24px 64px rgba(18,48,63,0.35);font-family:inherit">
+
+                    <div style="padding:40px 32px 30px;text-align:center">
+                        <span style="width:84px;height:84px;margin:0 auto 22px;border-radius:50%;background:#FEF3C7;color:#B45309;display:flex;align-items:center;justify-content:center">
+                            <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M12 3l7.5 3v5.5c0 4.4-3 8.1-7.5 9.5-4.5-1.4-7.5-5.1-7.5-9.5V6L12 3z" />
+                                <path d="M12 8.5v4.2M12 15.8h.01" />
+                            </svg>
+                        </span>
+
+                        <h2 id="aviso-estafas-titulo" style="margin:0 0 14px;font-size:26px;font-weight:800;color:#12303F;line-height:1.25">¡Evita las estafas!</h2>
+
+                        <p id="aviso-estafas-texto" style="margin:0;font-size:16px;line-height:1.7;color:#3E4C59">
+                            Málaga Emplea no cobra por postularse, participar en procesos de selección ni acceder a oportunidades laborales. Nunca entregues dinero para conseguir un empleo.
+                        </p>
+                    </div>
+
+                    <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:12px;padding:18px 24px;border-top:1px solid #E3E8EF;background:#FFFFFF">
+                        <button type="button" data-cerrar-aviso class="{{ $btnSecundario }} cursor-pointer">Cancelar</button>
+                        <button type="button" data-continuar-postulacion class="{{ $btnPrimario }} cursor-pointer">Continuar</button>
+                    </div>
+                </div>
+            </div>
+        @endunless
+
     @push('scripts')
         <script>
-                        // Modal de ver oferta y postularse //
+            // Modal de ver oferta y postularse //
 
             (function () {
                 const modal = document.getElementById('modal-oferta');
@@ -221,6 +251,51 @@
                 document.addEventListener('keydown', function (e) {
                     if (e.key === 'Escape' && !modal.hidden) cerrar();
                 });
+            })();
+        </script>
+
+        <script>
+        // Aviso antiestafas antes de postularse //
+            (function () {
+                const aviso = document.getElementById('modal-aviso-estafas');
+                const formPostular = document.getElementById('modal-form-postular');
+                if (!aviso || !formPostular) return;
+
+                const botonPostular = formPostular.querySelector('[data-abrir-aviso-estafas]');
+                const botonContinuar = aviso.querySelector('[data-continuar-postulacion]');
+
+                function abrirAviso() {
+                    botonContinuar.disabled = false;
+                    aviso.hidden = false;
+                    aviso.style.display = 'flex';
+                    botonContinuar.focus();
+                }
+
+                function cerrarAviso() {
+                    aviso.hidden = true;
+                    aviso.style.display = 'none';
+                    if (botonPostular) botonPostular.focus();
+                }
+
+                if (botonPostular) botonPostular.addEventListener('click', abrirAviso);
+
+                aviso.addEventListener('click', function (e) {
+                    if (e.target.closest('[data-cerrar-aviso]') || e.target === aviso) cerrarAviso();
+                });
+
+                // Al aceptar, se envía el formulario que ya existía (evita doble clic).
+                botonContinuar.addEventListener('click', function () {
+                    botonContinuar.disabled = true;
+                    formPostular.submit();
+                });
+
+                // Escape cierra solo el aviso y no deja que cierre también el modal de la oferta.
+                document.addEventListener('keydown', function (e) {
+                    if (e.key === 'Escape' && !aviso.hidden) {
+                        e.stopImmediatePropagation();
+                        cerrarAviso();
+                    }
+                }, true);
             })();
         </script>
     @endpush

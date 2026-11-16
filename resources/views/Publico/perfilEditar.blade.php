@@ -140,8 +140,6 @@
                     </div>
                 </div>
 
-                @include('layouts.Publico.avisosPaginas')
-
                 <button type="button" x-show="!abierto" @click="abierto = true" class="{{ $btnSecundario }} mt-4 w-full cursor-pointer">
                     Cambiar contraseña
                 </button>
