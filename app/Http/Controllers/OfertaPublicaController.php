@@ -38,7 +38,7 @@ class OfertaPublicaController extends Controller
                 $request->user()
             );
 
-            return view('Publico.UsuarioOfertas', $datos);
+            return view('Publico.usuarioOfertas', $datos);
         } catch (InvalidArgumentException $e) {
             // Solo errores de filtros inválidos: se vuelve al listado sin filtros.
             return redirect('/empleos')->with('error', $e->getMessage());
