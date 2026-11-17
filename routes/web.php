@@ -42,6 +42,7 @@ Route::middleware(['auth:web,empresa', 'cuenta.activa'])->group(function () {
     Route::get('/mis-ofertas/{id}/postulantes', [OfertaPublicaController::class, 'postulantes'])->whereNumber('id')->middleware('empresa.permiso:ver postulacion')->name('Publico.misOfertas.postulantes');
     Route::post('/mis-ofertas/postulantes/{id}/calificar', [OfertaPublicaController::class, 'calificarPostulante'])->whereNumber('id')->middleware('empresa.permiso:crear calificacion')->name('Publico.misOfertas.calificarPostulante');
     Route::patch('/mis-ofertas/postulantes/{id}/estado', [OfertaPublicaController::class, 'actualizarEstadoPostulante'])->whereNumber('id')->middleware('empresa.permiso:editar postulacion')->name('Publico.misOfertas.actualizarPostulante');
+    Route::put('/mi-perfil/contrasena', [PerfilController::class, 'cambiarContrasena'])->middleware('empresa.permiso:editar perfil')->name('perfil.contrasena');
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 

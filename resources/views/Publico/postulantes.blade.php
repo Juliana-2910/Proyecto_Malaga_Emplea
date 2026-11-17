@@ -248,7 +248,7 @@
             <article id="postulacion-{{ $p->id }}" class="scroll-mt-24 flex flex-wrap items-center gap-5 rounded-2xl border border-slate-200 bg-white p-6 transition hover:shadow-lg hover:shadow-noche/10 target:border-marca target:ring-2 target:ring-marca/30">
 
                 {{-- Foto o icono --}}
-                <div class="flex size-14 shrink-0 items-center justify-center self-center overflow-hidden rounded-full border-2 border-[#EAF6FD] bg-[#EAF6FD] text-marca-texto">
+                <div class="flex size-14 shrink-0 items-center justify-center self-center overflow-hidden rounded-full border-2 border-black bg-[#EAF6FD] text-marca-texto">
                     @if ($foto)
                         <img src="{{ $foto }}" alt="Foto de {{ $nombrePersona }}" class="size-full object-cover">
                     @else
@@ -256,25 +256,68 @@
                     @endif
                 </div>
 
+
                 {{-- Información --}}
                 <div class="flex min-w-[260px] flex-1 flex-col gap-2">
+
+                    @php
+                        $reputacion = $p->reputacionUsuario;
+                        $promedioPostulante = rtrim(
+                            rtrim(number_format($reputacion['promedio'], 2, '.', ''), '0'),
+                            '.'
+                        );
+                    @endphp
+
+                    {{-- NOMBRE Y CALIFICACIÓN EN LA MISMA LÍNEA --}}
                     <div class="flex flex-wrap items-center gap-2">
-                        <h3 class="text-[19px] font-bold text-noche">{{ $nombrePersona }}</h3>
-                        @if (($p->reputacionUsuario['total'] ?? 0) > 0)
-                            @php $promedioPostulante = rtrim(rtrim(number_format($p->reputacionUsuario['promedio'], 2, '.', ''), '0'), '.'); @endphp
-                            @if ($puedeVerCalificaciones)<button type="button" @click="$dispatch('abrir-calificaciones', { url: '{{ route('perfil.calificaciones.publicas', ['usuario', $p->usuario->id]) }}' })" class="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-extrabold text-noche hover:bg-amber-100 focus:outline-none focus:ring-2 focus:ring-amber-400" aria-label="Promedio {{ $promedioPostulante }} de 5">@else<span class="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-extrabold text-noche" aria-label="Promedio {{ $promedioPostulante }} de 5">@endif
-                                <span class="text-amber-400" aria-hidden="true">{{ str_repeat('★', (int) round($p->reputacionUsuario['promedio'])) }}{{ str_repeat('☆', 5 - (int) round($p->reputacionUsuario['promedio'])) }}</span>
-                                {{ $promedioPostulante }}/5
-                            @if ($puedeVerCalificaciones)</button>@else</span>@endif
+
+                        <h3 class="text-[19px] font-bold text-noche">
+                            {{ $nombrePersona }}
+                        </h3>
+
+                        @if ($puedeVerCalificaciones)
+                            <button type="button"
+                                @click="$dispatch('abrir-calificaciones', { url: '{{ route('perfil.calificaciones.publicas', ['usuario', $u->id]) }}' })"
+                                class="inline-flex w-fit items-center gap-1.5 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-800 hover:bg-amber-100 focus:outline-none focus:ring-2 focus:ring-amber-400"
+                                aria-label="{{ $reputacion['total'] > 0 ? $promedioPostulante . ' de 5, ' . $reputacion['total'] . ' calificaciones' : 'Sin calificaciones' }}">
                         @else
-                            @if ($puedeVerCalificaciones)<button type="button" @click="$dispatch('abrir-calificaciones', { url: '{{ route('perfil.calificaciones.publicas', ['usuario', $p->usuario->id]) }}' })" class="text-xs font-semibold text-slate-500 underline decoration-slate-300 underline-offset-2 hover:text-marca-texto">Sin calificaciones</button>@else<span class="text-xs font-semibold text-slate-500">Sin calificaciones</span>@endif
+                            <span
+                                class="inline-flex w-fit items-center gap-1.5 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-800"
+                                aria-label="{{ $reputacion['total'] > 0 ? $promedioPostulante . ' de 5, ' . $reputacion['total'] . ' calificaciones' : 'Sin calificaciones' }}">
                         @endif
+
+                            <svg class="size-4 text-amber-500" viewBox="0 0 24 24"
+                                fill="currentColor" aria-hidden="true">
+                                <path d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z" />
+                            </svg>
+
+                            @if ($reputacion['total'] > 0)
+                                {{ $promedioPostulante }}/5
+
+                                <span class="text-amber-700">
+                                    · {{ $reputacion['total'] }}
+                                    {{ $reputacion['total'] === 1 ? 'calificación' : 'calificaciones' }}
+                                </span>
+                            @else
+                                Sin calificaciones
+                            @endif
+
+                        @if ($puedeVerCalificaciones)
+                            </button>
+                        @else
+                            </span>
+                        @endif
+
                     </div>
 
-                    <span class="text-sm text-slate-500">{{ $contacto }}</span>
+                    <span class="text-sm text-slate-500">
+                        {{ $contacto }}
+                    </span>
 
                     <div class="flex flex-wrap gap-2">
-                        <span class="{{ $etiqueta }} text-sm text-slate-500">Se postuló el {{ $fechaPostulo }}</span>
+                        <span class="{{ $etiqueta }} text-sm text-slate-500">
+                            Se postuló el {{ $fechaPostulo }}
+                        </span>
                     </div>
 
                 </div>

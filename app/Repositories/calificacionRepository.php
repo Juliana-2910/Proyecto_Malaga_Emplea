@@ -176,4 +176,29 @@ class calificacionRepository{
         ->orderByDesc('id')
         ->get();
     }
+
+    public function listarPaginado(string $buscar, int $porPagina)
+    {
+        return Calificacion::with([
+                'usuario', 'empresa', 'usuarioCalificado', 'empresaCalificada',
+                'postulacion.usuario', 'postulacion.oferta.empresa', 'postulacion.oferta.usuario',
+            ])
+            ->when($buscar !== '', function ($q) use ($buscar) {
+                foreach (preg_split('/\s+/', $buscar) as $palabra) {
+                    $q->where(function ($q) use ($palabra) {
+                        $q->where('comentario', 'like', "%{$palabra}%")
+                        ->orWhere('fecha', 'like', "%{$palabra}%")
+                        ->orWhereHas('postulacion.usuario', fn ($u) => $u->where('nombres', 'like', "%{$palabra}%")
+                                                                        ->orWhere('apellidos', 'like', "%{$palabra}%"))
+                        ->orWhereHas('postulacion.oferta', fn ($o) => $o->where('titulo', 'like', "%{$palabra}%"))
+                        ->orWhereHas('postulacion.oferta.empresa', fn ($e) => $e->where('nombreEmpresa', 'like', "%{$palabra}%"))
+                        ->orWhereHas('postulacion.oferta.usuario', fn ($u) => $u->where('nombres', 'like', "%{$palabra}%")
+                                                                                ->orWhere('apellidos', 'like', "%{$palabra}%"));
+                    });
+                }
+            })
+            ->orderBy('id')
+            ->paginate($porPagina)
+            ->withQueryString();
+    }
 }

@@ -8,6 +8,8 @@ use App\Models\OfertaServicios;
 use App\Services\ofertaServiciosService;
 use App\Services\ofertasService;
 use App\Services\serviciosService;
+use Exception;
+use InvalidArgumentException;
 use Illuminate\Http\Request;
 
 class OfertaServiciosController extends Controller
@@ -28,10 +30,15 @@ class OfertaServiciosController extends Controller
         $this->ofertasService = $ofertasService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $ofertaServicios = $this->ofertaServiciosService->listarTodos();
-        return view('OfertaServicios.index',compact('ofertaServicios'));
+        try {
+            $ofertaServicios = $this->ofertaServiciosService->listarPaginado($request->only('buscar'));
+
+            return view('OfertaServicios.index', compact('ofertaServicios'));
+        } catch (InvalidArgumentException $e) {
+            return redirect()->route('ofertaServicios.index')->with('error', $e->getMessage());
+        }
     }
 
     public function create()
@@ -69,7 +76,12 @@ class OfertaServiciosController extends Controller
 
     public function destroy($id)
     {
-        $this->ofertaServiciosService->eliminar($id);
+        try {
+            $this->ofertaServiciosService->eliminar((int) $id);
+        } catch (Exception $e) {
+            return back()->with('error', $e->getMessage());
+        }
+
         return redirect()->route('ofertaServicios.index')->with('eliminar', 'Oferta Servicio eliminada exitosamente');
     }
 }

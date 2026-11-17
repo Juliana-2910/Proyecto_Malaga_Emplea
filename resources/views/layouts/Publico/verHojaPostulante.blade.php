@@ -2,7 +2,7 @@
 <div id="modal-hoja-postulante" hidden
     style="display:none;position:fixed;top:0;right:0;bottom:0;left:0;z-index:55;align-items:center;justify-content:center;padding:16px;box-sizing:border-box;background:rgba(18,48,63,0.6)">
     <div role="dialog" aria-modal="true" aria-labelledby="hp-nombre"
-        style="width:100%;max-width:720px;max-height:100%;display:flex;flex-direction:column;overflow:hidden;border-radius:20px;background:#FFFFFF;box-shadow:0 24px 64px rgba(18,48,63,0.35);font-family:inherit">
+        style="width:100%;max-width:700px;max-height:100%;display:flex;flex-direction:column;overflow:hidden;border-radius:20px;background:#FFFFFF;box-shadow:0 24px 64px rgba(18,48,63,0.35);font-family:inherit">
 
         {{-- Encabezado --}}
         <div style="padding:28px 28px 20px;display:flex;align-items:flex-start;gap:16px;border-bottom:1px solid #E3E8EF">
@@ -55,8 +55,8 @@
 
             </div>
 
-            {{-- Perfil profesional --}}
-            <label style="display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:500;color:#52606D">
+            {{-- Perfil personal --}}
+            <label style="display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:700;color:#52606D">
                 <span style="display:flex;justify-content:space-between;gap:12px">
                     <span>Perfil Personal</span>
                     <span id="hp-perfil-contador" style="font-weight:600;color:#7B8794">0/255</span>
@@ -68,7 +68,7 @@
             {{-- Experiencia laboral --}}
             <label style="display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:700;color:#52606D">
                 <span style="display:flex;justify-content:space-between;gap:12px">
-                    <span>Experiencia laboral</span>
+                    <span>Experiencia Laboral</span>
                     <span id="hp-exp-contador" style="font-weight:600;color:#7B8794">0/255</span>
                 </span>
                 <textarea id="hp-exp" rows="3" readonly

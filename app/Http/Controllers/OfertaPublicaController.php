@@ -8,6 +8,8 @@ use App\Http\Requests\HojaDeVidaStoreRequest;
 use App\Services\hojaDeVidaService;
 use App\Http\Requests\OfertaStoreRequest;
 use App\Http\Requests\OfertaUpdateRequest;
+use App\Http\Requests\CalificarContratacionRequest;
+use App\Http\Requests\CalificarPostulanteRequest;
 use App\Services\calificacionService;
 use Exception;
 use Illuminate\Http\Request;
@@ -43,7 +45,7 @@ class OfertaPublicaController extends Controller
         }
     }
 
-        public function postular(int $id)
+    public function postular(int $id)
     {
     // Solo las cuentas personales pueden postularse.
     $usuario = request()->user();
@@ -153,29 +155,14 @@ class OfertaPublicaController extends Controller
         }
     }
 
-    public function calificar(Request $request, int $id)
+    public function calificar(CalificarContratacionRequest $request, int $id)
     {
-        $usuario = $request->user();
-        abort_unless($usuario instanceof \App\Models\Usuario, 403, 'Solo los usuarios pueden enviar esta calificación.');
-
-        // Los errores van en su propio "bolsillo" para no abrir otros modales.
-        $datos = $request->validateWithBag('calificar', [
-            'puntuacion' => 'required|integer|min:1|max:5',
-            'comentario' => 'required|string|max:255',
-        ], [
-            'puntuacion.required' => 'Elige de 1 a 5 estrellas.',
-            'puntuacion.min'      => 'Elige de 1 a 5 estrellas.',
-            'puntuacion.max'      => 'Elige de 1 a 5 estrellas.',
-            'comentario.required' => 'Cuéntanos cómo fue tu experiencia.',
-            'comentario.max'      => 'El comentario no puede superar los 255 caracteres.',
-        ]);
-
         try {
             $this->calificacionService->calificarContratacion(
                 $id,
-                (int) $usuario->id,
-                (int) $datos['puntuacion'],
-                $datos['comentario']
+                (int) $request->user()->id,
+                (int) $request->validated('puntuacion'),
+                $request->validated('comentario')
             );
         } catch (Exception $e) {
             return back()->with('error', $e->getMessage());
@@ -221,28 +208,14 @@ class OfertaPublicaController extends Controller
         });
     }
 
-    public function calificarPostulante(Request $request, int $id)
+    public function calificarPostulante(CalificarPostulanteRequest $request, int $id)
     {
-        $publicador = $request->user();
-        abort_unless($publicador, 403);
-
-        $datos = $request->validateWithBag('calificar', [
-            'puntuacion' => ['required', 'integer', 'min:1', 'max:5'],
-            'comentario' => ['required', 'string', 'max:255'],
-        ], [
-            'puntuacion.required' => 'Elige de 1 a 5 estrellas.',
-            'puntuacion.min' => 'Elige de 1 a 5 estrellas.',
-            'puntuacion.max' => 'Elige de 1 a 5 estrellas.',
-            'comentario.required' => 'Cuéntanos cómo fue la experiencia.',
-            'comentario.max' => 'El comentario no puede superar los 255 caracteres.',
-        ]);
-
         try {
             $this->calificacionService->calificarPostulante(
                 $id,
-                $publicador,
-                (int) $datos['puntuacion'],
-                $datos['comentario']
+                $request->user(),
+                (int) $request->validated('puntuacion'),
+                $request->validated('comentario')
             );
         } catch (Exception $e) {
             return back()->with('error', $e->getMessage());

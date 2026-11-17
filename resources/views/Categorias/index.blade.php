@@ -7,7 +7,7 @@
 
 @section('content')
 
-<div class="min-h-screen bg-gray-100 py-8">
+<div class="min-h-screen py-8">
 
     <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
 
@@ -15,29 +15,56 @@
         <div class="mb-7 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
 
             <div>
-
                 <h1 class="text-2xl font-bold tracking-tight text-gray-800 sm:text-3xl">
                     Categorías
                 </h1>
-
                 <p class="mt-1 text-sm text-gray-500">
                     Gestión de categorías laborales
                 </p>
+            </div>
+
+        </div>
+
+        {{-- BUSCADOR --}}
+        <form method="GET" action="{{ route('categorias.index') }}"
+            class="mb-6 flex w-full flex-wrap items-center gap-3">
+
+            <div class="flex h-11 w-2/3 items-center gap-2.5 rounded-full border border-gray-200 bg-white pl-4 pr-1.5 shadow-sm transition focus-within:border-[#4DB6E8] focus-within:ring-[3px] focus-within:ring-[#4DB6E8]/25">
+
+                @php( $icon = 'magnifying-glass')
+                @include('layouts.partials.icons')
+
+                <input type="text" name="buscar" value="{{ request('buscar') }}" maxlength="100" autocomplete="off" placeholder="Buscar categoría..."
+                    class="min-w-0 flex-1 border-0 bg-transparent p-0 text-sm text-gray-700 placeholder:text-gray-400 focus:outline-none focus:ring-0">
+
+                <button type="submit"
+                    class="h-[34px] shrink-0 rounded-full bg-[#4DB6E8] px-4 text-[13px] font-semibold text-white transition duration-200 hover:bg-[#333333]">
+                    Buscar
+                </button>
 
             </div>
 
-            <a
-                href="{{ route('categorias.create') }}"
-                class="inline-flex items-center justify-center gap-2 rounded-xl bg-[#4DB6E8] px-5 py-3 text-sm font-semibold text-white shadow-sm transition duration-200 hover:bg-[#333333]">
+            @if (request('buscar'))
+                <a href="{{ route('categorias.index') }}"
+                    class="inline-flex items-center gap-1.5 text-[13px] font-semibold text-gray-500 transition hover:text-gray-800">
+
+                    @php( $icon = 'equisfiltros')
+                    @include('layouts.partials.icons')
+
+                    Limpiar
+                </a>
+            @endif
+
+            <a href="{{ route('categorias.create') }}"
+                class="ml-auto inline-flex items-center justify-center gap-2 rounded-full bg-[#4DB6E8] px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition duration-200 hover:bg-[#333333]">
 
                 @php($icon = 'plus')
                 @include('layouts.partials.icons')
 
                 Nueva Categoría
-
             </a>
 
-        </div>
+        </form>
 
         {{-- TARJETA PRINCIPAL --}}
         <div class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-[0_10px_35px_rgba(77,182,232,0.20)]">
@@ -198,23 +225,37 @@
                                             @include('layouts.partials.icons')
                                         </div>
 
-                                        <h3 class="text-lg font-semibold text-gray-800">
-                                            No hay categorías registradas
-                                        </h3>
+                                        @if (request('buscar'))
 
-                                        <p class="mx-auto mt-2 max-w-md text-sm text-gray-500">
-                                            Todavía no existen categorías laborales registradas en el sistema.
-                                        </p>
+                                            <h3 class="text-lg font-semibold text-gray-800">
+                                                No se encontraron resultados
+                                            </h3>
 
-                                        <a
-                                            href="{{ route('categorias.create') }}"
-                                            class="mt-5 inline-flex items-center gap-2 rounded-xl bg-[#4DB6E8] px-5 py-2.5 text-sm font-semibold text-white transition duration-200 hover:bg-[#333333]">
+                                            <p class="mx-auto mt-2 max-w-md text-sm text-gray-500">
+                                                No hay categorías que coincidan con «{{ request('buscar') }}».
+                                            </p>
 
-                                            @php($icon = 'plus')
-                                            @include('layouts.partials.icons')
+                                        @else
 
-                                            Nueva categoría
-                                        </a>
+                                            <h3 class="text-lg font-semibold text-gray-800">
+                                                No hay categorías registradas
+                                            </h3>
+
+                                            <p class="mx-auto mt-2 max-w-md text-sm text-gray-500">
+                                                Todavía no existen categorías laborales registradas en el sistema.
+                                            </p>
+
+                                            <a
+                                                href="{{ route('categorias.create') }}"
+                                                class="mt-5 inline-flex items-center gap-2 rounded-xl bg-[#4DB6E8] px-5 py-2.5 text-sm font-semibold text-white transition duration-200 hover:bg-[#333333]">
+
+                                                @php($icon = 'plus')
+                                                @include('layouts.partials.icons')
+
+                                                Nueva categoría
+                                            </a>
+
+                                        @endif
 
                                     </div>
 
@@ -232,35 +273,13 @@
 
         </div>
 
-        {{-- CONTADOR --}}
-        @if ($categorias->count() > 0)
-
-            <div class="mt-4 flex items-center justify-between px-1">
-
-                <p class="text-sm text-gray-500">
-
-                    Mostrando
-
-                    <span class="font-semibold text-gray-800">
-                        {{ $categorias->count() }}
-                    </span>
-
-                    {{ $categorias->count() == 1
-                        ? 'categoría registrada'
-                        : 'categorías registradas' }}
-                </p>
-
-                <div class="hidden items-center gap-2 text-xs text-gray-400 sm:flex">
-
-                    <span class="h-2 w-2 rounded-full bg-[#4DB6E8]"></span>
-
-                    Málaga Emplea
-                </div>
-
-            </div>
-
-        @endif
-
+        {{-- CONTADOR + PAGINADO + MARCA --}}
+        @include('layouts.partials.paginacion', [
+            'paginador' => $categorias,
+            'singular'  => 'categoría registrada',
+            'plural'    => 'categorías registradas',
+        ])
+        
     </div>
 
 </div>

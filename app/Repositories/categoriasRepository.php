@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Repositories;
+use App\Models\Servicios;
 
 use App\Models\Categoria;
 
@@ -32,6 +33,19 @@ class categoriasRepository{
     {
         $categoria = Categoria::findOrFail($id);
         $categoria->update($datos);
+    }
+
+    public function listarPaginado(string $buscar, int $porPagina)
+    {
+        return Categoria::query()->when($buscar !== '', fn ($q) => $q->where('nombre', 'like', "%{$buscar}%"))
+            ->orderBy('id')
+            ->paginate($porPagina)
+            ->withQueryString(); // conserva ?buscar=... al cambiar de página
+    }
+
+    public function tieneServicios(int $id): bool
+    {
+        return Servicios::where('idCategoria', $id)->exists();
     }
 }
 

@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use App\Services\postulacionService;
 use App\Services\usuariosService;
 use App\Services\ofertasService;
+use InvalidArgumentException;
+use Exception;
+use Illuminate\Database\QueryException;
 use App\Http\Requests\PostulacionStoreRequest;
 use App\Http\Requests\PostulacionUpdateRequest;
 
@@ -28,10 +31,15 @@ class PostulacionController extends Controller
         $this->ofertasService = $ofertasService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $postulaciones = $this->postulacionService->listarTodos();
-        return view('Postulacion.index', compact('postulaciones'));
+        try {
+            $postulaciones = $this->postulacionService->listarPaginado($request->only('buscar'));
+
+            return view('Postulacion.index', compact('postulaciones'));
+        } catch (InvalidArgumentException $e) {
+            return redirect()->route('postulacion.index')->with('error', $e->getMessage());
+        }
     }
 
     public function misPostulaciones()
@@ -89,7 +97,14 @@ class PostulacionController extends Controller
 
     public function destroy($id)
     {
-        $this->postulacionService->eliminar($id);
+        try {
+            $this->postulacionService->eliminar((int) $id);
+        } catch (QueryException $e) {
+            return back()->with('error', 'No se puede eliminar la postulación porque tiene información relacionada.');
+        } catch (Exception $e) {
+            return back()->with('error', $e->getMessage());
+        }
+
         return redirect()->route('postulacion.index')->with('eliminar', 'Postulación eliminada exitosamente.');
     }
 }

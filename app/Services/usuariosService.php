@@ -5,12 +5,15 @@ namespace App\Services;
 use App\Repositories\usuariosRepository;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
+use InvalidArgumentException;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 class usuariosService{
 
     private usuariosRepository $usuariosRepository;
     private hojaDeVidaService $hojaDeVidaService;
+    private const POR_PAGINA = 9;
 
     public function __construct(
         usuariosRepository $usuariosRepository,
@@ -64,17 +67,22 @@ class usuariosService{
 
     public function eliminar(int $id)
     {
-        $usuario = $this->usuariosRepository->buscarPorId($id); // Buscar el usuario
-        if ($usuario->fotoPerfil) {
-            Storage::disk('public')->delete(
-                $usuario->fotoPerfil
-            );  // Eliminar foto de perfil
+        $usuario = $this->usuariosRepository->buscarPorId($id);
+        $fotoPerfil = $usuario->fotoPerfil;
+
+        // Si algo falla (por ejemplo, postulaciones en curso), no se borra nada
+        DB::transaction(function () use ($usuario, $id) {
+            foreach ($usuario->hojaDeVida as $hoja) {
+                $this->hojaDeVidaService->eliminar($hoja->id);
+            }
+
+            $this->usuariosRepository->eliminar($id);
+        });
+
+        // La foto se borra al final, solo si el usuario sí se eliminó
+        if ($fotoPerfil) {
+            Storage::disk('public')->delete($fotoPerfil);
         }
-        $hojasDeVida = $usuario->hojaDeVida; // Obtener hojas de vida asociadas
-        foreach ($hojasDeVida as $hoja) {
-            $this->hojaDeVidaService->eliminar($hoja->id); // Eliminar cada hoja de vida
-        }
-        $this->usuariosRepository->eliminar($id); // Finalmente eliminar el usuario
     }
 
     public function buscarPorId(int $id)
@@ -112,6 +120,17 @@ class usuariosService{
             $datos['fotoPerfil'] = null;
         }
         return $this->usuariosRepository->actualizar($id, $datos);
+    }
+
+    public function listarPaginado(array $filtros)
+    {
+        $buscar = trim((string) ($filtros['buscar'] ?? ''));
+
+        if (mb_strlen($buscar) > 100) {
+            throw new InvalidArgumentException('La búsqueda no puede superar los 100 caracteres.');
+        }
+
+        return $this->usuariosRepository->listarPaginado($buscar, self::POR_PAGINA);
     }
 }
 

@@ -126,10 +126,10 @@ class PanelPublicoTest extends TestCase
             'puntuacion' => 5,
         ]);
 
-        $this->get(route('perfil.calificaciones'))->assertOk()->assertSee('Calificación recibida');
+        $this->get(route('perfil.calificaciones'))->assertOk()->assertSee('Publicado por');
         $this->actingAs($empresa, 'empresa')->get(route('perfil.calificaciones'))
             ->assertOk()
-            ->assertSee('Calificación enviada');
+            ->assertSee('Calificado por');
 
         $this->post(route('Publico.misOfertas.calificarPostulante', $postulacion->id), [
             'puntuacion' => 4,

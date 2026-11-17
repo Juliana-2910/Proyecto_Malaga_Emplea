@@ -6,6 +6,10 @@ use App\Models\Empresa;
 use App\Services\empresasServices;
 use App\Http\Requests\EmpresaStoreRequest;
 use App\Http\Requests\EmpresaUpdateRequest;
+use Illuminate\Http\Request;
+use Exception;
+use Illuminate\Database\QueryException;
+use InvalidArgumentException;
 
 class EmpresaController extends Controller
 {
@@ -16,10 +20,15 @@ class EmpresaController extends Controller
             $this->empresasServices = $empresasServices;
         }
 
-        public function index()
+        public function index(Request $request)
         {
-            $empresas = $this->empresasServices->listarTodos();
-            return view('Empresa.index', compact('empresas'));
+            try {
+                $empresas = $this->empresasServices->listarPaginado($request->only('buscar'));
+
+                return view('Empresa.index', compact('empresas'));
+            } catch (InvalidArgumentException $e) {
+                return redirect()->route('empresas.index')->with('error', $e->getMessage());
+            }
         }
 
         public function empresasConOfertas()
@@ -61,7 +70,14 @@ class EmpresaController extends Controller
 
         public function destroy(int $id)
         {
-            $this->empresasServices->eliminar($id);
+            try {
+                $this->empresasServices->eliminar($id);
+            } catch (QueryException $e) {
+                return back()->with('error', 'No se puede eliminar la empresa porque tiene información relacionada.');
+            } catch (Exception $e) {
+                return back()->with('error', $e->getMessage());
+            }
+
             return redirect()->route('empresas.index')->with('eliminar', 'Empresa eliminada exitosamente.');
         }
 }

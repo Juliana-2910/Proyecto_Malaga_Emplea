@@ -1,6 +1,6 @@
 @extends('seguridad.layout')
 
-@section('title', 'Permisos')
+@section('title', 'Panel Administrativo')
 
 @section('content')
 <h1 class="text-xl font-semibold">Permisos</h1>
@@ -30,7 +30,7 @@
                    placeholder="Elige uno existente o escribe uno nuevo" class="w-full rounded-md border border-slate-300 px-3 py-2">
         </div>
 
-        <button type="submit" class="rounded-xl bg-[#333333] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#4DB6E8] hover:text-[#17232c]">Crear permiso</button>
+        <button type="submit" class="rounded-xl bg-[#4DB6E8] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#333333]">Crear permiso</button>
     </form>
 
     <form action="{{ route('seguridad.permisos.modulo') }}" method="POST" class="bg-white rounded-xl border border-slate-200 p-5 space-y-4">
@@ -47,7 +47,7 @@
                    placeholder="Ej. clientes" class="w-full rounded-md border border-slate-300 px-3 py-2">
         </div>
 
-        <button type="submit" class="rounded-xl bg-[#4DB6E8] px-4 py-2 text-sm font-semibold text-[#17232c] transition hover:bg-[#333333] hover:text-white">Crear permisos del módulo</button>
+        <button type="submit" class="rounded-xl bg-[#4DB6E8] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#333333]">Crear permisos del módulo</button>
     </form>
 </div>
 

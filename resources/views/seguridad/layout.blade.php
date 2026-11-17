@@ -50,18 +50,16 @@
 
         {{-- Sidebar Estilo Panel de Control --}}
         <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'" class="fixed inset-y-0 left-0 z-40 flex w-64 flex-col bg-[#333333] text-white transition-transform duration-300 ease-in-out lg:translate-x-0">
-            <div class="flex h-20 items-center gap-3 border-b border-white/10 px-5">
-                <span class="flex size-11 items-center justify-center overflow-hidden rounded-xl bg-white p-1.5">
-                    <img src="{{ asset('images/Logo Malaga Emplea.png') }}" alt="" class="h-full w-full object-contain">
-                </span>
-                <span>
-                    <span class="block text-sm font-extrabold tracking-wide">Málaga Emplea</span>
-                    <span class="mt-0.5 block text-xs text-white/60">Panel de seguridad</span>
-                </span>
-            </div>
+            <div class="flex items-center gap-3 h-16 px-6 border-b border-[#444444]">
+        <div class="w-12 h-12 flex items-center justify-center">
+        <img
+            src="{{ asset('images/Logo Malaga Emplea.png') }}" >
+        </div>
+            <span class="text-white font-semibold text-lg tracking-tight">{{ config('app.name', 'AdminPanel') }}</span>
+        </div>
 
             <div class="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
-                <div class="mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-white/50">Administración</div>
+                <div class="mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-white/50">Seguridad</div>
 
                 @foreach ([
                     ['seguridad.roles.index', 'Roles', 'seguridad.roles.*', '<path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />'],
@@ -69,14 +67,14 @@
                     ['seguridad.cuentas.index', 'Cuentas y estados', 'seguridad.cuentas.*', '<path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />'],
                     ['seguridad.usuarios.index', 'Usuarios y roles', 'seguridad.usuarios.*', '<path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.715m12 0v-.503a3.333 3.333 0 00-3-3.333h-6c-1.657 0-3 1.492-3 3.333v.503m6-9.5a3 3 0 11-6 0 3 3 0 016 0z" />'],
                 ] as [$ruta, $texto, $patron, $icono])
-                    <a href="{{ route($ruta) }}" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors {{ request()->routeIs($patron) ? 'bg-[#4DB6E8] text-[#17232c] shadow-sm' : 'text-white/75 hover:bg-white/10 hover:text-white' }}">
+                    <a href="{{ route($ruta) }}" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors {{ request()->routeIs($patron) ? 'bg-[#4DB6E8] text-[#17232c] shadow-sm' : 'text-white/75 hover:bg-[#4DB6E8]/20 hover:text-white' }}">
                         <svg class="w-5 h-5 opacity-80" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">{!! $icono !!}</svg>
                         {{ $texto }}
                     </a>
                 @endforeach
 
                 <div class="mt-4 border-t border-white/10 pt-4">
-                    <a href="{{ url('/') }}" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-white/60 transition-colors hover:bg-white/10 hover:text-white">
+                    <a href="{{ url('/dashboard') }}" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-white/60 transition-colors hover:bg-[#4DB6E8]/20 hover:text-white">
                         <svg class="w-5 h-5 opacity-80" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3"/></svg>
                         Volver a la app
                     </a>
@@ -86,7 +84,8 @@
             <div class="border-t border-white/10 p-4">
                 <form action="{{ route('logout') }}" method="POST">
                     @csrf
-                    <button type="submit" class="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-white/75 transition-colors hover:bg-white/10 hover:text-white">
+                    <button type="submit" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-red-400 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500">
+
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9"/></svg>
                         Cerrar sesión
                     </button>
@@ -128,10 +127,20 @@
             </main>
 
             {{-- Footer --}}
-            <footer class="flex flex-col items-center justify-between gap-2 border-t border-gray-200 bg-white px-6 py-4 text-xs text-gray-500 sm:flex-row">
-                <div>&copy; {{ date('Y') }} Málaga Emplea. Todos los derechos reservados.</div>
-                <div>Administración segura</div>
-            </footer>
+            <footer class="border-t border-[#E5E5E5] bg-white">
+            <div class="mx-auto grid max-w-6xl items-center gap-5 md:grid-cols-3 px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-sm text-[#333333]">
+                <p>© 2026 Málaga Emplea. Todos los derechos reservados.</p>
+
+                    <div class="text-center">
+                        <p>
+                            Juliana Alvarez López (juliana.loal29@gmail.com) <br>
+                            Edison Ruiz (yamid2918@gmail.com)
+                        </p>
+                    </div>
+
+                    <p class="md:text-right">Versión 1.0.0</p>
+            </div>
+        </footer>
         </div>
     </div>
 

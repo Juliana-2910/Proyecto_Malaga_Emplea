@@ -25,7 +25,7 @@ class CalificacionUpdateRequest extends FormRequest
         return [
             'idPostulacion' => 'required|exists:postulacion,id',
             'puntuacion' => 'required|integer|min:1|max:5',
-            'comentario' => 'required|string|max:255',
+            'comentario' => 'required|string|max:100',
             'tipoCalificador' => 'required|in:usuario,empresa',
         ];
     }
@@ -44,7 +44,7 @@ class CalificacionUpdateRequest extends FormRequest
 
             'comentario.required' =>'El comentario es obligatorio.',
             'comentario.string' =>'El comentario debe ser un texto.',
-            'comentario.max' => 'El comentario no puede superar los 255 caracteres.',
+            'comentario.max' => 'El comentario no puede superar los 100 caracteres.',
 
             'tipoCalificador.required' => 'Debes indicar quién realiza la calificación.',
             'tipoCalificador.in' => 'Debes seleccionar Usuario califica a empresa o Empresa califica a usuario.',

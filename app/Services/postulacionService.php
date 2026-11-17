@@ -7,12 +7,14 @@ use App\Models\Empresa;
 use App\Models\Usuario;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
+use InvalidArgumentException;
 use Exception;
 use Carbon\Carbon;
 
 class postulacionService
 {
     private postulacionRepository $postulacionrepository;
+    private const POR_PAGINA = 10;
 
     public function __construct(postulacionRepository $postulacionrepository)
     {
@@ -54,6 +56,10 @@ class postulacionService
 
     public function eliminar(int $id)
     {
+        if ($this->postulacionrepository->tieneCalificaciones($id)) {
+            throw new Exception('No se puede eliminar esta postulación porque tiene calificaciones registradas.');
+        }
+
         $this->postulacionrepository->eliminar($id);
     }
 
@@ -266,5 +272,16 @@ class postulacionService
         if ($postulacion->estado !== $this->obtenerEstadoInicial()) {
             throw new Exception('Solo puedes cancelar postulaciones que aún están en estado Enviado.');
         }
+    }
+
+    public function listarPaginado(array $filtros)
+    {
+        $buscar = trim((string) ($filtros['buscar'] ?? ''));
+
+        if (mb_strlen($buscar) > 100) {
+            throw new InvalidArgumentException('La búsqueda no puede superar los 100 caracteres.');
+        }
+
+        return $this->postulacionrepository->listarPaginado($buscar, self::POR_PAGINA);
     }
 }

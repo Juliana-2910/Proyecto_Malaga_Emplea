@@ -34,8 +34,8 @@
             ['label' => 'Hoja de vida',     'route' => 'hojaDeVida.index',    'icon' => 'link', 'can' => ['ver hojadevida']],
             ['label' => 'Postulaciones', 'route' => 'postulacion.index',   'icon' => 'document', 'can' => ['ver postulacion']],
             ['label' => 'Oferta Servicios', 'route' => 'ofertaServicios.index',   'icon' => 'circle-stack', 'can' => ['ver ofertaservicios']],
-            ['label' => 'Calificacion', 'route' => 'calificacion.index',   'icon' => 'star', 'can' => ['ver calificacion']],
-            ['label' => 'seguridad', 'route' => 'seguridad.permisos.index',   'icon' => 'star', 'can' => ['gestionar seguridad']],
+            ['label' => 'Calificación', 'route' => 'calificacion.index',   'icon' => 'star', 'can' => ['ver calificacion']],
+            ['label' => 'Seguridad', 'route' => 'seguridad.permisos.index',   'icon' => 'shield-check', 'can' => ['gestionar seguridad']],
             ];
         @endphp
 

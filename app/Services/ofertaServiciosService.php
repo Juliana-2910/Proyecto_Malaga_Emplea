@@ -1,12 +1,14 @@
 <?php
 
 namespace App\Services;
-
+use Exception;
 use App\Repositories\ofertaServiciosRepository;
+use InvalidArgumentException;
 
 class ofertaServiciosService
 {
     private ofertaServiciosRepository $ofertaServiciosRepository;
+    private const POR_PAGINA = 10;
 
     public function __construct(ofertaServiciosRepository $ofertaServiciosRepository)
     {
@@ -25,6 +27,12 @@ class ofertaServiciosService
 
     public function eliminar(int $id)
     {
+        $relacion = $this->ofertaServiciosRepository->buscarporid($id);
+
+        if ($this->ofertaServiciosRepository->ofertaTienePostulaciones((int) $relacion->idOferta)) {
+            throw new Exception('No se puede eliminar esta relación porque la oferta ya tiene postulaciones.');
+        }
+
         $this->ofertaServiciosRepository->eliminar($id);
     }
 
@@ -36,5 +44,16 @@ class ofertaServiciosService
     public function actualizar(int $id, array $datos)
     {
         $this->ofertaServiciosRepository->actualizar($id, $datos);
+    }
+
+    public function listarPaginado(array $filtros)
+    {
+        $buscar = trim((string) ($filtros['buscar'] ?? ''));
+
+        if (mb_strlen($buscar) > 100) {
+            throw new InvalidArgumentException('La búsqueda no puede superar los 100 caracteres.');
+        }
+
+        return $this->ofertaServiciosRepository->listarPaginado($buscar, self::POR_PAGINA);
     }
 }

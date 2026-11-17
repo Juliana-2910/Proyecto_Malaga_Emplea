@@ -6,6 +6,8 @@ use App\Models\Categoria;
 use App\Services\categoriasService;
 use App\Http\Requests\CategoriasStoreRequest;
 use App\Http\Requests\CategoriasUpdateRequest;
+use Exception;
+use InvalidArgumentException;
 use Illuminate\Http\Request;
 
 class CategoriaController extends Controller
@@ -17,10 +19,15 @@ class CategoriaController extends Controller
         $this->categoriasService = $categoriasService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $categorias = $this->categoriasService->listarTodos();
-        return view('Categorias.index', compact('categorias'));
+        try {
+            $categorias = $this->categoriasService->listarPaginado($request->only('buscar'));
+
+            return view('Categorias.index', compact('categorias'));
+        } catch (InvalidArgumentException $e) {
+            return redirect()->route('categorias.index')->with('error', $e->getMessage());
+        }
     }
 
     public function create()
@@ -56,9 +63,14 @@ class CategoriaController extends Controller
     }
 
 
-        public function destroy($id)
+    public function destroy($id)
     {
-        $this->categoriasService->eliminar($id);
+        try {
+            $this->categoriasService->eliminar((int) $id);
+        } catch (Exception $e) {
+            return back()->with('error', $e->getMessage());
+        }
+
         return redirect()->route('categorias.index')->with('eliminar', 'Categoría eliminada exitosamente.');
     }
 }

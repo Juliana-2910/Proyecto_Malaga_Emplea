@@ -553,4 +553,48 @@ class ofertasRepository
             ->all();
     }
 
+    /** Devuelve los IDs de las ofertas que tienen contrataciones pendientes de calificar por su publicador. */
+    public function ofertasConContratacionesPendientesDeCalificar(
+        array $idsOfertas,
+        int $idPublicador,
+        bool $esEmpresa
+    ): array {
+        if ($idsOfertas === []) {
+            return [];
+        }
+
+        return Postulacion::query()
+            ->leftJoin('calificacion as c', function ($join) use ($idPublicador, $esEmpresa) {
+                $join->on('c.idPostulacion', '=', 'postulacion.id')
+                    ->where('c.tipoCalificador', $esEmpresa ? 'empresa' : 'usuario')
+                    ->where($esEmpresa ? 'c.idEmpresa' : 'c.idUsuario', $idPublicador);
+            })
+            ->whereIn('postulacion.idOferta', $idsOfertas)
+            ->where('postulacion.estado', 'Contratado')
+            ->whereNull('c.id')
+            ->distinct()
+            ->pluck('postulacion.idOferta')
+            ->all();
+    }
+
+    public function listarPaginadoAdmin(string $buscar, int $porPagina)
+    {
+        return Oferta::with(['empresa', 'usuario'])
+            ->when($buscar !== '', function ($q) use ($buscar) {
+                foreach (preg_split('/\s+/', $buscar) as $palabra) {
+                    $q->where(function ($q) use ($palabra) {
+                        $q->where('titulo', 'like', "%{$palabra}%")
+                        ->orWhere('ubicacion', 'like', "%{$palabra}%")
+                        ->orWhere('tipoContrato', 'like', "%{$palabra}%")
+                        ->orWhereHas('empresa', fn ($e) => $e->where('nombreEmpresa', 'like', "%{$palabra}%"))
+                        ->orWhereHas('usuario', fn ($u) => $u->where('nombres', 'like', "%{$palabra}%")
+                                                            ->orWhere('apellidos', 'like', "%{$palabra}%"));
+                    });
+                }
+            })
+            ->orderBy('id')
+            ->paginate($porPagina)
+            ->withQueryString();
+    }
+
 }

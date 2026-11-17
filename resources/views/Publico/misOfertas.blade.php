@@ -87,10 +87,10 @@
                             Publicar una oferta
                         </button>
 
-                        <span class="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-3 text-sm font-semibold text-sky-200">
-                            <span class="rounded-md bg-white/15 px-2 py-0.5 text-sm">{{ $resumen['postulantesPorRevisar'] }}</span>
-                            Postulantes por revisar
+                        <span class="text-sm font-semibold text-sky-200">
+                        {{ $resumen['postulantesPorRevisar'] }} postulantes por revisar
                         </span>
+
                     </div>
                 </div>
             @endif
@@ -105,20 +105,21 @@
                 </div>
 
                 <div class="grid grid-cols-3 gap-4">
-                    <div class="flex flex-col items-center gap-2.5">
-                        <span class="inline-flex items-center gap-1.5 rounded-full bg-sky-100 px-3 py-1 text-[13px] font-bold text-sky-900">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" class="size-6"   stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z" /></svg>
-                            Por calificar
-                        </span>
-                        <span class="text-3xl font-extrabold leading-none text-noche">{{ $resumen['porCalificar'] }}</span>
-                    </div>
 
                     <div class="flex flex-col items-center gap-2.5">
-                        <span class="inline-flex items-center gap-1.5 rounded-full bg-amber-100 px-3 py-1 text-[13px] font-bold text-amber-900">
+                        <span class="inline-flex items-center gap-1.5 rounded-full bg-sky-100 px-3 py-1 text-[13px] font-bold text-sky-900">
                             <svg width="18" height="18" class="size-6" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
                             Vencen pronto
                         </span>
                         <span class="text-3xl font-extrabold leading-none text-noche">{{ $resumen['vencenPronto'] }}</span>
+                    </div>
+
+                    <div class="flex flex-col items-center gap-2.5">
+                        <span class="inline-flex items-center gap-1.5 rounded-full bg-amber-100 px-3 py-1 text-[13px] font-bold text-amber-900">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" class="size-6"   stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z" /></svg>
+                            Por calificar
+                        </span>
+                        <span class="text-3xl font-extrabold leading-none text-noche">{{ $resumen['porCalificar'] }}</span>
                     </div>
 
                     <div class="flex flex-col items-center gap-2.5">
@@ -260,6 +261,8 @@
                     'tipoContrato' => $oferta->tipoContrato,
                     'ubicacion'    => $oferta->ubicacion,
                     'fechaLimite'  => \Carbon\Carbon::parse($oferta->fechaLimite)->toDateString(),
+                    'fechaPublicacion'=> \Carbon\Carbon::parse($oferta->fechaPublicacion)->format('d/m/Y'),
+                    'fechaLimite'     => \Carbon\Carbon::parse($oferta->fechaLimite)->toDateString(),
 
                     // Categoría y servicio actuales de la oferta
                     'idCategoria'  => $oferta->ofertaServicio->first()?->servicio?->idCategoria,
@@ -277,10 +280,12 @@
                     'salario'          => '$' . number_format($oferta->salario, 0, ',', '.'),
                     'ubicacion'        => $oferta->ubicacion,
                     'publicada'        => \Carbon\Carbon::parse($oferta->fechaPublicacion)->format('d/m/Y'),
-                    'diasRestantes'    => max(0, \Carbon\Carbon::today('America/Bogota')->diffInDays(
-                        \Carbon\Carbon::parse($oferta->fechaLimite)->startOfDay(),
-                        false
-                    )),
+                    'diasRestantes' => (int) \Carbon\Carbon::now('America/Bogota')
+                        ->startOfDay()
+                        ->diffInDays(
+                            \Carbon\Carbon::parse($oferta->fechaLimite, 'America/Bogota')->startOfDay(),
+                            false
+                        ),
                     'vence'            => \Carbon\Carbon::parse($oferta->fechaLimite)->format('d/m/Y'),
                     'descripcion'      => $oferta->descripcion,
                     'requisitos'       => array_values(array_filter(
@@ -325,24 +330,43 @@
 
                     {{-- Postulantes --}}
                     <div class="flex flex-wrap items-center gap-2">
+
                         <span class="text-[13px] font-bold text-noche">Postulantes:</span>
 
-                        @if ($totalPostulantes === 0)
-                            <span class="text-[13px] text-slate-500">Aún nadie se ha postulado.</span>
-                        @else
-                            @if ($r['enviadas'] > 0)
-                                <span class="rounded-full bg-amber-100 px-3 py-1 text-[13px] font-bold text-amber-900">{{ $plural($r['enviadas'], 'Enviada') }}</span>
+                            @if ($totalPostulantes === 0)
+                                <span class="text-[13px] text-slate-500">Aún nadie se ha postulado.</span>
+                                @else
+
+                                    @if ($r['enviadas'] > 0)
+                                        <span class="rounded-full bg-amber-100 px-3 py-1 text-[13px] font-bold text-amber-900">
+                                            {{ $plural($r['enviadas'], 'Enviada') }}
+                                        </span>
+                                    @endif
+
+                                    @if ($r['aceptadas'] > 0)
+                                        <span class="rounded-full bg-green-100 px-3 py-1 text-[13px] font-bold text-green-900">
+                                            {{ $plural($r['aceptadas'], 'Aceptada') }}
+                                        </span>
+                                    @endif
+
+                                    @if ($r['rechazadas'] > 0)
+                                        <span class="rounded-full bg-red-100 px-3 py-1 text-[13px] font-bold text-red-900">
+                                            {{ $plural($r['rechazadas'], 'Rechazada') }}
+                                        </span>
+                                    @endif
+
+                                    @if ($r['contratadas'] > 0)
+                                        <span class="rounded-full bg-blue-100 px-3 py-1 text-[13px] font-bold text-blue-900">
+                                        {{ $plural($r['contratadas'], 'Contratada') }}
+                                        </span>
+
+                                    @if ($oferta->yaCalifico)
+                                        <svg viewBox="0 0 24 24" class="h-5 w-5 text-yellow-400" fill="currentColor" title="Ya calificaste a la persona contratada"><path d="M12 2.5l2.9 5.88 6.49.94-4.7 4.58 1.11 6.47L12 17.32l-5.8 3.05 1.11-6.47-4.7-4.58 6.49-.94L12 2.5z"/></svg>
+                                        @else
+                                            <svg viewBox="0 0 24 24" class="h-5 w-5 text-slate-400" fill="currentColor" title="Tienes una contratación pendiente por calificar"><path d="M12 2.5l2.9 5.88 6.49.94-4.7 4.58 1.11 6.47L12 17.32l-5.8 3.05 1.11-6.47-4.7-4.58 6.49-.94L12 2.5z"/></svg>
+                                    @endif
+                                @endif
                             @endif
-                            @if ($r['aceptadas'] > 0)
-                                <span class="rounded-full bg-green-100 px-3 py-1 text-[13px] font-bold text-green-900">{{ $plural($r['aceptadas'], 'Aceptada') }}</span>
-                            @endif
-                            @if ($r['rechazadas'] > 0)
-                                <span class="rounded-full bg-red-100 px-3 py-1 text-[13px] font-bold text-red-900">{{ $plural($r['rechazadas'], 'Rechazada') }}</span>
-                            @endif
-                            @if ($r['contratadas'] > 0)
-                                <span class="rounded-full bg-blue-100 px-3 py-1 text-[13px] font-bold text-blue-900">{{ $plural($r['contratadas'], 'Contratada') }}</span>
-                            @endif
-                        @endif
                     </div>
 
                     {{-- Aviso de contratación --}}
@@ -356,7 +380,7 @@
 
 
                 {{-- Estado + acciones --}}
-                <div class="flex flex-col items-center justify-center gap-4 self-center">
+                <div class="flex flex-col items-end gap-4 self-center">
                     <span class="inline-flex items-center gap-2 rounded-full px-3 py-1 text-[13px] font-bold {{ $estado['caja'] }}">
                         <span class="size-2 rounded-full {{ $oferta->estadoOferta === 'vencida' ? 'bg-gray-500' : $estado['punto'] }}"></span>
                         {{ $estado['texto'] }}

@@ -3,10 +3,13 @@
 namespace App\Services;
 
 use App\Repositories\serviciosRepository;
+use Exception;
+use InvalidArgumentException;
 
 class serviciosService{
 
     private serviciosRepository $serviciosRepository;
+    private const POR_PAGINA = 10;
 
     public function __construct(serviciosRepository $serviciosRepository)
     {
@@ -30,6 +33,10 @@ class serviciosService{
 
     public function eliminar(int $id)
     {
+        if ($this->serviciosRepository->tieneOfertas($id)) {
+            throw new Exception('No se puede eliminar este servicio porque tiene ofertas relacionadas.');
+        }
+
         $this->serviciosRepository->eliminar($id);
     }
 
@@ -41,5 +48,19 @@ class serviciosService{
     public function actualizar(int $id, array $datos)
     {
         $this->serviciosRepository->actualizar($id, $datos);
+    }
+
+    public function listarPaginado(array $filtros)
+    {
+        $buscar = trim((string) ($filtros['buscar'] ?? ''));
+        $this->validarBusqueda($buscar);
+        return $this->serviciosRepository->listarPaginado($buscar, self::POR_PAGINA);
+    }
+
+    private function validarBusqueda(string $buscar): void
+    {
+        if (mb_strlen($buscar) > 100) {
+            throw new InvalidArgumentException('La búsqueda no puede superar los 100 caracteres.');
+        }
     }
 }
