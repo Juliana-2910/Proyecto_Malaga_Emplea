@@ -12,14 +12,14 @@
             'texto'  => 'Crea tu hoja de vida, explora vacantes y postúlate desde un solo lugar.',
             'boton'  => 'Explorar oportunidades',
             'tipo'   => 'usuario',
-            'icono'  => 'M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z',
+            'icono'  => 'M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.5 20.1a7.5 7.5 0 0115 0',
         ],
         [
             'titulo' => 'Soy empresa',
             'texto'  => 'Publica tus vacantes y encuentra talento de tu propio municipio.',
             'boton'  => 'Publicar una oferta',
             'tipo'   => 'empresa',
-            'icono'  => 'M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75',
+            'icono'  => 'M3 21h18M5 21V7l8-4v18M19 21V11l-6-4M9 9v.01M9 12v.01M9 15v.01M9 18v.01',
         ],
     ];
 
@@ -43,35 +43,33 @@
     ];
 @endphp
 
-    {{-- NAVBAR --}}
-    <header class=" sticky top-0 z-50 border-b border-slate-200 bg-white">
-        <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-3">
-            <a href="{{ url('/') }}" class="flex items-center gap-3 text-xl font-extrabold text-noche">
-                <img src="{{ asset('images/Logo Malaga Emplea.png') }}" alt="Logo de Málaga Emplea" class="size-14 object-contain">
-                Málaga Emplea
+{{-- NAVBAR --}}
+<header class="sticky top-0 z-50 border-b border-slate-200 bg-white">
+    <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-3">
+        <a href="{{ url('/') }}" class="flex items-center gap-3 text-xl font-extrabold text-noche">
+            <img src="{{ asset('images/Logo Malaga Emplea.png') }}" alt="Logo de Málaga Emplea" class="size-14 object-contain">
+            Málaga Emplea
+        </a>
+
+        <nav class="hidden items-center gap-7 text-[15px] font-semibold md:flex">
+            <a href="#perfiles" class="py-3 transition hover:text-marca-texto">Perfiles</a>
+            <a href="#como" class="py-3 transition hover:text-marca-texto">Cómo funciona</a>
+            <a href="#nosotros" class="py-3 transition hover:text-marca-texto">Sobre nosotros</a>
+        </nav>
+
+        <div class="flex flex-wrap gap-3">
+            <a href="{{ route('login') }}"
+                class="self-start rounded-full border-2 border-slate-800 bg-white px-4 py-2 text-[15px] font-bold text-slate-800 transition hover:border-carbon hover:bg-carbon hover:text-white">
+                Ingresar
             </a>
-
-            <nav class="hidden items-center gap-7 text-[15px] font-semibold md:flex">
-                <a href="#perfiles" class="py-3 transition hover:text-marca-texto">Perfiles</a>
-                <a href="#como" class="py-3 transition hover:text-marca-texto">Cómo funciona</a>
-                <a href="#nosotros" class="py-3 transition hover:text-marca-texto">Sobre nosotros</a>
-            </nav>
-
-            <div class="flex flex-wrap gap-3">
-                <a href="{{ route('login') }}"
-                    class="self-start rounded-full border-2 border-slate-800 bg-white px-4 py-2 text-[15px] font-bold text-slate-800 transition hover:border-carbon hover:bg-carbon hover:text-white">
-                        Ingresar
-                </a>
 
             <button type="button" onclick="abrirModalRegistro()"
                 class="self-start rounded-full border-2 border-marca bg-marca px-4 py-2 text-[15px] font-bold text-tinta transition hover:border-carbon hover:bg-carbon hover:text-white">
                 Registrarse
             </button>
         </div>
-
-        </div>
-    </header>
-
+    </div>
+</header>
 
 {{-- ============ HERO (banner con imagen) ============ --}}
 <section class="relative isolate overflow-hidden">
@@ -96,8 +94,6 @@
             </p>
 
             <div class="flex flex-wrap gap-1">
-
-
             </div>
         </div>
 
@@ -122,7 +118,6 @@
                     </li>
                 @endforeach
             </ul>
-
         </div>
     </div>
 </section>
@@ -138,8 +133,8 @@
         <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-2">
             @foreach ($perfiles as $perfil)
                 <article class="flex flex-col gap-3.5 rounded-2xl border border-slate-200 bg-white p-7 transition hover:shadow-lg">
-                    <span class="flex size-[52px] items-center justify-center rounded-2xl bg-sky-50 text-marca-texto">
-                        <svg class="size-7" fill="none" viewBox="0 0 24 24" stroke-width="1.6" stroke="currentColor" aria-hidden="true">
+                    <span class="flex size-[52px] items-center justify-center rounded-2xl bg-[#EAF6FD] text-marca-texto">
+                        <svg class="size-7" fill="none" viewBox="0 0 24 24" stroke-width="1.7" stroke="currentColor" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" d="{{ $perfil['icono'] }}" />
                         </svg>
                     </span>
@@ -167,10 +162,10 @@
         <div class="grid gap-8 md:grid-cols-3">
             @foreach ($pasos as $i => $paso)
                 <div class="flex flex-col gap-3.5">
-                    <span class=" flex size-12 items-center justify-center rounded-full bg-marca text-xl font-extrabold text-tinta">
+                    <span class="flex size-12 items-center justify-center rounded-full bg-marca text-xl font-extrabold text-tinta">
                         {{ $i + 1 }}
                     </span>
-                    <h3 class=" text-xl font-bold">{{ $paso['titulo'] }}</h3>
+                    <h3 class="text-xl font-bold">{{ $paso['titulo'] }}</h3>
                     <p class="leading-relaxed text-slate-500">{{ $paso['texto'] }}</p>
                 </div>
             @endforeach
@@ -204,30 +199,21 @@
     class="fixed inset-0 z-[100] hidden items-center justify-center bg-[#17232c]/80 px-3 py-4 backdrop-blur-md">
 
     <div id="contenidoModal"
-        class="modal-contenido relative flex max-h-[90vh] w-full max-w-xl flex-col overflow-hidden rounded-3xl border border-white/70 bg-[#F8FCFF] shadow-[0_28px_90px_rgba(10,25,35,0.45)]">
+        class="modal-contenido relative flex max-h-[90vh] w-full max-w-xl flex-col overflow-hidden rounded-3xl border border-white/70 bg-[#F5F7FA] shadow-[0_28px_90px_rgba(10,25,35,0.45)]">
 
         {{-- ENCABEZADO --}}
         <div class="flex items-center justify-between border-b border-gray-200 bg-white px-5 py-4">
-            <div class="flex items-center gap-3">
-                <div class="flex size-10 items-center justify-center rounded-xl bg-[#4DB6E8]/20 text-[#333333]">
-                    <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
-                            d="M18 9a3 3 0 11-6 0 3 3 0 016 0ZM6 20a6 6 0 0112 0M5 8a3 3 0 100 6m-2 6a5 5 0 014-4.9"/>
-                    </svg>
-                </div>
-
-                <div>
-                    <h2 id="tituloModal" class="text-lg font-extrabold text-[#333333]">
-                        Crear una cuenta
-                    </h2>
-                    <p id="descripcionModal" class="text-xs text-gray-500">
-                        Elige cómo quieres participar en Málaga Emplea.
-                    </p>
-                </div>
+            <div>
+                <h2 id="tituloModal" class="text-lg font-extrabold text-noche">
+                    Crear una cuenta
+                </h2>
+                <p id="descripcionModal" class="text-xs text-gray-500">
+                    Elige cómo quieres participar en Málaga Emplea.
+                </p>
             </div>
 
             <button type="button" onclick="cerrarModalRegistro()"
-                class="flex size-9 items-center justify-center rounded-full text-gray-500 transition hover:rotate-90 hover:bg-gray-100 hover:text-[#333333]"
+                class="flex size-9 items-center justify-center rounded-full text-gray-500 transition hover:rotate-90 hover:bg-gray-100 hover:text-carbon"
                 aria-label="Cerrar modal">
                 <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -248,7 +234,7 @@
             {{-- SELECCIÓN --}}
             <div id="selectorRegistro" class="etapa-animacion">
                 <div class="mb-4">
-                    <p class="text-sm font-bold text-[#333333]">¿Cómo deseas registrarte?</p>
+                    <p class="text-sm font-bold text-noche">¿Cómo deseas registrarte?</p>
                     <p class="mt-1 text-xs text-gray-500">Selecciona el tipo de cuenta que mejor se adapte a ti.</p>
                 </div>
 
@@ -258,21 +244,21 @@
                     <button type="button" onclick="mostrarFormulario('usuario')"
                         class="tarjeta-registro group flex items-center gap-3 rounded-xl border border-gray-200 bg-white p-4 text-left transition duration-300 hover:-translate-y-1 hover:border-[#4DB6E8] hover:shadow-lg">
 
-                        <span class="flex size-12 shrink-0 items-center justify-center rounded-xl bg-[#4DB6E8]/15 text-[#333333] transition group-hover:scale-110 group-hover:bg-[#4DB6E8]">
-                            <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7"
-                                    d="M15 19.128a9.38 9.38 0 002.625.372 9.37 9.37 0 004.125-.95M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 8.25a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"/>
+                        <span class="flex size-12 shrink-0 items-center justify-center rounded-xl bg-[#EAF6FD] text-marca-texto transition group-hover:scale-110 group-hover:bg-marca group-hover:text-tinta">
+                            <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.5 20.1a7.5 7.5 0 0115 0"/>
                             </svg>
                         </span>
 
                         <span class="min-w-0 flex-1">
-                            <span class="block text-sm font-bold text-[#333333]">Persona natural</span>
+                            <span class="block text-sm font-bold text-noche">Persona Natural</span>
                             <span class="mt-1 block text-xs leading-relaxed text-gray-500">
                                 Busca empleo y crea tu hoja de vida.
                             </span>
                         </span>
 
-                        <svg class="size-4 shrink-0 text-gray-400 transition group-hover:translate-x-1 group-hover:text-[#333333]"
+                        <svg class="size-4 shrink-0 text-gray-400 transition group-hover:translate-x-1 group-hover:text-noche"
                             fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                         </svg>
@@ -282,21 +268,21 @@
                     <button type="button" onclick="mostrarFormulario('empresa')"
                         class="tarjeta-registro group flex items-center gap-3 rounded-xl border border-gray-200 bg-white p-4 text-left transition duration-300 hover:-translate-y-1 hover:border-[#4DB6E8] hover:shadow-lg">
 
-                        <span class="flex size-12 shrink-0 items-center justify-center rounded-xl bg-[#333333]/10 text-[#333333] transition group-hover:scale-110 group-hover:bg-[#4DB6E8]">
-                            <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7"
-                                    d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4M9 9v.01M9 12v.01M9 15v.01M9 18v.01M14 9v.01M14 12v.01M14 15v.01M14 18v.01"/>
+                        <span class="flex size-12 shrink-0 items-center justify-center rounded-xl bg-[#EAF6FD] text-marca-texto transition group-hover:scale-110 group-hover:bg-marca group-hover:text-tinta">
+                            <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4M9 9v.01M9 12v.01M9 15v.01M9 18v.01"/>
                             </svg>
                         </span>
 
                         <span class="min-w-0 flex-1">
-                            <span class="block text-sm font-bold text-[#333333]">Empresa</span>
+                            <span class="block text-sm font-bold text-noche">Empresa</span>
                             <span class="mt-1 block text-xs leading-relaxed text-gray-500">
                                 Publica vacantes y encuentra talento.
                             </span>
                         </span>
 
-                        <svg class="size-4 shrink-0 text-gray-400 transition group-hover:translate-x-1 group-hover:text-[#333333]"
+                        <svg class="size-4 shrink-0 text-gray-400 transition group-hover:translate-x-1 group-hover:text-noche"
                             fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                         </svg>
@@ -308,7 +294,7 @@
             <div id="formulariosRegistro" class="hidden">
 
                 <button type="button" onclick="volverSelector()"
-                    class="mb-4 flex items-center gap-1.5 text-xs font-semibold text-gray-500 transition hover:text-[#333333]">
+                    class="mb-4 flex items-center gap-1.5 text-xs font-semibold text-gray-500 transition hover:text-noche">
                     <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
                     </svg>
@@ -317,30 +303,51 @@
 
                 {{-- FORMULARIO PERSONA NATURAL --}}
                 <form id="formRegistroUsuario" class="hidden space-y-4">
-                    @csrf    
+                    @csrf
                     <div class="grid gap-3 sm:grid-cols-2">
+
                         <div>
-                            <label for="registroNombres" class="mb-1 block text-xs font-semibold text-[#333333]">Nombres</label>
+                            <label for="registroNombres" class="mb-1 block text-xs font-semibold text-noche">Nombres</label>
                             <input id="registroNombres" name="nombres" type="text" required autocomplete="given-name"
-                                class="campo-registro w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm outline-none">
+                                class="campo-registro w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-slate-800 outline-none">
                         </div>
 
                         <div>
-                            <label for="registroApellidos" class="mb-1 block text-xs font-semibold text-[#333333]">Apellidos</label>
+                            <label for="registroApellidos" class="mb-1 block text-xs font-semibold text-noche">Apellidos</label>
                             <input id="registroApellidos" name="apellidos" type="text" required autocomplete="family-name"
-                                class="campo-registro w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm outline-none">
+                                class="campo-registro w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-slate-800 outline-none">
+                        </div>
+
+                        {{-- FECHA DE NACIMIENTO CON BOTÓN DE CALENDARIO --}}
+                        <div>
+                            <label for="registroFecha" class="mb-1 block text-xs font-semibold text-noche">
+                                Fecha de nacimiento
+                            </label>
+
+                            <div style="position:relative;display:flex;align-items:center">
+                                <input id="registroFecha" name="fechaNacimiento" type="date" required
+                                    min="1900-01-01" max="{{ date('Y-m-d') }}"
+                                    class="campo-registro w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 pr-12 text-sm text-slate-800 outline-none"
+                                    style="padding-right:54px">
+
+                                <button id="registroAbrirCalendario" type="button"
+                                    aria-label="Abrir calendario de fecha de nacimiento"
+                                    title="Elegir fecha en el calendario"
+                                    style="position:absolute;right:6px;top:50%;transform:translateY(-50%);width:40px;height:40px;border:0;border-radius:9px;background:transparent;color:#52606D;display:flex;align-items:center;justify-content:center;cursor:pointer">
+                                    <svg width="18" height="18" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="1.8"
+                                        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                        <rect x="3" y="5" width="18" height="16" rx="2"/>
+                                        <path d="M16 3v4M8 3v4M3 10h18"/>
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
 
                         <div>
-                            <label for="registroFecha" class="mb-1 block text-xs font-semibold text-[#333333]">Fecha de nacimiento</label>
-                            <input id="registroFecha" name="fechaNacimiento" type="date" required
-                                class="campo-registro w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm outline-none">
-                        </div>
-
-                        <div>
-                            <label for="registroTipoDocumento" class="mb-1 block text-xs font-semibold text-[#333333]">Tipo de documento</label>
+                            <label for="registroTipoDocumento" class="mb-1 block text-xs font-semibold text-noche">Tipo de documento</label>
                             <select id="registroTipoDocumento" name="tipoDocumento" required
-                                class="campo-registro w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm outline-none">
+                                class="campo-registro w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-slate-800 outline-none">
                                 <option value="">Seleccionar</option>
                                 <option value="CC">Cédula de ciudadanía</option>
                                 <option value="CE">Cédula de extranjería</option>
@@ -351,31 +358,40 @@
                         </div>
 
                         <div>
-                            <label for="registroDocumento" class="mb-1 block text-xs font-semibold text-[#333333]">Número de documento</label>
+                            <label for="registroDocumento" class="mb-1 block text-xs font-semibold text-noche">Número de documento</label>
                             <input id="registroDocumento" name="numeroDocumento" type="text" required
-                                class="campo-registro w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm outline-none">
+                                class="campo-registro w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-slate-800 outline-none">
                         </div>
 
                         <div>
-                            <label for="registroTelefono" class="mb-1 block text-xs font-semibold text-[#333333]">Teléfono</label>
+                            <label for="registroTelefono" class="mb-1 block text-xs font-semibold text-noche">Teléfono</label>
                             <input id="registroTelefono" name="telefono" type="tel" required autocomplete="tel"
-                                class="campo-registro w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm outline-none">
+                                class="campo-registro w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-slate-800 outline-none">
                         </div>
 
-                        <div class="sm:col-span-2">
-                            <label for="registroEmailUsuario" class="mb-1 block text-xs font-semibold text-[#333333]">Correo electrónico</label>
+                        {{-- CORREO PERSONA NATURAL --}}
+                        <div>
+                            <label for="registroEmailUsuario" class="mb-1 block text-xs font-semibold text-noche">Correo electrónico</label>
                             <input id="registroEmailUsuario" name="email" type="email" required autocomplete="email"
-                                class="campo-registro w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm outline-none">
+                                class="campo-registro w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-slate-800 outline-none">
                         </div>
 
-                        <div class="sm:col-span-2">
-                            <label for="registroPasswordUsuario" class="mb-1 block text-xs font-semibold text-[#333333]">Contraseña</label>
+                        {{-- CONTRASEÑA PERSONA NATURAL --}}
+                        <div>
+                            <label for="registroPasswordUsuario" class="mb-1 block text-xs font-semibold text-noche">Contraseña</label>
                             <div class="relative">
                                 <input id="registroPasswordUsuario" name="password" type="password" minlength="8" required autocomplete="new-password"
-                                    class="campo-registro w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 pr-16 text-sm outline-none">
+                                    class="campo-registro w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 pr-11 text-sm text-slate-800 outline-none">
+
                                 <button type="button" onclick="alternarPassword('registroPasswordUsuario', this)"
-                                    class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-[#4DB6E8] hover:text-[#333333]">
-                                    Mostrar
+                                    aria-label="Mostrar contraseña"
+                                    title="Mostrar contraseña"
+                                    class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 transition hover:text-marca-texto">
+                                    <svg class="size-5" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M4 10.5c2.1 3 4.8 4.5 8 4.5s5.9-1.5 8-4.5M7 12.5l-1.5 2M12 15v2M17 12.5l1.5 2"/>
+                                    </svg>
                                 </button>
                             </div>
                             <p class="mt-1 text-[11px] text-gray-500">Mínimo 8 caracteres.</p>
@@ -383,8 +399,8 @@
                     </div>
 
                     <button type="submit"
-                        class="boton-registro w-full rounded-lg bg-[#333333] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#4DB6E8] hover:text-[#333333]">
-                        Crear cuenta personal
+                        class="boton-registro w-full rounded-full border-2 border-marca bg-marca px-5 py-3 text-sm font-extrabold text-tinta transition hover:border-carbon hover:bg-carbon hover:text-white">
+                        Crear cuenta
                     </button>
                 </form>
 
@@ -392,38 +408,48 @@
                 <form id="formRegistroEmpresa" class="hidden space-y-4">
                     @csrf
                     <div class="grid gap-3 sm:grid-cols-2">
+
                         <div class="sm:col-span-2">
-                            <label for="registroNombreEmpresa" class="mb-1 block text-xs font-semibold text-[#333333]">Nombre de la empresa</label>
+                            <label for="registroNombreEmpresa" class="mb-1 block text-xs font-semibold text-noche">Nombre de la empresa</label>
                             <input id="registroNombreEmpresa" name="nombreEmpresa" type="text" required
-                                class="campo-registro w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm outline-none">
+                                class="campo-registro w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-slate-800 outline-none">
                         </div>
 
                         <div>
-                            <label for="registroNit" class="mb-1 block text-xs font-semibold text-[#333333]">NIT</label>
+                            <label for="registroNit" class="mb-1 block text-xs font-semibold text-noche">NIT</label>
                             <input id="registroNit" name="nit" type="text" required
-                                class="campo-registro w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm outline-none">
+                                class="campo-registro w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-slate-800 outline-none">
                         </div>
 
                         <div>
-                            <label for="registroDireccion" class="mb-1 block text-xs font-semibold text-[#333333]">Dirección</label>
+                            <label for="registroDireccion" class="mb-1 block text-xs font-semibold text-noche">Dirección</label>
                             <input id="registroDireccion" name="direccion" type="text" required
-                                class="campo-registro w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm outline-none">
+                                class="campo-registro w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-slate-800 outline-none">
                         </div>
 
-                        <div class="sm:col-span-2">
-                            <label for="registroEmailEmpresa" class="mb-1 block text-xs font-semibold text-[#333333]">Correo electrónico</label>
+                        {{-- CORREO EMPRESA --}}
+                        <div>
+                            <label for="registroEmailEmpresa" class="mb-1 block text-xs font-semibold text-noche">Correo electrónico</label>
                             <input id="registroEmailEmpresa" name="email" type="email" required autocomplete="email"
-                                class="campo-registro w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm outline-none">
+                                class="campo-registro w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-slate-800 outline-none">
                         </div>
 
-                        <div class="sm:col-span-2">
-                            <label for="registroPasswordEmpresa" class="mb-1 block text-xs font-semibold text-[#333333]">Contraseña</label>
+                        {{-- CONTRASEÑA EMPRESA --}}
+                        <div>
+                            <label for="registroPasswordEmpresa" class="mb-1 block text-xs font-semibold text-noche">Contraseña</label>
                             <div class="relative">
                                 <input id="registroPasswordEmpresa" name="password" type="password" minlength="8" required autocomplete="new-password"
-                                    class="campo-registro w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 pr-16 text-sm outline-none">
+                                    class="campo-registro w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 pr-11 text-sm text-slate-800 outline-none">
+
                                 <button type="button" onclick="alternarPassword('registroPasswordEmpresa', this)"
-                                    class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-[#4DB6E8] hover:text-[#333333]">
-                                    Mostrar
+                                    aria-label="Mostrar contraseña"
+                                    title="Mostrar contraseña"
+                                    class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 transition hover:text-marca-texto">
+                                    <svg class="size-5" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M4 10.5c2.1 3 4.8 4.5 8 4.5s5.9-1.5 8-4.5M7 12.5l-1.5 2M12 15v2M17 12.5l1.5 2"/>
+                                    </svg>
                                 </button>
                             </div>
                             <p class="mt-1 text-[11px] text-gray-500">Mínimo 8 caracteres.</p>
@@ -431,8 +457,8 @@
                     </div>
 
                     <button type="submit"
-                        class="boton-registro w-full rounded-lg bg-[#333333] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#4DB6E8] hover:text-[#333333]">
-                        Crear cuenta de empresa
+                        class="boton-registro w-full rounded-full border-2 border-marca bg-marca px-5 py-3 text-sm font-extrabold text-tinta transition hover:border-carbon hover:bg-carbon hover:text-white">
+                        Crear cuenta
                     </button>
                 </form>
             </div>
@@ -448,8 +474,10 @@
 </div>
 
 <style>
+    /* APERTURA Y CIERRE DEL MODAL */
     #modalRegistro {
         opacity: 0;
+        background-color: rgba(18, 48, 63, .80);
         transition: opacity .25s ease;
     }
 
@@ -462,6 +490,8 @@
         max-height: 90dvh;
         opacity: 0;
         transform: translateY(18px) scale(.97);
+        border-radius: 1.75rem;
+        background: #F5F7FA;
         transition: opacity .3s ease, transform .3s cubic-bezier(.2,.8,.2,1);
     }
 
@@ -470,18 +500,32 @@
         transform: translateY(0) scale(1);
     }
 
+    /* ANIMACIÓN DE LAS ETAPAS */
     .etapa-animacion {
         animation: aparecerEtapa .35s ease both;
     }
 
     @keyframes aparecerEtapa {
-        from { opacity: 0; transform: translateY(10px); }
-        to { opacity: 1; transform: translateY(0); }
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 
+    /* TARJETAS DE SELECCIÓN */
     .tarjeta-registro {
         position: relative;
         overflow: hidden;
+        border-color: rgba(24, 101, 167, .18);
+    }
+
+    .tarjeta-registro:hover {
+        border-color: #4DB6E8;
     }
 
     .tarjeta-registro::after {
@@ -500,21 +544,45 @@
         left: 140%;
     }
 
+    /* CAMPOS DEL FORMULARIO */
     .campo-registro {
         transition: border-color .2s ease, box-shadow .2s ease;
     }
 
     .campo-registro:focus {
         border-color: #4DB6E8;
-        box-shadow: 0 0 0 3px rgba(77,182,232,.16);
+        box-shadow: 0 0 0 3px rgba(77,182,232,.2);
     }
 
+    /* BOTÓN DEL OJITO */
+    .boton-ojo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        padding: 4px;
+    }
+
+    .boton-ojo:focus-visible {
+        outline: 2px solid #4DB6E8;
+        outline-offset: 3px;
+        border-radius: 5px;
+    }
+
+    /* BOTONES DEL FORMULARIO */
     .boton-registro {
+        border-radius: 999px;
+        border: 2px solid #4DB6E8;
+        background: #4DB6E8;
+        color: #0F2A3D;
         transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
     }
 
     .boton-registro:hover {
         transform: translateY(-2px);
+        border-color: #333333;
+        background: #333333;
+        color: white;
         box-shadow: 0 7px 16px rgba(51,51,51,.15);
     }
 
@@ -522,6 +590,7 @@
         transform: scale(.98);
     }
 
+    /* RESPETAR PREFERENCIAS DE MOVIMIENTO */
     @media (prefers-reduced-motion: reduce) {
         #modalRegistro,
         #contenidoModal,
@@ -532,34 +601,26 @@
             transition: none !important;
         }
     }
-
-    #modalRegistro { background-color: rgba(7, 39, 68, .70); }
-    #contenidoModal { border-radius: 1.75rem; background: #F8FCFF; }
-    #modalRegistro .bg-white { background-color: #F5FAFE; }
-    #modalRegistro .tarjeta-registro { border-radius: 1rem; border-color: rgba(24, 101, 167, .18); }
-    #modalRegistro .tarjeta-registro:hover { border-color: #1686D9; }
-    #modalRegistro .boton-registro { border-radius: 999px; background: #087DCA; color: white; }
-    #modalRegistro .boton-registro:hover { background: #0566A8; color: white; }
 </style>
 
 <script>
     const modalRegistro = document.getElementById('modalRegistro');
 
     function abrirModalRegistro(tipo = null) {
-    modalRegistro.classList.remove('hidden');
-    modalRegistro.classList.add('flex');
-    document.body.classList.add('overflow-hidden');
+        modalRegistro.classList.remove('hidden');
+        modalRegistro.classList.add('flex');
+        document.body.classList.add('overflow-hidden');
 
-    requestAnimationFrame(() => {
-        modalRegistro.classList.add('modal-visible');
+        requestAnimationFrame(() => {
+            modalRegistro.classList.add('modal-visible');
 
-        if (tipo === 'usuario' || tipo === 'empresa') {
-            mostrarFormulario(tipo);
-        } else {
-            volverSelector();
-        }
-    });
-}
+            if (tipo === 'usuario' || tipo === 'empresa') {
+                mostrarFormulario(tipo);
+            } else {
+                volverSelector();
+            }
+        });
+    }
 
     function cerrarModalRegistro() {
         modalRegistro.classList.remove('modal-visible');
@@ -586,7 +647,7 @@
         empresa.classList.toggle('hidden', tipo !== 'empresa');
 
         document.getElementById('tituloModal').textContent =
-            tipo === 'usuario' ? 'Crear cuenta personal' : 'Crear cuenta empresarial';
+            tipo === 'usuario' ? 'Crear Cuenta Personal' : 'Crear Cuenta Empresarial';
 
         document.getElementById('descripcionModal').textContent =
             tipo === 'usuario'
@@ -627,13 +688,51 @@
         });
     }
 
+    // Mostrar u ocultar contraseña con el mismo ojito del login
     function alternarPassword(id, boton) {
         const campo = document.getElementById(id);
-        const mostrar = campo.type === 'password';
+        if (!campo) return;
 
+        const mostrar = campo.type === 'password';
         campo.type = mostrar ? 'text' : 'password';
-        boton.textContent = mostrar ? 'Ocultar' : 'Mostrar';
+
+        boton.setAttribute(
+            'aria-label',
+            mostrar ? 'Ocultar contraseña' : 'Mostrar contraseña'
+        );
+
+        boton.setAttribute(
+            'title',
+            mostrar ? 'Ocultar contraseña' : 'Mostrar contraseña'
+        );
+
+        boton.innerHTML = mostrar
+            ? `<svg class="size-5" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M2.5 12s3.4-6.5 9.5-6.5 9.5 6.5 9.5 6.5-3.4 6.5-9.5 6.5-9.5-6.5-9.5-6.5z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M6.5 7.5 5 5.5M12 5.5V3.5M17.5 7.5 19 5.5"/>
+               </svg>`
+            : `<svg class="size-5" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M4 10.5c2.1 3 4.8 4.5 8 4.5s5.9-1.5 8-4.5M7 12.5l-1.5 2M12 15v2M17 12.5l1.5 2"/>
+               </svg>`;
     }
+
+    // Abrir el calendario de fecha de nacimiento
+    document.getElementById('registroAbrirCalendario').addEventListener('click', function () {
+        const fechaNacimiento = document.getElementById('registroFecha');
+
+        if (typeof fechaNacimiento.showPicker === 'function') {
+            fechaNacimiento.showPicker();
+        } else {
+            fechaNacimiento.focus();
+            fechaNacimiento.click();
+        }
+    });
 
     // Cerrar al pulsar fuera del contenido
     modalRegistro.addEventListener('click', function(event) {
@@ -650,131 +749,127 @@
     });
 
     // Registrar persona natural
-document.getElementById('formRegistroUsuario').addEventListener('submit', function (e) {
-    e.preventDefault();
-    enviarRegistro(this, "{{ route('registro.usuario') }}");
-});
-
-// Registrar empresa
-document.getElementById('formRegistroEmpresa').addEventListener('submit', function (e) {
-    e.preventDefault();
-    enviarRegistro(this, "{{ route('registro.empresa') }}");
-});
-
-// Enviar los datos del formulario
-
-async function enviarRegistro(formulario, ruta) {
-    const boton = formulario.querySelector('[type="submit"]');
-    const textoOriginal = boton.textContent;
-
-    boton.disabled = true;
-    boton.textContent = 'Registrando...';
-
-    limpiarErrores(formulario);
-
-    try {
-        const respuesta = await fetch(ruta, {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-            },
-            body: new FormData(formulario)
-        });
-
-        const resultado = await respuesta.json().catch(() => ({}));
-
-        if (!respuesta.ok) {
-            if (respuesta.status === 422 && resultado.errors) {
-                mostrarErrores(formulario, resultado.errors);
-            } else {
-                console.error('Respuesta del servidor:', respuesta.status, resultado);
-
-                mostrarMensajeRegistro(
-                    resultado.message || 'No fue posible completar el registro. Inténtalo nuevamente.',
-                    'error'
-                );
-            }
-
-            return;
-        }
-
-        formulario.reset();
-        mostrarMensajeRegistro(resultado.mensaje, 'exito');
-
-        window.location.href = resultado.redirect;
-
-    } catch (error) {
-        console.error('Error al registrar:', error);
-
-        mostrarMensajeRegistro(
-            'No fue posible conectar con el servidor. Inténtalo nuevamente.',
-            'error'
-        );
-
-    } finally {
-        boton.disabled = false;
-        boton.textContent = textoOriginal;
-    }
-}
-
-
-// Limpiar errores anteriores
-function limpiarErrores(formulario) {
-    formulario.querySelectorAll('.error-registro').forEach(error => error.remove());
-
-    formulario.querySelectorAll('.campo-registro').forEach(campo => {
-        campo.classList.remove('campo-error', 'border-red-500');
+    document.getElementById('formRegistroUsuario').addEventListener('submit', function (e) {
+        e.preventDefault();
+        enviarRegistro(this, "{{ route('registro.usuario') }}");
     });
 
-    const mensaje = document.getElementById('mensajeRegistro');
-    if (mensaje) {
-        mensaje.remove();
+    // Registrar empresa
+    document.getElementById('formRegistroEmpresa').addEventListener('submit', function (e) {
+        e.preventDefault();
+        enviarRegistro(this, "{{ route('registro.empresa') }}");
+    });
+
+    // Enviar los datos del formulario
+    async function enviarRegistro(formulario, ruta) {
+        const boton = formulario.querySelector('[type="submit"]');
+        const textoOriginal = boton.textContent;
+
+        boton.disabled = true;
+        boton.textContent = 'Registrando...';
+
+        limpiarErrores(formulario);
+
+        try {
+            const respuesta = await fetch(ruta, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                },
+                body: new FormData(formulario)
+            });
+
+            const resultado = await respuesta.json().catch(() => ({}));
+
+            if (!respuesta.ok) {
+                if (respuesta.status === 422 && resultado.errors) {
+                    mostrarErrores(formulario, resultado.errors);
+                } else {
+                    console.error('Respuesta del servidor:', respuesta.status, resultado);
+
+                    mostrarMensajeRegistro(
+                        resultado.message || 'No fue posible completar el registro. Inténtalo nuevamente.',
+                        'error'
+                    );
+                }
+
+                return;
+            }
+
+            formulario.reset();
+            mostrarMensajeRegistro(resultado.mensaje, 'exito');
+
+            window.location.href = resultado.redirect;
+
+        } catch (error) {
+            console.error('Error al registrar:', error);
+
+            mostrarMensajeRegistro(
+                'No fue posible conectar con el servidor. Inténtalo nuevamente.',
+                'error'
+            );
+
+        } finally {
+            boton.disabled = false;
+            boton.textContent = textoOriginal;
+        }
     }
-}
 
-// Mostrar errores de validación
-function mostrarErrores(formulario, errores) {
-    Object.entries(errores).forEach(([campo, mensajes]) => {
-        const input = formulario.querySelector(`[name="${campo}"]`);
+    // Limpiar errores anteriores
+    function limpiarErrores(formulario) {
+        formulario.querySelectorAll('.error-registro').forEach(error => error.remove());
 
-        if (!input) return;
+        formulario.querySelectorAll('.campo-registro').forEach(campo => {
+            campo.classList.remove('campo-error', 'border-red-500');
+        });
 
-        input.classList.add('campo-error', 'border-red-500');
+        const mensaje = document.getElementById('mensajeRegistro');
+        if (mensaje) {
+            mensaje.remove();
+        }
+    }
 
-        const mensaje = document.createElement('p');
-        mensaje.className = 'error-registro mt-1 text-sm text-red-600';
-        mensaje.textContent = mensajes[0];
+    // Mostrar errores de validación
+    function mostrarErrores(formulario, errores) {
+        Object.entries(errores).forEach(([campo, mensajes]) => {
+            const input = formulario.querySelector(`[name="${campo}"]`);
 
-        let contenedorCampo = input.parentElement;
+            if (!input) return;
 
-        if (contenedorCampo.classList.contains('relative')) {
-            contenedorCampo = contenedorCampo.parentElement;
+            input.classList.add('campo-error', 'border-red-500');
+
+            const mensaje = document.createElement('p');
+            mensaje.className = 'error-registro mt-1 text-sm text-red-600';
+            mensaje.textContent = mensajes[0];
+
+            let contenedorCampo = input.parentElement;
+
+            if (contenedorCampo.classList.contains('relative')) {
+                contenedorCampo = contenedorCampo.parentElement;
+            }
+
+            contenedorCampo.appendChild(mensaje);
+        });
+    }
+
+    // Mostrar confirmación dentro del modal
+    function mostrarMensajeRegistro(mensaje, tipo) {
+        let contenedor = document.getElementById('mensajeRegistro');
+
+        if (!contenedor) {
+            contenedor = document.createElement('div');
+            contenedor.id = 'mensajeRegistro';
+
+            const contenido = document.getElementById('contenidoDesplazable');
+            contenido.prepend(contenedor);
         }
 
-        contenedorCampo.appendChild(mensaje);
-        });
-}
+        contenedor.className = tipo === 'exito'
+            ? 'mb-4 rounded-xl border border-green-300 bg-green-50 p-3 text-sm font-medium text-green-800'
+            : 'mb-4 rounded-xl border border-red-300 bg-red-50 p-3 text-sm font-medium text-red-800';
 
-// Mostrar confirmación dentro del modal
-function mostrarMensajeRegistro(mensaje, tipo) {
-    let contenedor = document.getElementById('mensajeRegistro');
-
-    if (!contenedor) {
-        contenedor = document.createElement('div');
-        contenedor.id = 'mensajeRegistro';
-
-        const contenido = document.getElementById('contenidoDesplazable');
-        contenido.prepend(contenedor);
+        contenedor.textContent = mensaje;
     }
-
-    contenedor.className = tipo === 'exito'
-        ? 'mb-4 rounded-xl border border-green-300 bg-green-50 p-3 text-sm font-medium text-green-800'
-        : 'mb-4 rounded-xl border border-red-300 bg-red-50 p-3 text-sm font-medium text-red-800';
-
-    contenedor.textContent = mensaje;
-}
 </script>
-
-
 
 @endsection

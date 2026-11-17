@@ -18,7 +18,6 @@
     $btnPrimario = 'rounded-full border-2 border-marca bg-marca px-5 py-3 text-sm font-extrabold text-tinta transition hover:border-carbon hover:bg-carbon hover:text-white';
 @endphp
 
-
 {{-- PÁGINA: foto de fondo + tarjeta de vidrio a la derecha --}}
 <div class="login-page flex min-h-screen items-center justify-center px-4 py-6 lg:justify-end lg:px-16">
 
@@ -58,7 +57,7 @@
                                     class="opcion-tipo flex min-h-[54px] w-full items-center justify-center gap-2.5 rounded-2xl border-2 border-transparent bg-white/80 px-3 text-[15px] font-bold text-slate-600 transition {{ $tipoSeleccionado === $tipo ? 'seleccionado' : '' }}">
                                     @if ($tipo === 'usuario')
                                         <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.5 20.1a7.5 7.5 0 0115 0"/></svg>
-                                        Persona natural
+                                        Persona Natural
                                     @else
                                         <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4M9 9v.01M9 12v.01M9 15v.01M9 18v.01"/></svg>
                                         Empresa
@@ -94,8 +93,8 @@
                         <input id="password" name="password" type="password" required autocomplete="current-password"
                             placeholder="Contraseña" class="{{ $campoLogin }} pr-14">
 
-                        {{-- Ojo cerrado = contraseña oculta · ojo abierto = contraseña visible --}}
                         <button type="button" id="alternarPassword" aria-label="Mostrar contraseña"
+                            title="Mostrar contraseña"
                             class="absolute inset-y-0 right-0 flex items-center px-4 text-slate-500 transition hover:text-carbon">
                             <svg id="iconoOculta" class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10c2.5 4 6 6 9 6s6.5-2 9-6M12 16v3M7 14.5l-1.5 2.5M17 14.5l1.5 2.5"/></svg>
                             <svg id="iconoVisible" class="hidden size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
@@ -190,7 +189,7 @@
                             aria-pressed="{{ $tipoRecuperacionActual === $tipo ? 'true' : 'false' }}"
                             onclick="seleccionarTipoRecuperacion('{{ $tipo }}')"
                             class="opcion-tipo flex min-h-[54px] w-full items-center justify-center rounded-2xl border-2 border-slate-200 bg-white px-3 text-[15px] font-bold text-slate-600 transition {{ $tipoRecuperacionActual === $tipo ? 'seleccionado' : '' }}">
-                            {{ $tipo === 'usuario' ? 'Persona natural' : 'Empresa' }}
+                            {{ $tipo === 'usuario' ? 'Persona Natural' : 'Empresa' }}
                         </button>
                     @endforeach
                 </div>
@@ -219,7 +218,7 @@
     </div>
 </div>
 
-{{-- MODAL DE REGISTRO: primero se elige el tipo de cuenta y cada tipo tiene su formulario --}}
+{{-- MODAL DE REGISTRO --}}
 <div id="modalRegistro" class="fixed inset-0 z-[100] hidden items-center justify-center bg-noche/80 px-3 py-4 backdrop-blur-md">
 
     <div id="contenidoModal" class="relative flex max-h-[90vh] w-full max-w-xl flex-col overflow-hidden rounded-3xl border border-white/70 bg-fondo shadow-2xl shadow-noche/40">
@@ -255,25 +254,43 @@
 
                 <div class="grid gap-3 sm:grid-cols-2">
                     <button type="button" onclick="mostrarFormulario('usuario')"
-                        class="group flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-4 text-left transition hover:-translate-y-1 hover:border-marca hover:shadow-lg">
+                        class="tarjeta-registro group flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-4 text-left transition">
+
+                        {{-- ICONO ORIGINAL PERSONA NATURAL: SE CONSERVA --}}
                         <span class="flex size-12 shrink-0 items-center justify-center rounded-xl bg-[#EAF6FD] text-marca-texto transition group-hover:bg-marca group-hover:text-tinta">
                             <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.5 20.1a7.5 7.5 0 0115 0"/></svg>
                         </span>
+
                         <span class="min-w-0 flex-1">
-                            <span class="block text-sm font-bold text-noche">Persona natural</span>
+                            <span class="block text-sm font-bold text-noche">Persona Natural</span>
                             <span class="mt-1 block text-xs leading-relaxed text-slate-500">Busca empleo y crea tu hoja de vida.</span>
                         </span>
+
+                        {{-- FLECHA --}}
+                        <svg class="size-4 shrink-0 text-gray-400 transition duration-300 group-hover:translate-x-1 group-hover:text-noche"
+                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
                     </button>
 
                     <button type="button" onclick="mostrarFormulario('empresa')"
-                        class="group flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-4 text-left transition hover:-translate-y-1 hover:border-marca hover:shadow-lg">
+                        class="tarjeta-registro group flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-4 text-left transition">
+
+                        {{-- ICONO ORIGINAL EMPRESA: SE CONSERVA --}}
                         <span class="flex size-12 shrink-0 items-center justify-center rounded-xl bg-[#EAF6FD] text-marca-texto transition group-hover:bg-marca group-hover:text-tinta">
                             <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4M9 9v.01M9 12v.01M9 15v.01M9 18v.01"/></svg>
                         </span>
+
                         <span class="min-w-0 flex-1">
                             <span class="block text-sm font-bold text-noche">Empresa</span>
                             <span class="mt-1 block text-xs leading-relaxed text-slate-500">Publica vacantes y encuentra talento.</span>
                         </span>
+
+                        {{-- FLECHA --}}
+                        <svg class="size-4 shrink-0 text-gray-400 transition duration-300 group-hover:translate-x-1 group-hover:text-noche"
+                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
                     </button>
                 </div>
             </div>
@@ -301,11 +318,27 @@
                             <input id="registroApellidos" name="apellidos" type="text" required autocomplete="family-name" class="{{ $campoRegistro }}">
                         </div>
 
+                        {{-- FECHA DE NACIMIENTO --}}
                         <div>
                             <label for="registroFecha" class="{{ $etiquetaRegistro }}">Fecha de nacimiento</label>
-                            {{-- type="date": el navegador muestra el calendario para elegir la fecha --}}
-                            <input id="registroFecha" name="fechaNacimiento" type="date" required
-                                min="1900-01-01" max="{{ date('Y-m-d') }}" class="{{ $campoRegistro }}">
+                            <div style="position:relative;display:flex;align-items:center">
+                                <input id="registroFecha" name="fechaNacimiento" type="date" required
+                                    min="1900-01-01" max="{{ date('Y-m-d') }}"
+                                    class="{{ $campoRegistro }}"
+                                    style="padding-right:54px">
+
+                                <button id="registroAbrirCalendario" type="button"
+                                    aria-label="Abrir calendario de fecha de nacimiento"
+                                    title="Elegir fecha en el calendario"
+                                    style="position:absolute;right:6px;top:50%;transform:translateY(-50%);width:40px;height:40px;border:0;border-radius:9px;background:transparent;color:#52606D;display:flex;align-items:center;justify-content:center;cursor:pointer">
+                                    <svg width="18" height="18" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="1.8"
+                                        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                        <rect x="3" y="5" width="18" height="16" rx="2"/>
+                                        <path d="M16 3v4M8 3v4M3 10h18"/>
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
 
                         <div>
@@ -330,23 +363,35 @@
                             <input id="registroTelefono" name="telefono" type="tel" required autocomplete="tel" class="{{ $campoRegistro }}">
                         </div>
 
-                        <div class="sm:col-span-2">
+                        <div>
                             <label for="registroEmailUsuario" class="{{ $etiquetaRegistro }}">Correo electrónico</label>
                             <input id="registroEmailUsuario" name="email" type="email" required autocomplete="email" class="{{ $campoRegistro }}">
                         </div>
 
-                        <div class="sm:col-span-2">
+                        <div>
                             <label for="registroPasswordUsuario" class="{{ $etiquetaRegistro }}">Contraseña</label>
                             <div class="relative">
-                                <input id="registroPasswordUsuario" name="password" type="password" minlength="8" required autocomplete="new-password" class="{{ $campoRegistro }} pr-16">
-                                <button type="button" onclick="alternarPassword('registroPasswordUsuario', this)"
-                                    class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-marca-texto hover:text-carbon">Mostrar</button>
+                                <input id="registroPasswordUsuario" name="password" type="password"
+                                    minlength="8" required autocomplete="new-password"
+                                    class="{{ $campoRegistro }} pr-11">
+
+                                <button type="button"
+                                    onclick="alternarPassword('registroPasswordUsuario', this)"
+                                    aria-label="Mostrar contraseña"
+                                    title="Mostrar contraseña"
+                                    class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 transition hover:text-marca-texto">
+                                    <svg class="size-5" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M4 10.5c2.1 3 4.8 4.5 8 4.5s5.9-1.5 8-4.5M7 12.5l-1.5 2M12 15v2M17 12.5l1.5 2"/>
+                                    </svg>
+                                </button>
                             </div>
                             <p class="mt-1 text-[11px] text-slate-500">Mínimo 8 caracteres.</p>
                         </div>
                     </div>
 
-                    <button type="submit" class="{{ $btnPrimario }} w-full">Crear cuenta personal</button>
+                    <button type="submit" class="{{ $btnPrimario }} w-full">Crear cuenta</button>
                 </form>
 
                 {{-- FORMULARIO EMPRESA --}}
@@ -368,23 +413,35 @@
                             <input id="registroDireccion" name="direccion" type="text" required class="{{ $campoRegistro }}">
                         </div>
 
-                        <div class="sm:col-span-2">
+                        <div>
                             <label for="registroEmailEmpresa" class="{{ $etiquetaRegistro }}">Correo electrónico</label>
                             <input id="registroEmailEmpresa" name="email" type="email" required autocomplete="email" class="{{ $campoRegistro }}">
                         </div>
 
-                        <div class="sm:col-span-2">
+                        <div>
                             <label for="registroPasswordEmpresa" class="{{ $etiquetaRegistro }}">Contraseña</label>
                             <div class="relative">
-                                <input id="registroPasswordEmpresa" name="password" type="password" minlength="8" required autocomplete="new-password" class="{{ $campoRegistro }} pr-16">
-                                <button type="button" onclick="alternarPassword('registroPasswordEmpresa', this)"
-                                    class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-marca-texto hover:text-carbon">Mostrar</button>
+                                <input id="registroPasswordEmpresa" name="password" type="password"
+                                    minlength="8" required autocomplete="new-password"
+                                    class="{{ $campoRegistro }} pr-11">
+
+                                <button type="button"
+                                    onclick="alternarPassword('registroPasswordEmpresa', this)"
+                                    aria-label="Mostrar contraseña"
+                                    title="Mostrar contraseña"
+                                    class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 transition hover:text-marca-texto">
+                                    <svg class="size-5" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M4 10.5c2.1 3 4.8 4.5 8 4.5s5.9-1.5 8-4.5M7 12.5l-1.5 2M12 15v2M17 12.5l1.5 2"/>
+                                    </svg>
+                                </button>
                             </div>
                             <p class="mt-1 text-[11px] text-slate-500">Mínimo 8 caracteres.</p>
                         </div>
                     </div>
 
-                    <button type="submit" class="{{ $btnPrimario }} w-full">Crear cuenta de empresa</button>
+                    <button type="submit" class="{{ $btnPrimario }} w-full">Crear cuenta</button>
                 </form>
             </div>
         </div>
@@ -397,7 +454,7 @@
 </div>
 
 <style>
-    /* Foto de fondo (ya oscurecida). Si no carga, se ve el azul de respaldo. */
+    /* Foto de fondo */
     .login-page {
         background-color: #6FB4EE;
         background-image: url('{{ asset('images/fondo-malaga-login-oscurecido.jpg') }}');
@@ -406,45 +463,140 @@
     }
 
     @media (max-width: 760px) {
-        .login-page { background-position: 30% center; }
+        .login-page {
+            background-position: 30% center;
+        }
     }
 
     /* Botones de tipo de cuenta (login y recuperación) */
-    .opcion-tipo { cursor: pointer; }
-    .opcion-tipo:hover { border-color: #4DB6E8; }
+    .opcion-tipo {
+        cursor: pointer;
+        transition: transform .25s ease, border-color .25s ease, background-color .25s ease, box-shadow .25s ease;
+    }
+
+    .opcion-tipo:hover {
+        transform: translateY(-3px);
+        border-color: #4DB6E8;
+        box-shadow: 0 8px 20px rgba(77, 182, 232, .15);
+    }
+
     .opcion-tipo.seleccionado {
         border-color: #4DB6E8;
         background-color: #EAF6FD;
         color: #1A75A8;
+        box-shadow: 0 5px 15px rgba(77, 182, 232, .16);
+    }
+
+    /* Tarjetas de selección de registro */
+    .tarjeta-registro {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid #E2E8F0;
+        transition:
+            transform .3s ease,
+            border-color .3s ease,
+            box-shadow .3s ease;
+    }
+
+    .tarjeta-registro:hover {
+        transform: translateY(-4px);
+        border-color: #4DB6E8;
+        box-shadow: 0 10px 25px rgba(15, 42, 61, .10);
+    }
+
+    /* Franja luminosa que cruza la tarjeta */
+    .tarjeta-registro::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -120%;
+        width: 70%;
+        height: 100%;
+        background: linear-gradient(
+            100deg,
+            transparent,
+            rgba(77, 182, 232, .15),
+            transparent
+        );
+        transition: left .6s ease;
+        pointer-events: none;
+    }
+
+    .tarjeta-registro:hover::after {
+        left: 140%;
+    }
+
+    .tarjeta-registro:focus-visible,
+    .opcion-tipo:focus-visible {
+        outline: 3px solid rgba(77, 182, 232, .35);
+        outline-offset: 3px;
     }
 
     /* Modal de registro: aparición suave */
-    #modalRegistro { opacity: 0; transition: opacity .25s ease; }
-    #modalRegistro.modal-visible { opacity: 1; }
+    #modalRegistro {
+        opacity: 0;
+        transition: opacity .25s ease;
+    }
+
+    #modalRegistro.modal-visible {
+        opacity: 1;
+    }
+
     #contenidoModal {
         max-height: 90dvh;
         opacity: 0;
         transform: translateY(18px) scale(.97);
         transition: opacity .3s ease, transform .3s cubic-bezier(.2, .8, .2, 1);
     }
-    #modalRegistro.modal-visible #contenidoModal { opacity: 1; transform: translateY(0) scale(1); }
 
-    .etapa-animacion { animation: aparecerEtapa .35s ease both; }
-    @keyframes aparecerEtapa {
-        from { opacity: 0; transform: translateY(10px); }
-        to { opacity: 1; transform: translateY(0); }
+    #modalRegistro.modal-visible #contenidoModal {
+        opacity: 1;
+        transform: translateY(0) scale(1);
     }
 
-    .campo-registro { transition: border-color .2s ease, box-shadow .2s ease; }
-    .campo-registro:focus { border-color: #4DB6E8; box-shadow: 0 0 0 3px rgba(77, 182, 232, .2); }
+    .etapa-animacion {
+        animation: aparecerEtapa .35s ease both;
+    }
+
+    @keyframes aparecerEtapa {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .campo-registro {
+        transition: border-color .2s ease, box-shadow .2s ease;
+    }
+
+    .campo-registro:focus {
+        border-color: #4DB6E8;
+        box-shadow: 0 0 0 3px rgba(77, 182, 232, .2);
+    }
 
     @media (prefers-reduced-motion: reduce) {
-        #modalRegistro, #contenidoModal, .etapa-animacion { animation: none !important; transition: none !important; }
+        #modalRegistro,
+        #contenidoModal,
+        .etapa-animacion,
+        .tarjeta-registro,
+        .opcion-tipo {
+            animation: none !important;
+            transition: none !important;
+        }
+
+        .tarjeta-registro:hover,
+        .opcion-tipo:hover {
+            transform: none;
+        }
     }
 </style>
 
 <script>
-    // ---------- Mostrar / ocultar contraseña (ojo cerrado = oculta, ojo abierto = visible) ----------
+    // ---------- Mostrar / ocultar contraseña del login ----------
     const campoPassword = document.getElementById('password');
     const botonPassword = document.getElementById('alternarPassword');
 
@@ -453,6 +605,8 @@
 
         campoPassword.type = mostrar ? 'text' : 'password';
         botonPassword.setAttribute('aria-label', mostrar ? 'Ocultar contraseña' : 'Mostrar contraseña');
+        botonPassword.setAttribute('title', mostrar ? 'Ocultar contraseña' : 'Mostrar contraseña');
+
         document.getElementById('iconoOculta').classList.toggle('hidden', mostrar);
         document.getElementById('iconoVisible').classList.toggle('hidden', !mostrar);
     });
@@ -514,9 +668,11 @@
     document.querySelectorAll('[data-abrir-recuperacion]').forEach(boton => {
         boton.addEventListener('click', () => abrirModalRecuperacion());
     });
+
     modalRecuperacion.querySelectorAll('[data-cerrar-recuperacion]').forEach(boton => {
         boton.addEventListener('click', cerrarModalRecuperacion);
     });
+
     modalRecuperacion.addEventListener('click', evento => {
         if (evento.target === modalRecuperacion) cerrarModalRecuperacion();
     });
@@ -565,7 +721,7 @@
         document.getElementById('formRegistroEmpresa').classList.toggle('hidden', tipo !== 'empresa');
 
         document.getElementById('tituloModal').textContent =
-            tipo === 'usuario' ? 'Crear cuenta personal' : 'Crear cuenta empresarial';
+            tipo === 'usuario' ? 'Crear Cuenta Personal' : 'Crear Cuenta Empresarial';
 
         document.getElementById('descripcionModal').textContent =
             tipo === 'usuario'
@@ -599,13 +755,52 @@
         document.getElementById('contenidoDesplazable').scrollTo({ top: 0, behavior: 'smooth' });
     }
 
+    // ---------- Mostrar / ocultar contraseñas de registro ----------
     function alternarPassword(id, boton) {
         const campo = document.getElementById(id);
-        const mostrar = campo.type === 'password';
+        if (!campo) return;
 
+        const mostrar = campo.type === 'password';
         campo.type = mostrar ? 'text' : 'password';
-        boton.textContent = mostrar ? 'Ocultar' : 'Mostrar';
+
+        boton.setAttribute(
+            'aria-label',
+            mostrar ? 'Ocultar contraseña' : 'Mostrar contraseña'
+        );
+
+        boton.setAttribute(
+            'title',
+            mostrar ? 'Ocultar contraseña' : 'Mostrar contraseña'
+        );
+
+        boton.innerHTML = mostrar
+            ? `<svg class="size-5" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M2.5 12s3.4-6.5 9.5-6.5 9.5 6.5 9.5 6.5-3.4 6.5-9.5 6.5-9.5-6.5-9.5-6.5z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M6.5 7.5 5 5.5M12 5.5V3.5M17.5 7.5 19 5.5"/>
+               </svg>`
+            : `<svg class="size-5" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M4 10.5c2.1 3 4.8 4.5 8 4.5s5.9-1.5 8-4.5M7 12.5l-1.5 2M12 15v2M17 12.5l1.5 2"/>
+               </svg>`;
     }
+
+    // ---------- Abrir calendario de fecha de nacimiento ----------
+    const fechaNacimiento = document.getElementById('registroFecha');
+    const botonCalendarioNacimiento = document.getElementById('registroAbrirCalendario');
+
+    botonCalendarioNacimiento.addEventListener('click', function () {
+        if (typeof fechaNacimiento.showPicker === 'function') {
+            fechaNacimiento.showPicker();
+        } else {
+            fechaNacimiento.focus();
+            fechaNacimiento.click();
+        }
+    });
 
     modalRegistro.addEventListener('click', function (evento) {
         if (evento.target === modalRegistro) cerrarModalRegistro();
