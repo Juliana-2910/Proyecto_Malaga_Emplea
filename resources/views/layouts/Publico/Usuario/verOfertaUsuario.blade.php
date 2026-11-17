@@ -17,11 +17,11 @@
                 <h2 id="modal-titulo" style="margin:0;font-size:24px;font-weight:700;color:#12303F;line-height:1.25"></h2>
 
                 {{-- Nombre y teléfono de quien publica --}}
-                <p style="margin:0;font-size:15px;color:#52606D;display:flex;flex-wrap:wrap;align-items:center;gap:5px">
+                <p style="margin:0;font-size:13px;color:#52606D;display:flex;flex-wrap:wrap;align-items:center;gap:5px">
                     Publicada por
-                    <span id="modal-publicador" style="color:#1F2933;font-weight:700"></span>
+                    <span id="modal-publicador" style="color:#1F2933;font-weight:600"></span>
                     <span id="modal-telefono-contenedor" style="display:inline-flex;align-items:center;gap:5px;color:#52606D">
-                        <span id="modal-telefono" style="color:#1F2933;font-weight:700"></span>
+                        <span id="modal-telefono" style="color:#1F2933;font-weight:600"></span>
                     </span>
                 </p>
 
