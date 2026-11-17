@@ -3,46 +3,34 @@
 namespace App\Http\Controllers\Seguridad;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Seguridad\LoginRequest;
+use App\Http\Requests\Seguridad\RegistrarEmpresaRequest;
+use App\Http\Requests\Seguridad\RegistrarUsuarioRequest;
 use App\Services\Seguridad\AuthService;
-use App\Services\usuariosService;
-use App\Services\empresasServices;
+use App\Services\Seguridad\RegistroService;
 use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
-use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class AuthController extends Controller
 {
+    public function __construct(
+        private AuthService $authService,
+        private RegistroService $registroService
+    ) {}
 
-    public function registrarUsuario(Request $request, usuariosService $usuariosService)
+    public function showLoginForm(): View
     {
-        $datos = $request->validate([
-            'nombres' => 'required|string|max:100',
-            'apellidos' => 'required|string|max:100',
-            'fechaNacimiento' => 'required|date',
-            'tipoDocumento' => [
-                'required',
-                Rule::in(['CC', 'CE', 'PPT', 'PEP', 'PASAPORTE']),
-            ],
-            'numeroDocumento' => 'required|string|max:30|unique:usuarios,numeroDocumento',
-            'telefono' => 'required|string|max:20',
-            'email' => 'required|email|max:255|unique:usuarios,email',
-            'password' => 'required|string|min:8',
-        ], [
-            'numeroDocumento.unique' => 'Este número de documento ya se encuentra registrado.',
-            'email.unique' => 'Este correo electrónico ya se encuentra registrado.',
-        ]);
+        return view('seguridad.login');
+    }
 
-        $usuariosService->guardar($datos);
+    public function registrarUsuario(RegistrarUsuarioRequest $request)
+    {
+        $datos = $request->validated();
 
-        $autenticado = $this->authService->autenticar(
-            $datos['email'],
-            $datos['password'],
-            false,
-            'usuario'
-        );
+        $autenticado = $this->registroService->registrarUsuario($datos);
 
         if (! $autenticado) {
             return response()->json([
@@ -59,29 +47,11 @@ class AuthController extends Controller
         ], 201);
     }
 
-    public function registrarEmpresa(Request $request, empresasServices $empresasServices)
+    public function registrarEmpresa(RegistrarEmpresaRequest $request)
     {
-        $datos = $request->validate([
-            'nombreEmpresa' => 'required|string|max:150',
-            'nit' => 'required|string|max:30|unique:empresas,nit',
-            'direccion' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:empresas,email',
-            'password' => 'required|string|min:8',
-        ], [
-            'nit.unique' => 'Este NIT ya se encuentra registrado.',
-            'email.unique' => 'Este correo electrónico ya se encuentra registrado.',
-        ]);
+        $datos = $request->validated();
 
-        $datos['estado'] = 'activo';
-
-        $empresasServices->guardar($datos);
-
-        $autenticado = $this->authService->autenticar(
-            $datos['email'],
-            $datos['password'],
-            false,
-            'empresa'
-        );
+        $autenticado = $this->registroService->registrarEmpresa($datos);
 
         if (! $autenticado) {
             return response()->json([
@@ -98,22 +68,9 @@ class AuthController extends Controller
         ], 201);
     }
 
-    public function __construct(private AuthService $authService) {}
-
-    public function showLoginForm(): View
+    public function login(LoginRequest $request): RedirectResponse
     {
-        return view('seguridad.login');
-    }
-
-    public function login(Request $request): RedirectResponse
-    {
-        $tipos = array_keys(config('seguridad.login') ?? ['usuario' => true]);
-
-        $credenciales = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required', 'string'],
-            'tipo' => ['nullable', Rule::in($tipos)],
-        ]);
+        $credenciales = $request->validated();
 
         try {
             $autenticado = $this->authService->autenticar(
@@ -123,11 +80,17 @@ class AuthController extends Controller
                 $credenciales['tipo'] ?? 'usuario'
             );
         } catch (Exception $e) {
-            return back()->withErrors(['email' => $e->getMessage()])->onlyInput('email', 'tipo');
+            return back()
+                ->withErrors(['email' => $e->getMessage()])
+                ->onlyInput('email', 'tipo');
         }
 
         if (! $autenticado) {
-            $intentosRestantes = max(0, 5 - RateLimiter::attempts($this->loginRateLimitKey($request)));
+            $intentosRestantes = max(
+                0,
+                5 - RateLimiter::attempts($this->loginRateLimitKey($request))
+            );
+
             $mensaje = $intentosRestantes > 0
                 ? "Las credenciales no coinciden. Te quedan {$intentosRestantes} intentos antes de un bloqueo temporal."
                 : 'Las credenciales no coinciden. Se agotaron tus intentos y el acceso quedó bloqueado temporalmente.';
@@ -139,7 +102,9 @@ class AuthController extends Controller
         }
 
         RateLimiter::clear($this->loginRateLimitKey($request));
+
         $request->session()->regenerate();
+
         $tipo = $credenciales['tipo'] ?? 'usuario';
 
         if ($tipo === 'empresa') {
@@ -156,7 +121,9 @@ class AuthController extends Controller
             return redirect()->route('dashboard.index');
         }
 
-        return redirect()->intended(config('seguridad.redirect_despues_login'));
+        return redirect()->intended(
+            config('seguridad.redirect_despues_login')
+        );
     }
 
     private function loginRateLimitKey(Request $request): string
@@ -164,7 +131,6 @@ class AuthController extends Controller
         return md5('login' . $request->ip());
     }
 
-    // Cerrar sesión
     public function logout(Request $request): RedirectResponse
     {
         $this->authService->cerrarSesion();
