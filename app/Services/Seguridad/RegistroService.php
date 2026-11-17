@@ -15,6 +15,8 @@ class RegistroService
 
     public function registrarUsuario(array $datos): bool
     {
+        unset($datos['terminos'], $datos['datos']);
+
         $this->usuariosService->guardar($datos);
 
         return $this->authService->autenticar(
@@ -27,6 +29,8 @@ class RegistroService
 
     public function registrarEmpresa(array $datos): bool
     {
+        unset($datos['terminos'], $datos['datos']);
+
         $datos['estado'] = 'activo';
 
         $this->empresasServices->guardar($datos);

@@ -26,6 +26,8 @@ class RegistrarUsuarioRequest extends FormRequest
             'telefono' => 'required|string|max:20',
             'email' => 'required|email|max:255|unique:usuarios,email',
             'password' => 'required|string|min:8',
+            'terminos' => 'required|accepted',
+            'datos' => 'required|accepted',
         ];
     }
 
@@ -34,6 +36,10 @@ class RegistrarUsuarioRequest extends FormRequest
         return [
             'numeroDocumento.unique' => 'Este número de documento ya se encuentra registrado.',
             'email.unique' => 'Este correo electrónico ya se encuentra registrado.',
+            'terminos.required' => 'Debes aceptar los Términos y Condiciones.',
+            'terminos.accepted' => 'Debes aceptar los Términos y Condiciones.',
+            'datos.required' => 'Debes autorizar el tratamiento de tus datos personales.',
+            'datos.accepted' => 'Debes autorizar el tratamiento de tus datos personales.',
         ];
     }
 }

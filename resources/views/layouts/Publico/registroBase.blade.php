@@ -208,6 +208,10 @@
     function limpiarErrores(formulario) {
         formulario.querySelectorAll('.error-registro').forEach(error => error.remove());
 
+        formulario.querySelectorAll('[name="terminos"], [name="datos"]').forEach(campo => {
+            campo.classList.remove('campo-error', 'border-red-500');
+        });
+
         formulario.querySelectorAll('.campo-registro').forEach(campo => {
             campo.classList.remove('campo-error', 'border-red-500');
         });
@@ -225,8 +229,10 @@
             const mensaje = document.createElement('p');
             mensaje.className = 'error-registro mt-1 block text-xs font-normal text-red-600';            mensaje.textContent = mensajes[0];
 
-            let contenedorCampo = input.parentElement;
-            if (contenedorCampo.classList.contains('relative')) {
+            const contenedorLegal = input.closest('[data-campo-legal]');
+            let contenedorCampo = contenedorLegal ?? input.parentElement;
+
+            if (!contenedorLegal && contenedorCampo.classList.contains('relative')) {
                 contenedorCampo = contenedorCampo.parentElement;
             }
 
@@ -251,4 +257,6 @@
         contenedor.textContent = mensaje;
     }
 </script>
+
+@include('layouts.Publico.registroLegal')
 @endonce

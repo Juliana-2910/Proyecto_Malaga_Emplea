@@ -70,6 +70,8 @@
                         @include('layouts.Publico.registroCampoPassword', ['id' => 'registroPasswordEmpresa'])
                     </div>
 
+                    @include('layouts.Publico.registroCasillasLegales', ['prefijo' => 'Empresa'])
+
                     <button type="submit" class="{{ $btnPrimario }} w-full">Crear cuenta</button>
                 </form>
             </div>

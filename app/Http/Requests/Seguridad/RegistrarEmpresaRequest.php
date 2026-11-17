@@ -19,6 +19,8 @@ class RegistrarEmpresaRequest extends FormRequest
             'direccion' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:empresas,email',
             'password' => 'required|string|min:8',
+            'terminos' => 'required|accepted',
+            'datos' => 'required|accepted',
         ];
     }
 
@@ -27,6 +29,10 @@ class RegistrarEmpresaRequest extends FormRequest
         return [
             'nit.unique' => 'Este NIT ya se encuentra registrado.',
             'email.unique' => 'Este correo electrónico ya se encuentra registrado.',
+            'terminos.required' => 'Debes aceptar los Términos y Condiciones.',
+            'terminos.accepted' => 'Debes aceptar los Términos y Condiciones.',
+            'datos.required' => 'Debes autorizar el tratamiento de tus datos personales.',
+            'datos.accepted' => 'Debes autorizar el tratamiento de tus datos personales.',
         ];
     }
 }
