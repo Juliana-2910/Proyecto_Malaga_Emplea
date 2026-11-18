@@ -33,25 +33,22 @@ class postulacionService
 
     public function guardar(array $datos)
     {
-        $usuario = $this->postulacionrepository->buscarUsuario(
-            (int) $datos['idUsuario']
-        );
+        DB::transaction(function () use ($datos): void {
+            $usuario = $this->postulacionrepository->buscarUsuario((int) $datos['idUsuario']);
+            $oferta = $this->postulacionrepository->buscarOfertaBloqueada((int) $datos['idOferta']);
 
-        $oferta = $this->postulacionrepository->buscarOferta(
-            (int) $datos['idOferta']
-        );
+            $this->validarUsuarioPuedePostular($usuario);
+            $this->validarOfertaVigente($oferta);
+            $this->validarNoDuplicada($usuario->id, $oferta->id);
+            $this->validarNoEsDuenoDeLaOferta($usuario, $oferta);
 
-        $this->validarUsuarioPuedePostular($usuario);
-        $this->validarOfertaVigente($oferta);
-        $this->validarNoDuplicada($usuario->id, $oferta->id);
-        $this->validarNoEsDuenoDeLaOferta($usuario, $oferta);
-
-        $this->postulacionrepository->guardar([
-            'fecha'     => $this->obtenerFechaActual(),
-            'estado'    => $this->obtenerEstadoInicial(),
-            'idUsuario' => $usuario->id,
-            'idOferta'  => $oferta->id,
-        ]);
+            $this->postulacionrepository->guardar([
+                'fecha'     => $this->obtenerFechaActual(),
+                'estado'    => $this->obtenerEstadoInicial(),
+                'idUsuario' => $usuario->id,
+                'idOferta'  => $oferta->id,
+            ]);
+        });
     }
 
     public function eliminar(int $id)
@@ -131,12 +128,13 @@ class postulacionService
             $postulacion = $this->postulacionrepository->buscarConOferta($idPostulacion);
             $this->validarPublicadorDeOferta($postulacion->oferta, $publicador);
 
-            if ($nuevoEstado === 'Contratado') {
-                $this->postulacionrepository->bloquearOfertaParaContratar((int) $postulacion->idOferta);
+            $this->postulacionrepository->bloquearOfertaParaContratar((int) $postulacion->idOferta);
+            $oferta = $this->postulacionrepository->buscarOfertaBloqueada((int) $postulacion->idOferta);
+            $postulacion = $this->postulacionrepository->buscarConOfertaBloqueada($idPostulacion);
+            $this->validarPublicadorDeOferta($postulacion->oferta, $publicador);
 
-                // Otra contratación puede haberse completado mientras esta solicitud esperaba el bloqueo.
-                $postulacion = $this->postulacionrepository->buscarConOfertaBloqueada($idPostulacion);
-                $this->validarPublicadorDeOferta($postulacion->oferta, $publicador);
+            if ($oferta->estado !== 'activa') {
+                throw new Exception('No puedes gestionar postulaciones de una oferta inactiva.');
             }
 
             $this->validarCambioEstado($postulacion->estado, $nuevoEstado);
@@ -177,6 +175,10 @@ class postulacionService
 
     private function validarOfertaVigente($oferta)
     {
+        if ($oferta->estado === 'inactiva') {
+            throw new Exception('La oferta está inactiva y no admite nuevas postulaciones.');
+        }
+
         $hoy = Carbon::parse($this->obtenerFechaActual());
 
         if ($hoy->gt(Carbon::parse($oferta->fechaLimite))) {

@@ -212,7 +212,18 @@
             </div>
 
             {{-- Botones --}}
-            <div style="padding:18px 28px;border-top:1px solid #E3E8EF;display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:12px;background:#FFFFFF">
+            <div style="position:relative;padding:18px 28px;border-top:1px solid #E3E8EF;display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:12px;background:#FFFFFF">
+                <button id="eo-inactivar" type="button" aria-label="Inactivar oferta" aria-pressed="false"
+                    style="position:absolute;left:28px;top:50%;transform:translateY(-50%);display:flex;align-items:center;gap:10px;border:0;background:transparent;padding:0;color:#1F2933;font:inherit;font-size:14px;font-weight:700;cursor:pointer;text-align:left">
+                    <span aria-hidden="true" style="position:relative;width:54px;height:30px;border-radius:999px;background:#CBD2D9;flex:0 0 auto">
+                        <span style="position:absolute;left:4px;top:4px;width:22px;height:22px;border-radius:50%;background:#FFFFFF;box-shadow:0 1px 3px rgba(0,0,0,.2)"></span>
+                    </span>
+                    <span style="display:flex;flex-direction:column;gap:2px">
+                        <span>Inactivar oferta</span>
+                        <span style="font-size:12px;font-weight:400;color:#7B8794">Desliza para cerrarla definitivamente</span>
+                    </span>
+                </button>
+
                 <button type="button" data-cerrar-editar-oferta class="{{ $btnSecundario }} cursor-pointer">
                     Cancelar
                 </button>
@@ -221,6 +232,21 @@
                     Actualizar
                 </button>
             </div>
+        </form>
+    </div>
+</div>
+
+<div id="modal-confirmar-inactivar-oferta" hidden
+    style="display:none;position:fixed;inset:0;z-index:70;align-items:center;justify-content:center;padding:16px;box-sizing:border-box;background:rgba(18,48,63,0.65)">
+    <div role="dialog" aria-modal="true" aria-labelledby="oi-titulo"
+        style="width:100%;max-width:480px;border-radius:18px;background:#FFFFFF;padding:26px;box-shadow:0 24px 64px rgba(18,48,63,0.35);font-family:inherit">
+        <h2 id="oi-titulo" style="margin:0 0 12px;font-size:21px;font-weight:800;color:#12303F">¿Deseas inactivar esta oferta?</h2>
+        <p style="margin:0;color:#52606D;line-height:1.55">La oferta dejará de estar publicada y las postulaciones pendientes pasarán a estado rechazado.</p>
+        <form id="oi-form" method="POST" action="" style="display:flex;justify-content:flex-end;gap:10px;margin-top:24px">
+            @csrf
+            @method('PATCH')
+            <button id="oi-cancelar" type="button" style="border:1.5px solid #52606D;border-radius:999px;background:#FFFFFF;padding:10px 17px;font-weight:700;color:#1F2933;cursor:pointer">Cancelar</button>
+            <button type="submit" style="border:1.5px solid #B42318;border-radius:999px;background:#B42318;padding:10px 17px;font-weight:700;color:#FFFFFF;cursor:pointer">Inactivar oferta</button>
         </form>
     </div>
 </div>
@@ -398,6 +424,28 @@
         document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape' && !modal.hidden) {
                 cerrar();
+            }
+        });
+
+        const confirmarInactivar = document.getElementById('modal-confirmar-inactivar-oferta');
+        const formularioInactivar = document.getElementById('oi-form');
+
+        document.getElementById('eo-inactivar').addEventListener('click', function () {
+            const idOferta = form.elements['_idOferta'].value;
+            formularioInactivar.action = form.dataset.base + '/' + idOferta + '/inactivar';
+            confirmarInactivar.hidden = false;
+            confirmarInactivar.style.display = 'flex';
+        });
+
+        document.getElementById('oi-cancelar').addEventListener('click', function () {
+            confirmarInactivar.hidden = true;
+            confirmarInactivar.style.display = 'none';
+        });
+
+        confirmarInactivar.addEventListener('click', function (e) {
+            if (e.target === confirmarInactivar) {
+                confirmarInactivar.hidden = true;
+                confirmarInactivar.style.display = 'none';
             }
         });
     })();

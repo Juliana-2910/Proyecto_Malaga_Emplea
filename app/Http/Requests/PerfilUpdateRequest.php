@@ -26,6 +26,7 @@ class PerfilUpdateRequest extends FormRequest
                 'nombreEmpresa' => ['required', 'string', 'max:100'],
                 'nit' => ['required', 'string', 'max:30', Rule::unique('empresas', 'nit')->ignore($cuenta->id)],
                 'direccion' => ['required', 'string', 'max:255'],
+                'telefono' => ['nullable', 'string', 'max:20'],
                 'email' => ['required', 'email', 'max:255', Rule::unique('empresas', 'email')->ignore($cuenta->id)],
             ] + $foto;
         }

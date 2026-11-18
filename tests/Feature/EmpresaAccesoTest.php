@@ -222,11 +222,17 @@ class EmpresaAccesoTest extends TestCase
             'nombreEmpresa' => 'Registro público',
             'nit' => '907',
             'direccion' => 'Calle 2',
+            'telefono' => '6041234567',
             'email' => 'registro@publico.com',
             'password' => '12345678',
             'terminos' => '1',
             'datos' => '1',
         ])->assertCreated();
+
+        $this->assertDatabaseHas('empresas', [
+            'email' => 'registro@publico.com',
+            'telefono' => '6041234567',
+        ]);
 
         $this->assertDatabaseHas('empresas', [
             'email' => 'registro@publico.com',

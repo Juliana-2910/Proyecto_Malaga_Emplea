@@ -135,6 +135,20 @@ class OfertaPublicaController extends Controller
         return redirect()->route('Publico.misOfertas')->with('actualizar', 'Tu oferta se actualizó correctamente.');
     }
 
+    public function inactivarOferta(Request $request, int $id)
+    {
+        $cuenta = $request->user();
+        abort_unless($cuenta instanceof \App\Models\Usuario || $cuenta instanceof \App\Models\Empresa, 403);
+
+        try {
+            $this->ofertasService->inactivarMiOferta($id, $cuenta);
+        } catch (Exception $e) {
+            return redirect()->route('Publico.misOfertas')->with('error', $e->getMessage());
+        }
+
+        return redirect()->route('Publico.misOfertas')->with('success', 'La oferta fue inactivada y las postulaciones pendientes fueron rechazadas.');
+    }
+
     public function misPostulaciones(Request $request)
     {
         $usuario = $request->user();

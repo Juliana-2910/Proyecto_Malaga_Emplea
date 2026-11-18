@@ -23,7 +23,7 @@ class Empresa extends Authenticatable
 
     protected string $guard_name = 'web';
 
-    protected $fillable = [ 'nombreEmpresa','fotoPerfil','nit','direccion','estado','email','password',
+    protected $fillable = [ 'nombreEmpresa','fotoPerfil','nit','direccion','telefono','estado','email','password',
     ];
 
     protected $hidden = ['password'];

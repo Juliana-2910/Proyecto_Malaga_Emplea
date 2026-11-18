@@ -121,6 +121,9 @@ class ofertasRepository
     public function listarActivas(array $filtros, int $porPagina)
     {
         $consulta = Oferta::with(['empresa', 'usuario'])
+            ->where(function ($query) {
+                $query->whereNull('estado')->orWhere('estado', '<>', 'inactiva');
+            })
             ->whereDate('fechaLimite', '>=', now('America/Bogota')->toDateString()) //Ofertas activas (no vencidas) //
             ->whereDoesntHave('postulaciones', function ($q) {$q->where('estado', 'Contratado');}) //Ocultar ofertas que ya tienen un postulante contratado //
             ->when($filtros['q'] ?? null, fn ($q, $v) => $q->where('titulo', 'like', "%{$v}%"))
@@ -295,11 +298,15 @@ class ofertasRepository
     {
         $hoy = now('America/Bogota')->toDateString();
         $contratada = fn ($q) => $q->where('estado', 'Contratado');
+        $publicada = fn ($q) => $q->where(function ($q) {
+            $q->whereNull('estado')->orWhere('estado', '<>', 'inactiva');
+        });
 
         match ($estado) {
-            'activas'      => $consulta->whereDate('fechaLimite', '>=', $hoy)->whereDoesntHave('postulaciones', $contratada),
-            'contratacion' => $consulta->whereHas('postulaciones', $contratada),
-            'vencidas'     => $consulta->whereDate('fechaLimite', '<', $hoy)->whereDoesntHave('postulaciones', $contratada),
+            'activas'      => $publicada($consulta)->whereDate('fechaLimite', '>=', $hoy)->whereDoesntHave('postulaciones', $contratada),
+            'contratacion' => $publicada($consulta)->whereHas('postulaciones', $contratada),
+            'vencidas'     => $publicada($consulta)->whereDate('fechaLimite', '<', $hoy)->whereDoesntHave('postulaciones', $contratada),
+            'inactivas'    => $consulta->where('estado', 'inactiva'),
             default        => null,
         };
     }
@@ -341,7 +348,7 @@ class ofertasRepository
     {
         $conteos = [];
 
-        foreach (['todas', 'activas', 'contratacion', 'vencidas'] as $estado) {
+        foreach (['todas', 'activas', 'contratacion', 'vencidas', 'inactivas'] as $estado) {
             $consulta = Oferta::where($esEmpresa ? 'idEmpresa' : 'idUsuario', $id);
             $this->aplicarEstadoOferta($consulta, $estado);
             $conteos[$estado] = $consulta->count();
@@ -410,6 +417,19 @@ class ofertasRepository
             ->whereKey($idOferta)
             ->where($esEmpresa ? 'idEmpresa' : 'idUsuario', $idPublicador)
             ->firstOrFail();
+    }
+
+    public function buscarOfertaDePublicadorBloqueada(int $idOferta, int $idPublicador, bool $esEmpresa): Oferta
+    {
+        return Oferta::whereKey($idOferta)
+            ->where($esEmpresa ? 'idEmpresa' : 'idUsuario', $idPublicador)
+            ->lockForUpdate()
+            ->firstOrFail();
+    }
+
+    public function inactivar(int $idOferta): void
+    {
+        Oferta::whereKey($idOferta)->update(['estado' => 'inactiva']);
     }
 
     /** Devuelve ['todas' => n, 'activas' => n, 'contratacion' => n, 'vencidas' => n]. */

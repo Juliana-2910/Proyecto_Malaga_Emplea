@@ -25,6 +25,7 @@
         'activa'           => ['texto' => 'Activa',          'caja' => 'bg-green-100 text-green-800', 'punto' => 'bg-green-600'],
         'con_contratacion' => ['texto' => 'Con contratación', 'caja' => 'bg-blue-100 text-blue-800',   'punto' => 'bg-blue-600'],
         'vencida'          => ['texto' => 'Vencida',         'caja' => 'bg-slate-100 text-slate-800', 'punto' => 'bg-slate-600'],
+        'inactiva'         => ['texto' => 'Inactiva',        'caja' => 'bg-slate-100 text-slate-800', 'punto' => 'bg-slate-500'],
     ];
 
     // Pestañas de filtro
@@ -33,6 +34,7 @@
         'activas'      => ['texto' => 'Activas',          'punto' => 'bg-green-600', 'contador' => 'bg-green-100 text-green-800'],
         'contratacion' => ['texto' => 'Con contratación', 'punto' => 'bg-blue-600',  'contador' => 'bg-blue-100 text-blue-800'],
         'vencidas'     => ['texto' => 'Vencidas',         'punto' => 'bg-slate-500', 'contador' => 'bg-slate-100 text-slate-800'],
+        'inactivas'    => ['texto' => 'Inactivas',        'punto' => 'bg-slate-500', 'contador' => 'bg-slate-100 text-slate-800'],
     ];
     $pestanaActual = request('estado', 'todas');
 
@@ -238,17 +240,18 @@
         {{-- LISTADO --}}
         @forelse ($ofertas as $oferta)
             @php
-                $estado = $estados[$oferta->estadoOferta] ?? $estados['activa'];
+                $estadoVisual = $oferta->estado === 'inactiva' ? 'inactiva' : $oferta->estadoOferta;
+                $estado = $estados[$estadoVisual] ?? $estados['activa'];
                 $r = $oferta->resumenPostulantes;
                 $totalPostulantes = array_sum($r);
 
                 // REGLA: el lápiz solo funciona en ofertas activas
-                $puedeEditar = $puedeEditarOfertas && $oferta->estadoOferta === 'activa';
+                $puedeEditar = $puedeEditarOfertas && $oferta->estado !== 'inactiva' && $oferta->estadoOferta === 'activa';
 
                 $motivoNoEditar = match ($oferta->estadoOferta) {
                     'con_contratacion' => 'Ya tiene una persona contratada',
                     'vencida'          => 'La oferta ya venció',
-                    default            => null,
+                    default            => $oferta->estado === 'inactiva' ? 'La oferta está inactiva' : null,
                 };
 
                 // Datos para el modal de editar (se conecta en el siguiente paso)
@@ -275,7 +278,7 @@
                     'categoria'        => $oferta->categoria ?? '',
                     'servicio'         => $oferta->ofertaServicio->first()?->servicio?->nombre ?? '',
                     'contrato'         => $contratos[$oferta->tipoContrato] ?? $oferta->tipoContrato,
-                    'estado'           => $oferta->estadoOferta,
+                    'estado'           => $estadoVisual,
                     'estadoTexto'      => $estado['texto'],
                     'salario'          => '$' . number_format($oferta->salario, 0, ',', '.'),
                     'ubicacion'        => $oferta->ubicacion,

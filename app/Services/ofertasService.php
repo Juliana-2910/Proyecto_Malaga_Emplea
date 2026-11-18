@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Repositories\ofertasRepository;
 use App\Repositories\ofertaServiciosRepository;
+use App\Repositories\postulacionRepository;
 use App\Models\Empresa;
 use App\Models\Usuario;
 use Illuminate\Support\Facades\DB;
@@ -16,12 +17,14 @@ class ofertasService
 {
     private ofertasRepository $ofertasrepository;
     private ofertaServiciosRepository $ofertaServiciosRepository;
+    private postulacionRepository $postulacionRepository;
     private const POR_PAGINA_ADMIN = 9;
 
-    public function __construct(ofertasRepository $ofertasrepository, ofertaServiciosRepository $ofertaServiciosRepository)
+    public function __construct(ofertasRepository $ofertasrepository, ofertaServiciosRepository $ofertaServiciosRepository, postulacionRepository $postulacionRepository)
     {
         $this->ofertasrepository = $ofertasrepository;
         $this->ofertaServiciosRepository = $ofertaServiciosRepository;
+        $this->postulacionRepository = $postulacionRepository;
     }
 
     public function listarTodos()
@@ -118,7 +121,7 @@ class ofertasService
     private const POR_PAGINA = 10;
     private const ESTADOS_POSTULACION = ['Enviado', 'Aceptado', 'Rechazado','Contratado'];
     private const ORDENES_POSTULACION = ['recientes', 'antiguas'];
-    private const ESTADOS_OFERTA = ['todas', 'activas', 'contratacion', 'vencidas'];
+    private const ESTADOS_OFERTA = ['todas', 'activas', 'contratacion', 'vencidas', 'inactivas'];
     private const DIAS_VENCE_PRONTO = 3;
 
     public function datosListadoUsuario(array $filtros, Usuario|Empresa $cuenta): array
@@ -381,6 +384,25 @@ class ofertasService
         unset($datos['idUsuario'], $datos['idEmpresa']);
 
         return $this->actualizar($id, $datos);
+    }
+
+    public function inactivarMiOferta(int $id, Usuario|Empresa $cuenta): void
+    {
+        DB::transaction(function () use ($id, $cuenta): void {
+            $esEmpresa = $cuenta instanceof Empresa;
+            $oferta = $this->ofertasrepository->buscarOfertaDePublicadorBloqueada(
+                $id,
+                (int) $cuenta->id,
+                $esEmpresa
+            );
+
+            if ($oferta->estado === 'inactiva') {
+                throw new Exception('Esta oferta ya está inactiva.');
+            }
+
+            $this->ofertasrepository->inactivar((int) $oferta->id);
+            $this->postulacionRepository->rechazarPendientesPorInactivacion((int) $oferta->id);
+        });
     }
 
     /** "Postulantes de una oferta" (quien publicó decide sobre ellos) */
