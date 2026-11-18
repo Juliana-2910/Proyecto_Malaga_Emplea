@@ -89,7 +89,7 @@
                     <div style="padding:24px 28px;display:flex;flex-direction:column;gap:20px;overflow:auto">
 
                         {{-- Ubicación y nivel educativo --}}
-                        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px">
+                        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:16px">
 
                             <label style="{{ $labelHv }}">
                                 Ubicación
@@ -179,7 +179,7 @@
                                 </span>
                             </span>
 
-                            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px">
+                            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:16px">
 
                                 {{-- Izquierda: elegir o arrastrar --}}
                                 <label id="hv-zona"

@@ -1,5 +1,29 @@
 
 {{-- MODAL VER OFERTA QUE YO MISMO CREE (MODULO MIS OFERTAS) --}}
+<style>
+    @media (max-width: 639px) {
+        #mo-header {
+            display: grid !important;
+            grid-template-columns: 56px minmax(112px, 1fr) 40px;
+            grid-template-areas: "icono vence cerrar" "informacion informacion informacion";
+            align-items: start;
+            column-gap: 12px;
+            row-gap: 16px;
+            padding: 20px 16px 18px !important;
+        }
+
+        #mo-icono { grid-area: icono; }
+        #mo-informacion { grid-area: informacion; min-width: 0 !important; }
+        #mo-caja-vence {
+            grid-area: vence;
+            width: 100%;
+            min-width: 0 !important;
+            margin: 0 !important;
+            padding: 10px 8px !important;
+        }
+        #mo-cerrar { grid-area: cerrar; margin: 0 !important; }
+    }
+</style>
 <div id="modal-mi-oferta" hidden
     style="display:none;position:fixed;top:0;right:0;bottom:0;left:0;z-index:50;align-items:center;justify-content:center;padding:16px;box-sizing:border-box;background:rgba(18,48,63,0.6)">
 
@@ -7,15 +31,15 @@
         style="width:100%;max-width:650px;max-height:100%;display:flex;flex-direction:column;overflow:hidden;border-radius:20px;background:#FFFFFF;box-shadow:0 24px 64px rgba(18,48,63,0.35);font-family:inherit">
 
         {{-- Encabezado --}}
-        <div style="display:flex;align-items:flex-start;gap:16px;padding:28px 28px 20px;border-bottom:1px solid #E3E8EF">
+        <div id="mo-header" style="display:flex;flex:0 0 auto;flex-wrap:wrap;align-items:flex-start;gap:16px;padding:28px clamp(16px, 5vw, 28px) 20px;border-bottom:1px solid #E3E8EF">
 
-            <span style="width:56px;height:56px;border-radius:14px;background:#EAF6FD;color:#1A75A8;display:flex;align-items:center;justify-content:center;flex:0 0 auto">
+            <span id="mo-icono" style="width:56px;height:56px;border-radius:14px;background:#EAF6FD;color:#1A75A8;display:flex;align-items:center;justify-content:center;flex:0 0 auto">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <path d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0112 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 01-.673-.38m0 0A2.18 2.18 0 013 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 013.413-.387m7.5 0V5.25A2.25 2.25 0 0013.5 3h-3a2.25 2.25 0 00-2.25 2.25v.894m7.5 0a48.667 48.667 0 00-7.5 0M12 12.75h.008v.008H12v-.008z"/>
                 </svg>
             </span>
 
-            <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:8px">
+            <div id="mo-informacion" style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:8px">
                 <h2 id="mo-titulo" style="margin:0;font-size:24px;font-weight:700;color:#12303F;line-height:1.25"></h2>
 
                 <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px">
@@ -51,7 +75,7 @@
             </div>
 
             {{-- Botón cerrar --}}
-            <button type="button" data-cerrar-mi-oferta aria-label="Cerrar"
+            <button id="mo-cerrar" type="button" data-cerrar-mi-oferta aria-label="Cerrar"
                 style="width:40px;height:40px;flex:0 0 auto;border-radius:12px;border:none;background:#F5F7FA;color:#1F2933;display:flex;align-items:center;justify-content:center;cursor:pointer">
 
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -61,10 +85,10 @@
         </div>
 
         {{-- Cuerpo --}}
-        <div style="padding:24px 28px;display:flex;flex-direction:column;gap:24px;overflow:auto">
+        <div style="min-height:0;flex:1 1 auto;padding:24px clamp(16px, 5vw, 28px);display:flex;flex-direction:column;gap:24px;overflow:auto">
 
             {{-- Datos principales --}}
-            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px">
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,140px),1fr));gap:12px">
 
                 <div style="background:#F5F7FA;border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px">
                     <span style="font-size:15px;font-weight:800;color:#52606D;letter-spacing:0.04em">Salario</span>

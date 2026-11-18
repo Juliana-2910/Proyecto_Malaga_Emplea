@@ -45,7 +45,7 @@
                     @if ($err('titulo')) <span style="{{ $errorO }}">{{ $err('titulo') }}</span> @endif
                 </label>
 
-                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px">
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:16px">
                     <label style="{{ $labelO }}">Categoría
                         <select id="co-categoria" name="idCategoria" style="{{ $campoO }};min-height:46px">
                             <option value="">Selecciona una categoría</option>
@@ -67,7 +67,7 @@
                     </label>
                 </div>
 
-                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px">
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:16px">
                     <label style="{{ $labelO }}">Salario (COP)
                         <div style="display:flex;align-items:center;border:1.5px solid #CBD2D9;border-radius:10px;background:#FFFFFF;overflow:hidden">
                             <span style="padding:0 0 0 14px;font-size:15px;font-weight:700;color:#7B8794">$</span>
@@ -115,7 +115,7 @@
                     @if ($err('requisitos')) <span style="{{ $errorO }}">{{ $err('requisitos') }}</span> @endif
                 </label>
 
-                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;align-items:end">
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:16px;align-items:end">
                     <label style="{{ $labelO }}">Fecha límite para postularse
                         <div style="position:relative;display:flex;align-items:center">
                             <input id="co-fecha-limite" type="date" name="fechaLimite" min="{{ now('America/Bogota')->toDateString() }}"

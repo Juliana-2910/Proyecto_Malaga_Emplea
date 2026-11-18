@@ -33,12 +33,12 @@
         <div style="padding:24px 28px;display:flex;flex-direction:column;gap:20px;overflow:auto">
 
             {{-- Contacto: cajitas como en "Ver oferta" --}}
-            <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px">
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,140px),1fr));gap:12px">
 
                 {{-- Correo --}}
                 <div style="background:#F5F7FA;border-radius:14px;padding:10px 10px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:4px;min-width:0">
                     <span style="font-size:15px;font-weight:800;color:#52606D;letter-spacing:0.04em">Correo Electrónico</span>
-                    <span id="hp-correo" style="font-size:15px;font-weight:400;color:#12303F"></span>
+                    <span id="hp-correo" style="font-size:15px;font-weight:400;color:#12303F;overflow-wrap:anywhere"></span>
                 </div>
 
                 {{-- Teléfono --}}

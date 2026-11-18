@@ -14,6 +14,21 @@
     $errorE = 'font-size:12px;font-weight:600;color:#B42318';
 @endphp
 
+<style>
+    @media (max-width: 639px) {
+        #eo-form > div:last-child {
+            padding: 16px !important;
+        }
+
+        #eo-inactivar {
+            position: static !important;
+            width: 100% !important;
+            margin-bottom: 4px;
+            transform: none !important;
+        }
+    }
+</style>
+
 <div id="modal-editar-oferta" hidden data-abrir-al-cargar="{{ $reabrirE ? '1' : '0' }}" data-id-reabrir="{{ $reabrirE ? $idReabrir : '' }}"
     style="display:none;position:fixed;top:0;right:0;bottom:0;left:0;z-index:56;align-items:center;justify-content:center;padding:16px;box-sizing:border-box;background:rgba(18,48,63,0.6)">
 
@@ -64,7 +79,7 @@
                 </label>
 
                 {{-- Categoría y servicio --}}
-                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px">
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:16px">
 
                     <label style="{{ $labelE }}">Categoría
                         <select id="eo-categoria" name="idCategoria"
@@ -102,7 +117,7 @@
                 </div>
 
                 {{-- Salario y contrato --}}
-                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px">
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:16px">
 
                     <label style="{{ $labelE }}">Salario (COP)
                         <div style="display:flex;align-items:center;border:1.5px solid #CBD2D9;border-radius:10px;background:#FFFFFF;overflow:hidden">
@@ -181,7 +196,7 @@
                 </label>
 
                 {{-- Fecha límite y fecha de publicación --}}
-                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;align-items:end">
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:16px;align-items:end">
 
                     <label style="{{ $labelE }}">Fecha límite para postularse
                         <div style="position:relative;display:flex;align-items:center">
@@ -242,7 +257,7 @@
         style="width:100%;max-width:480px;border-radius:18px;background:#FFFFFF;padding:26px;box-shadow:0 24px 64px rgba(18,48,63,0.35);font-family:inherit">
         <h2 id="oi-titulo" style="margin:0 0 12px;font-size:21px;font-weight:800;color:#12303F">¿Deseas inactivar esta oferta?</h2>
         <p style="margin:0;color:#52606D;line-height:1.55">La oferta dejará de estar publicada y las postulaciones pendientes pasarán a estado rechazado.</p>
-        <form id="oi-form" method="POST" action="" style="display:flex;justify-content:flex-end;gap:10px;margin-top:24px">
+        <form id="oi-form" method="POST" action="" style="display:flex;flex-wrap:wrap;justify-content:flex-end;gap:10px;margin-top:24px">
             @csrf
             @method('PATCH')
             <button id="oi-cancelar" type="button" style="border:1.5px solid #52606D;border-radius:999px;background:#FFFFFF;padding:10px 17px;font-weight:700;color:#1F2933;cursor:pointer">Cancelar</button>

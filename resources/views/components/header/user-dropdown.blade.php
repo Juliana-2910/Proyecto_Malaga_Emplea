@@ -43,9 +43,22 @@
         event.preventDefault();
         await this.abrirCalificaciones(enlace.href);
         this.$nextTick(() => this.$refs.calificacionesScroll?.scrollTo({ top: 0, behavior: 'smooth' }));
+    },
+    ajustarMenu() {
+        this.$nextTick(() => {
+            const menu = this.$refs.menuPerfil;
+            if (!menu) return;
+            menu.style.marginRight = '0px';
+            const limites = menu.getBoundingClientRect();
+            const margen = 16;
+            const ajuste = limites.right > window.innerWidth - margen
+                ? limites.right - (window.innerWidth - margen)
+                : limites.left < margen ? -(margen - limites.left) : 0;
+            menu.style.marginRight = `${ajuste}px`;
+        });
     }
-}" @abrir-calificaciones.window="abrirCalificaciones($event.detail.url)" x-effect="document.body.style.overflow = modalAbierto ? 'hidden' : ''" @keydown.escape.window="modalAbierto = null" class="relative">
-    <button type="button" @click="open = !open" @click.outside="open = false" :aria-expanded="open.toString()" aria-haspopup="true" class="flex max-w-[min(72vw,320px)] items-center gap-2 rounded-full p-1.5 pr-3 text-left transition hover:bg-[#EAF6FD] focus:outline-none focus:ring-2 focus:ring-marca">
+}" @abrir-calificaciones.window="abrirCalificaciones($event.detail.url)" @resize.window="if (open) ajustarMenu()" x-effect="document.body.style.overflow = modalAbierto ? 'hidden' : ''" @keydown.escape.window="modalAbierto = null" class="relative">
+    <button type="button" @click="open = !open; if (open) ajustarMenu()" @click.outside="open = false" :aria-expanded="open.toString()" aria-haspopup="true" class="flex max-w-[min(72vw,320px)] items-center gap-2 rounded-full p-1.5 pr-3 text-left transition hover:bg-[#EAF6FD] focus:outline-none focus:ring-2 focus:ring-marca">
         @if ($foto)
             <img src="{{ $foto }}" alt="Foto de {{ $nombreCuenta }}" class="size-10 shrink-0 rounded-full border-2 border-black object-cover">
         @else
@@ -55,7 +68,7 @@
         <svg class="size-4 shrink-0 text-slate-500 transition" :class="open ? 'rotate-180' : ''" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m6 9 6 6 6-6"/></svg>
     </button>
 
-    <div x-show="open" x-cloak x-transition @click.outside="open = false" class="absolute right-0 z-50 mt-2 w-60 overflow-hidden rounded-2xl border border-slate-100 bg-white p-2 shadow-xl shadow-noche/15">
+    <div x-ref="menuPerfil" x-show="open" x-cloak x-transition @click.outside="open = false" class="absolute right-0 z-50 mt-2 max-h-[calc(100dvh-6rem)] w-60 max-w-[calc(100vw-2rem)] overflow-y-auto rounded-2xl border border-slate-100 bg-white p-2 shadow-xl shadow-noche/15">
         @if ($puedeVerPerfil || $puedeEditarPerfil)<button type="button" @click="open = false; modalAbierto = 'perfil'" class="block w-full rounded-xl px-4 py-3 text-left text-sm font-bold text-noche transition hover:bg-[#EAF6FD]">Mi perfil</button>@endif
         @if ($puedeVerPerfil && $puedeEditarPerfil && ! $esEmpresa)<a href="{{ route('perfil.editar') }}#hoja-de-vida" @click="open = false" class="block w-full rounded-xl px-4 py-3 text-left text-sm font-bold text-noche transition hover:bg-[#EAF6FD]">Hoja de vida</a>@endif
         @if ($puedeVerPerfil && $puedeEditarPerfil)<a href="{{ route('perfil.editar') }}#cambiar-contrasena" @click="open = false" class="block w-full rounded-xl px-4 py-3 text-left text-sm font-bold text-noche transition hover:bg-[#EAF6FD]">Cambiar contraseña</a>@endif

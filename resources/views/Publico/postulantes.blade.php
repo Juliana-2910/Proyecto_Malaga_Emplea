@@ -258,7 +258,7 @@
 
 
                 {{-- Información --}}
-                <div class="flex min-w-[260px] flex-1 flex-col gap-2">
+                <div class="flex min-w-0 flex-1 flex-col gap-2 sm:min-w-[260px]">
 
                     @php
                         $reputacion = $p->reputacionUsuario;
@@ -323,7 +323,7 @@
                 </div>
 
                 {{-- Estado + acciones --}}
-                <div class="flex flex-col items-end gap-3 self-center">
+                <div class="flex basis-full flex-row items-center justify-between gap-3 self-center sm:basis-auto sm:flex-col sm:items-end">
                     <span class="inline-flex items-center gap-2 rounded-full px-3 py-1 text-[13px] font-bold {{ $est['caja'] }}">
                         <span class="size-2 rounded-full {{ $est['punto'] }}"></span>
                         {{ $est['texto'] }}
