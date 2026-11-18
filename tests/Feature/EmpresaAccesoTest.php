@@ -79,7 +79,7 @@ class EmpresaAccesoTest extends TestCase
     {
         $empresa = $this->crearEmpresa();
 
-        $this->get(route('login'))->assertOk()->assertSee('Persona natural')->assertSee('Empresa')->assertSee('¿Cómo deseas ingresar?');
+        $this->get(route('login'))->assertOk()->assertSee('Persona Natural')->assertSee('Empresa')->assertSee('Tipo de cuenta');
 
         $this->post(route('login.store'), ['tipo' => 'empresa', 'email' => 'e@e.com', 'password' => '12345678'])
             ->assertRedirect(route('Publico.misOfertas'));
@@ -224,6 +224,8 @@ class EmpresaAccesoTest extends TestCase
             'direccion' => 'Calle 2',
             'email' => 'registro@publico.com',
             'password' => '12345678',
+            'terminos' => '1',
+            'datos' => '1',
         ])->assertCreated();
 
         $this->assertDatabaseHas('empresas', [

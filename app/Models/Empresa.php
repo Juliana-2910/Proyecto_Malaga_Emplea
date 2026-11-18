@@ -8,10 +8,11 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Spatie\Permission\Models\Role;
 use Illuminate\Notifications\Notifiable;
 use App\Notifications\RestablecerContrasena;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Empresa extends Authenticatable
 {
-    use TieneRolesActivos, Notifiable;
+    use HasFactory, TieneRolesActivos, Notifiable;
 
     public function sendPasswordResetNotification($token): void
     {

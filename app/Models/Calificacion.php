@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Calificacion extends Model
 {
+    use HasFactory;
+
     protected $table = 'calificacion';
 
     protected $fillable = ['puntuacion','comentario','fecha','idUsuario','idEmpresa','idUsuarioCalificado', 'idEmpresaCalificada',

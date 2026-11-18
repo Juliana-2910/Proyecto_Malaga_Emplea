@@ -127,6 +127,7 @@ class PanelPublicoTest extends TestCase
         ]);
 
         $this->get(route('perfil.calificaciones'))->assertOk()->assertSee('Publicado por');
+        $this->app['auth']->guard('web')->logout();
         $this->actingAs($empresa, 'empresa')->get(route('perfil.calificaciones'))
             ->assertOk()
             ->assertSee('Calificado por');

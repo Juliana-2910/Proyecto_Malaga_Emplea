@@ -63,7 +63,7 @@ class RecuperarContrasenaTest extends TestCase
             ->assertSee('modalRecuperarContrasena')
             ->assertSee('data-tipo-recuperacion="usuario"', false)
             ->assertSee('data-tipo-recuperacion="empresa"', false)
-            ->assertSee('Inicia sesión')
+            ->assertSee('Iniciar sesión')
             ->assertDontSee('<h1 class="text-3xl font-extrabold tracking-tight text-[#333333]">Málaga Emplea</h1>', false);
 
         $this->post(route('password.email'), [
