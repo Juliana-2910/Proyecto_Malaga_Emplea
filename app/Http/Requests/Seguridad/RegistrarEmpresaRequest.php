@@ -17,6 +17,7 @@ class RegistrarEmpresaRequest extends FormRequest
             'nombreEmpresa' => 'required|string|max:150',
             'nit' => 'required|string|max:30|unique:empresas,nit',
             'direccion' => 'required|string|max:255',
+            'telefono' => 'nullable|string|max:20',
             'email' => 'required|email|max:255|unique:empresas,email',
             'password' => 'required|string|min:8',
             'terminos' => 'required|accepted',

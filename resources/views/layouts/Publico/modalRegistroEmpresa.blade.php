@@ -47,9 +47,14 @@
                 <form id="formRegistroEmpresa" class="space-y-4">
                     @csrf
                     <div class="grid gap-3 sm:grid-cols-2">
-                        <div class="sm:col-span-2">
+                        <div>
                             <label for="registroNombreEmpresa" class="{{ $etiquetaRegistro }}">Nombre de la empresa</label>
                             <input id="registroNombreEmpresa" name="nombreEmpresa" type="text" required class="{{ $campoRegistro }}">
+                        </div>
+
+                        <div>
+                            <label for="registroTelefonoEmpresa" class="{{ $etiquetaRegistro }}">Teléfono</label>
+                            <input id="registroTelefonoEmpresa" name="telefono" type="tel" maxlength="20" class="{{ $campoRegistro }}">
                         </div>
 
                         <div>
@@ -68,6 +73,7 @@
                         </div>
 
                         @include('layouts.Publico.registroCampoPassword', ['id' => 'registroPasswordEmpresa'])
+
                     </div>
 
                     @include('layouts.Publico.registroCasillasLegales', ['prefijo' => 'Empresa'])

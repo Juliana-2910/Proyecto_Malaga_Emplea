@@ -9,7 +9,7 @@ class Oferta extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['titulo','descripcion','requisitos','salario','tipoContrato','ubicacion','fechaPublicacion','fechaLimite','idEmpresa', 'idUsuario' ];
+    protected $fillable = ['titulo','descripcion','requisitos','salario','tipoContrato','ubicacion','fechaPublicacion','fechaLimite','estado','idEmpresa', 'idUsuario' ];
 
     public function empresa()
     {

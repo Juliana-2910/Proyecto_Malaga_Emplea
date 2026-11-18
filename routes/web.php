@@ -39,6 +39,7 @@ Route::middleware(['auth:web,empresa', 'cuenta.activa'])->group(function () {
     Route::post('/mis-postulaciones/{id}/calificar', [OfertaPublicaController::class, 'calificar'])->whereNumber('id')->name('Publico.calificar');
     Route::get('/mis-ofertas', [OfertaPublicaController::class, 'misOfertas'])->middleware('empresa.permiso:ver ofertas')->name('Publico.misOfertas');
     Route::put('/mis-ofertas/{id}', [OfertaPublicaController::class, 'actualizarOferta'])->whereNumber('id')->middleware('empresa.permiso:editar ofertas')->name('Publico.actualizarOferta');
+    Route::patch('/mis-ofertas/{id}/inactivar', [OfertaPublicaController::class, 'inactivarOferta'])->whereNumber('id')->middleware('empresa.permiso:editar ofertas')->name('Publico.inactivarOferta');
     Route::get('/mis-ofertas/{id}/postulantes', [OfertaPublicaController::class, 'postulantes'])->whereNumber('id')->middleware('empresa.permiso:ver postulacion')->name('Publico.misOfertas.postulantes');
     Route::post('/mis-ofertas/postulantes/{id}/calificar', [OfertaPublicaController::class, 'calificarPostulante'])->whereNumber('id')->middleware('empresa.permiso:crear calificacion')->name('Publico.misOfertas.calificarPostulante');
     Route::patch('/mis-ofertas/postulantes/{id}/estado', [OfertaPublicaController::class, 'actualizarEstadoPostulante'])->whereNumber('id')->middleware('empresa.permiso:editar postulacion')->name('Publico.misOfertas.actualizarPostulante');

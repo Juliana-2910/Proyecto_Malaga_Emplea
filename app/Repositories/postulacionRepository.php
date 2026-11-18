@@ -55,10 +55,22 @@ class postulacionRepository
             ->exists();
     }
 
-    /** Serializa las contrataciones de una misma oferta dentro de una transacción. */
+    /** Serializa los cambios de estado de postulaciones de una misma oferta. */
     public function bloquearOfertaParaContratar(int $idOferta): void
     {
         Oferta::whereKey($idOferta)->lockForUpdate()->firstOrFail();
+    }
+
+    public function buscarOfertaBloqueada(int $idOferta): Oferta
+    {
+        return Oferta::whereKey($idOferta)->lockForUpdate()->firstOrFail();
+    }
+
+    public function rechazarPendientesPorInactivacion(int $idOferta): void
+    {
+        Postulacion::where('idOferta', $idOferta)
+            ->whereIn('estado', ['Enviado', 'Aceptado'])
+            ->update(['estado' => 'Rechazado']);
     }
 
     /** Rechaza todas las postulaciones que seguían en proceso al contratar una persona. */

@@ -249,6 +249,13 @@
                         @error('email') <span class="{{ $error }}">{{ $message }}</span> @enderror
                     </label>
 
+                    @if ($esEmpresa)
+                        <label class="{{ $label }}">Teléfono
+                            <input type="tel" name="telefono" form="form-perfil" maxlength="20" value="{{ old('telefono', $cuenta->telefono) }}" placeholder="Ej.: 3001234567" class="{{ $campo }}">
+                            @error('telefono') <span class="{{ $error }}">{{ $message }}</span> @enderror
+                        </label>
+                    @endif
+
                 </div>
 
                 <div class="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
