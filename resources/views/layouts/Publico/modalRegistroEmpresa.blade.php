@@ -53,23 +53,23 @@
                         </div>
 
                         <div>
-                            <label for="registroTelefonoEmpresa" class="{{ $etiquetaRegistro }}">Teléfono</label>
-                            <input id="registroTelefonoEmpresa" name="telefono" type="tel" maxlength="20" class="{{ $campoRegistro }}">
-                        </div>
-
-                        <div>
                             <label for="registroNit" class="{{ $etiquetaRegistro }}">NIT</label>
                             <input id="registroNit" name="nit" type="text" required class="{{ $campoRegistro }}">
                         </div>
 
                         <div>
-                            <label for="registroDireccion" class="{{ $etiquetaRegistro }}">Dirección</label>
-                            <input id="registroDireccion" name="direccion" type="text" required class="{{ $campoRegistro }}">
+                            <label for="registroEmailEmpresa" class="{{ $etiquetaRegistro }}">Correo electrónico</label>
+                            <input id="registroEmailEmpresa" name="email" type="email" required autocomplete="email" class="{{ $campoRegistro }}">
                         </div>
 
                         <div>
-                            <label for="registroEmailEmpresa" class="{{ $etiquetaRegistro }}">Correo electrónico</label>
-                            <input id="registroEmailEmpresa" name="email" type="email" required autocomplete="email" class="{{ $campoRegistro }}">
+                            <label for="registroTelefonoEmpresa" class="{{ $etiquetaRegistro }}">Teléfono</label>
+                            <input id="registroTelefonoEmpresa" name="telefono" type="tel" maxlength="20" class="{{ $campoRegistro }}">
+                        </div>
+
+                        <div>
+                            <label for="registroDireccion" class="{{ $etiquetaRegistro }}">Dirección</label>
+                            <input id="registroDireccion" name="direccion" type="text" required class="{{ $campoRegistro }}">
                         </div>
 
                         @include('layouts.Publico.registroCampoPassword', ['id' => 'registroPasswordEmpresa'])

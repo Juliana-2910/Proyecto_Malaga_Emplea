@@ -36,7 +36,7 @@
                 @include('layouts.partials.icons')
 
                 <input type="text" name="buscar" value="{{ request('buscar') }}" maxlength="100" autocomplete="off"
-                    placeholder="Buscar por nombre, NIT, dirección o correo..."
+                    placeholder="Buscar por nombre, NIT, dirección, teléfono o correo..."
                     class="min-w-0 flex-1 border-0 bg-transparent p-0 text-sm text-gray-700 placeholder:text-gray-400 focus:outline-none focus:ring-0">
 
                 <button type="submit"
@@ -72,7 +72,7 @@
         {{-- CONTENEDOR PRINCIPAL --}}
         <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-[0_10px_35px_rgba(77,182,232,0.12)] sm:p-6">
 
-            {{-- Encabezado de sección --}}
+            {{-- ENCABEZADO DE SECCIÓN --}}
             <div class="mb-6 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
 
                 <div>
@@ -101,19 +101,19 @@
             </div>
 
 
-            {{-- Tarjetas --}}
+            {{-- TARJETAS --}}
             <div class="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
 
                 @forelse ($empresas as $empresa)
 
                     <div class="flex h-full flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition duration-200 hover:border-[#4DB6E8]/40 hover:shadow-[0_8px_25px_rgba(77,182,232,0.12)]">
 
-                        {{-- Encabezado de tarjeta --}}
+                        {{-- ENCABEZADO DE TARJETA --}}
                         <div class="border-b border-gray-100 bg-gradient-to-r from-[#4DB6E8]/5 to-white px-4 py-4">
 
                             <div class="flex items-center gap-3">
 
-                                {{-- Foto de empresa --}}
+                                {{-- FOTO DE EMPRESA --}}
                                 <div class="flex h-16 w-16 flex-shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-white bg-[#4DB6E8]/10 text-[#4DB6E8] shadow-sm">
 
                                     @if (!empty($empresa->fotoPerfil))
@@ -133,7 +133,7 @@
                                 </div>
 
 
-                                {{-- Nombre de empresa --}}
+                                {{-- NOMBRE DE EMPRESA --}}
                                 <div class="min-w-0 flex-1">
 
                                     <p class="text-[10px] font-bold uppercase tracking-wider text-[#4DB6E8]">
@@ -157,36 +157,94 @@
                         </div>
 
 
-                        {{-- Datos de la empresa --}}
+                        {{-- DATOS DE LA EMPRESA --}}
                         <div class="flex-1 px-5 py-5">
 
                             <div class="grid grid-cols-1 gap-x-5 gap-y-4 sm:grid-cols-2">
 
+                                {{-- NIT --}}
                                 <div>
-                                    <p class="text-xs font-medium text-gray-400">NIT</p>
+                                    <p class="text-xs font-medium text-gray-400">
+                                        NIT
+                                    </p>
+
                                     <p class="mt-1 break-words text-sm font-medium text-gray-700">
                                         {{ $empresa->nit }}
                                     </p>
                                 </div>
 
+
+                                {{-- DIRECCIÓN --}}
                                 <div>
-                                    <p class="text-xs font-medium text-gray-400">Dirección</p>
+                                    <p class="text-xs font-medium text-gray-400">
+                                        Dirección
+                                    </p>
+
                                     <p class="mt-1 break-words text-sm font-medium text-gray-700">
                                         {{ $empresa->direccion }}
                                     </p>
                                 </div>
 
+
+                                {{-- TELÉFONO --}}
                                 <div>
-                                    <p class="text-xs font-medium text-gray-400">Correo electrónico</p>
+                                    <p class="text-xs font-medium text-gray-400">
+                                        Teléfono
+                                    </p>
+
+                                    <p class="mt-1 break-words text-sm font-medium text-gray-700">
+                                        {{ $empresa->telefono ?: 'No registrado' }}
+                                    </p>
+                                </div>
+
+
+                                {{-- CORREO --}}
+                                <div>
+                                    <p class="text-xs font-medium text-gray-400">
+                                        Correo electrónico
+                                    </p>
+
                                     <p class="mt-1 break-all text-sm font-medium text-gray-700">
                                         {{ $empresa->email }}
                                     </p>
                                 </div>
 
+
+                                {{-- FECHA DE REGISTRO --}}
                                 <div>
-                                    <p class="text-xs font-medium text-gray-400">Fecha de registro</p>
+                                    <p class="text-xs font-medium text-gray-400">
+                                        Fecha de registro
+                                    </p>
+
                                     <p class="mt-1 text-sm font-medium text-gray-700">
-                                    {{ $empresa->created_at?->timezone('America/Bogota')->format('d/m/Y') ?? 'No registrada' }}                                    </p>
+                                        {{ $empresa->created_at?->timezone('America/Bogota')->format('d/m/Y') ?? 'No registrada' }}
+                                    </p>
+                                </div>
+
+
+                                {{-- ESTADO --}}
+                                <div>
+                                    <p class="text-xs font-medium text-gray-400">
+                                        Estado
+                                    </p>
+
+                                    <div class="mt-1">
+
+                                        @if (strtolower($empresa->estado) === 'activo')
+
+                                            <span class="inline-flex items-center rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">
+                                                Activo
+                                            </span>
+
+                                        @else
+
+                                            <span class="inline-flex items-center rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-700">
+                                                Inactivo
+                                            </span>
+
+                                        @endif
+
+                                    </div>
                                 </div>
 
                             </div>
@@ -194,56 +252,36 @@
                         </div>
 
 
-                        {{-- BOTONES: ESTADO (izquierda) + ACCIONES (derecha) --}}
-                        <div class="flex items-center justify-between gap-3 border-t border-gray-100 bg-gray-50/60 px-4 py-3">
+                        {{-- ACCIONES --}}
+                        <div class="flex items-center justify-end gap-2 border-t border-gray-100 bg-gray-50/60 px-4 py-3">
 
-                            {{-- Estado --}}
-                            @if (strtolower($empresa->estado) === 'activo')
+                            {{-- EDITAR --}}
+                            <a
+                                href="{{ route('empresas.edit', $empresa->id) }}"
+                                title="Editar empresa"
+                                class="inline-flex items-center gap-1.5 rounded-lg bg-[#4DB6E8]/10 px-3 py-2 text-xs font-semibold text-[#4DB6E8] transition duration-200 hover:bg-[#4DB6E8] hover:text-white">
 
-                                <span class="inline-flex items-center rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">
-                                    Activo
-                                </span>
+                                @php($icon = 'pencil')
+                                @include('layouts.partials.icons')
 
-                            @else
+                                <span>Editar</span>
 
-                                <span class="inline-flex items-center rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-700">
-                                    Inactivo
-                                </span>
-
-                            @endif
+                            </a>
 
 
-                            {{-- Botones --}}
-                            <div class="flex items-center gap-2">
+                            {{-- ELIMINAR --}}
+                            <button
+                                type="button"
+                                title="Eliminar empresa"
+                                @click="$dispatch('open-modal', 'delete-{{ $empresa->id }}')"
+                                class="inline-flex items-center gap-1.5 rounded-lg bg-red-50 px-3 py-2 text-xs font-semibold text-red-500 transition duration-200 hover:bg-red-500 hover:text-white">
 
-                                {{-- EDITAR --}}
-                                <a
-                                    href="{{ route('empresas.edit', $empresa->id) }}"
-                                    title="Editar empresa"
-                                    class="inline-flex items-center gap-1.5 rounded-lg bg-[#4DB6E8]/10 px-3 py-2 text-xs font-semibold text-[#4DB6E8] transition duration-200 hover:bg-[#4DB6E8] hover:text-white">
+                                @php($icon = 'trash')
+                                @include('layouts.partials.icons')
 
-                                    @php($icon = 'pencil')
-                                    @include('layouts.partials.icons')
+                                <span>Eliminar</span>
 
-                                    <span>Editar</span>
-
-                                </a>
-
-                                {{-- ELIMINAR --}}
-                                <button
-                                    type="button"
-                                    title="Eliminar empresa"
-                                    @click="$dispatch('open-modal', 'delete-{{ $empresa->id }}')"
-                                    class="inline-flex items-center gap-1.5 rounded-lg bg-red-50 px-3 py-2 text-xs font-semibold text-red-500 transition duration-200 hover:bg-red-500 hover:text-white">
-
-                                    @php($icon = 'trash')
-                                    @include('layouts.partials.icons')
-
-                                    <span>Eliminar</span>
-
-                                </button>
-
-                            </div>
+                            </button>
 
                         </div>
 
@@ -259,8 +297,10 @@
                         <div class="text-center">
 
                             <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-100 text-red-600">
+
                                 @php($icon = 'exclamation-triangle')
                                 @include('layouts.partials.icons')
+
                             </div>
 
                             <p class="text-sm leading-6 text-gray-500">
@@ -312,8 +352,10 @@
                     <div class="col-span-full rounded-2xl border border-dashed border-gray-300 bg-gray-50 px-6 py-14 text-center">
 
                         <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#4DB6E8]/10 text-[#4DB6E8]">
+
                             @php($icon = 'building')
                             @include('layouts.partials.icons')
+
                         </div>
 
                         @if (request('buscar'))

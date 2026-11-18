@@ -25,7 +25,7 @@
         'activa'           => ['texto' => 'Activa',          'caja' => 'bg-green-100 text-green-800', 'punto' => 'bg-green-600'],
         'con_contratacion' => ['texto' => 'Con contratación', 'caja' => 'bg-blue-100 text-blue-800',   'punto' => 'bg-blue-600'],
         'vencida'          => ['texto' => 'Vencida',         'caja' => 'bg-slate-100 text-slate-800', 'punto' => 'bg-slate-600'],
-        'inactiva'         => ['texto' => 'Inactiva',        'caja' => 'bg-slate-100 text-slate-800', 'punto' => 'bg-slate-500'],
+        'inactiva'         => ['texto' => 'Inactiva',         'caja' => 'bg-red-100 text-red-800',     'punto' => 'bg-red-600'],
     ];
 
     // Pestañas de filtro
@@ -34,8 +34,7 @@
         'activas'      => ['texto' => 'Activas',          'punto' => 'bg-green-600', 'contador' => 'bg-green-100 text-green-800'],
         'contratacion' => ['texto' => 'Con contratación', 'punto' => 'bg-blue-600',  'contador' => 'bg-blue-100 text-blue-800'],
         'vencidas'     => ['texto' => 'Vencidas',         'punto' => 'bg-slate-500', 'contador' => 'bg-slate-100 text-slate-800'],
-        'inactivas'    => ['texto' => 'Inactivas',        'punto' => 'bg-slate-500', 'contador' => 'bg-slate-100 text-slate-800'],
-    ];
+        'inactivas' => ['texto' => 'Inactivas', 'punto' => 'bg-red-600', 'contador' => 'bg-red-100 text-red-800'],    ];
     $pestanaActual = request('estado', 'todas');
 
     // Plural simple: 1 Aceptada / 3 Aceptadas
@@ -192,9 +191,7 @@
                             {{ $activa ? 'border-noche bg-noche text-white' : 'border-slate-200 bg-white text-noche hover:border-noche' }}">
 
                         {{-- PUNTO INDICADOR --}}
-                        @if ($clave === 'vencidas')
-                            <span class="block h-2 w-2 shrink-0 rounded-full bg-gray-500"></span>
-                        @elseif ($p['punto'] !== null)
+                        @if ($p['punto'] !== null)
                             <span class="block h-2 w-2 shrink-0 rounded-full {{ $p['punto'] }}"></span>
                         @endif
 
@@ -385,8 +382,8 @@
                 {{-- Estado + acciones --}}
                 <div class="flex basis-full flex-row items-center justify-between gap-4 self-center sm:basis-auto sm:flex-col sm:items-end">
                     <span class="inline-flex items-center gap-2 rounded-full px-3 py-1 text-[13px] font-bold {{ $estado['caja'] }}">
-                        <span class="size-2 rounded-full {{ $oferta->estadoOferta === 'vencida' ? 'bg-gray-500' : $estado['punto'] }}"></span>
-                        {{ $estado['texto'] }}
+                        <span class="size-2 rounded-full {{ $estado['punto'] }}"></span>
+                            {{ $estado['texto'] }}
                     </span>
 
                     <div class="flex items-center gap-3">
