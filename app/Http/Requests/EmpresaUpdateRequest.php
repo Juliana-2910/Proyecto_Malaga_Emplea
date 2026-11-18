@@ -25,6 +25,7 @@ class EmpresaUpdateRequest extends FormRequest
         'nombreEmpresa' => 'required|string|max:100',
         'fotoPerfil' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         'nit' => 'required|string|unique:empresas,nit,' . $this->route('empresa'),
+        'telefono' => 'required|string|max:20',
         'direccion' => 'required|string|max:255',
         'estado' => 'required|in:activo,inactivo',
         'email' => 'required|string|email|max:255|unique:empresas,email,' . $this->route('empresa'),
@@ -45,6 +46,10 @@ public function messages(): array
 
         'nit.required' => 'El NIT es obligatorio.',
         'nit.unique' => 'El NIT ingresado ya se encuentra registrado.',
+
+        'telefono.required' => 'El teléfono de la empresa es obligatorio.',
+        'telefono.string' => 'El teléfono debe ser un texto válido.',
+        'telefono.max' => 'El teléfono no puede superar los 20 caracteres.',
 
         'direccion.required' => 'La dirección es obligatoria.',
 

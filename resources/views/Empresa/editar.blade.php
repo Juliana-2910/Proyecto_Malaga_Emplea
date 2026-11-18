@@ -9,333 +9,311 @@
 
 <div class="mx-auto max-w-5xl px-6">
 
-{{-- Encabezado --}}
-<div class="mb-6">
+    {{-- Encabezado --}}
+    <div class="mb-6">
 
-    <h1 class="text-3xl font-bold text-gray-800">
-        Editar empresa
-    </h1>
+        <h1 class="text-3xl font-bold text-gray-800">
+            Editar empresa
+        </h1>
 
-    <p class="mt-1 text-sm text-gray-500">
-        Actualización de la información de la empresa
-    </p>
+        <p class="mt-1 text-sm text-gray-500">
+            Actualización de la información de la empresa
+        </p>
 
-</div>
+    </div>
 
+    {{-- Formulario --}}
+    <div class="rounded-xl bg-white p-8 shadow">
 
-{{-- Formulario --}}
-<div class="rounded-xl bg-white p-8 shadow">
+        <form action="{{ route('empresas.update', $empresa->id) }}"
+            method="POST"
+            enctype="multipart/form-data">
 
-    <form action="{{ route('empresas.update', $empresa->id) }}"
-        method="POST"
-        enctype="multipart/form-data">
+            @csrf
+            @method('PUT')
 
-        @csrf
+            {{-- 1 = eliminar la foto actual al guardar --}}
+            <input type="hidden" name="eliminarFotoPerfil" id="eliminarFotoPerfil" value="0">
 
-        @method('PUT')
+            {{-- Información principal --}}
+            <div class="mb-8 grid grid-cols-1 gap-6 md:grid-cols-3">
 
-        {{-- 1 = eliminar la foto actual al guardar --}}
-        <input type="hidden" name="eliminarFotoPerfil" id="eliminarFotoPerfil" value="0">
+                {{-- FOTO DE PERFIL --}}
+                <div class="flex flex-col items-center justify-center">
 
+                    <label class="mb-3 block text-sm font-semibold text-gray-700">
+                        Foto de perfil
+                    </label>
 
-{{-- Información principal --}}
-<div class="mb-8 grid grid-cols-1 gap-6 md:grid-cols-3">
+                    {{-- Vista previa --}}
+                    <div class="h-32 w-32 overflow-hidden rounded-full border-2 border-[#4DB6E8] bg-gray-100 shadow-sm">
 
+                        <img id="previewFoto"
+                            src="{{ $empresa->fotoPerfil ? asset('storage/empresas/' . $empresa->fotoPerfil) : '' }}"
+                            alt="Foto de perfil"
+                            class="{{ $empresa->fotoPerfil ? '' : 'hidden' }} h-full w-full object-cover">
 
-    {{-- FOTO DE PERFIL --}}
-    <div class="flex flex-col items-center justify-center">
+                        <div id="placeholderFoto"
+                            class="{{ $empresa->fotoPerfil ? 'hidden' : 'flex' }} h-full w-full items-center justify-center text-gray-400">
 
-        <label class="mb-3 block text-sm font-semibold text-gray-700">
-            Foto de perfil
-        </label>
+                            @php($icon = 'building-office-2')
+                            @include('layouts.partials.icons')
 
+                        </div>
 
-        {{-- Vista previa --}}
-        <div class="h-32 w-32 overflow-hidden rounded-full border-2 border-[#4DB6E8] bg-gray-100 shadow-sm">
+                    </div>
 
-            <img id="previewFoto"
-                src="{{ $empresa->fotoPerfil ? asset('storage/empresas/' . $empresa->fotoPerfil) : '' }}"
-                alt="Foto de perfil"
-                class="{{ $empresa->fotoPerfil ? '' : 'hidden' }} h-full w-full object-cover">
+                    {{-- Botón cambiar foto --}}
+                    <label for="fotoPerfil"
+                        class="mt-4 cursor-pointer rounded-lg bg-[#4DB6E8] px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-[#333333]">
 
-            <div id="placeholderFoto"
-                class="{{ $empresa->fotoPerfil ? 'hidden' : 'flex' }} h-full w-full items-center justify-center text-gray-400">
+                        Cambiar foto
 
-                @php($icon = 'building-office-2')
-                @include('layouts.partials.icons')
+                    </label>
+
+                    {{-- Nombre del archivo --}}
+                    <p id="nombreFoto"
+                        class="mt-2 max-w-[220px] truncate text-center text-sm text-gray-600">
+
+                        @if($empresa->fotoPerfil)
+                            {{ basename($empresa->fotoPerfil) }}
+                        @endif
+
+                    </p>
+
+                    {{-- Eliminar foto --}}
+                    <button type="button"
+                        id="btnEliminarFoto"
+                        class="{{ $empresa->fotoPerfil ? '' : 'hidden' }} mt-1 text-xs font-semibold text-red-500 transition hover:text-red-700 hover:underline">
+
+                        Eliminar foto
+
+                    </button>
+
+                    <input type="file"
+                        name="fotoPerfil"
+                        id="fotoPerfil"
+                        accept="image/jpeg,image/png,image/jpg"
+                        class="hidden">
+
+                    <p class="mt-2 text-center text-xs text-gray-500">
+                        JPG, JPEG o PNG<br>
+                        Máximo 2 MB
+                    </p>
+
+                    @error('fotoPerfil')
+                        <p class="mt-1 text-center text-sm text-red-500">
+                            {{ $message }}
+                        </p>
+                    @enderror
+
+                </div>
+
+                {{-- DOS COLUMNAS AL LADO DE LA FOTO --}}
+                <div class="md:col-span-2 grid grid-cols-1 gap-5 md:grid-cols-2">
+
+                    {{-- Nombre de empresa --}}
+                    <div>
+
+                        <label for="nombreEmpresa"
+                            class="mb-2 block text-sm font-semibold text-gray-700">
+                            Nombre de la empresa
+                        </label>
+
+                        <input type="text"
+                            name="nombreEmpresa"
+                            id="nombreEmpresa"
+                            value="{{ old('nombreEmpresa', $empresa->nombreEmpresa) }}"
+                            placeholder="Ingrese el nombre de la empresa"
+                            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
+
+                        @error('nombreEmpresa')
+                            <p class="mt-1 text-sm text-red-500">
+                                {{ $message }}
+                            </p>
+                        @enderror
+
+                    </div>
+
+                    {{-- NIT --}}
+                    <div>
+
+                        <label for="nit"
+                            class="mb-2 block text-sm font-semibold text-gray-700">
+                            NIT
+                        </label>
+
+                        <input type="text"
+                            name="nit"
+                            id="nit"
+                            value="{{ old('nit', $empresa->nit) }}"
+                            placeholder="Ingrese el NIT"
+                            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
+
+                        @error('nit')
+                            <p class="mt-1 text-sm text-red-500">
+                                {{ $message }}
+                            </p>
+                        @enderror
+
+                    </div>
+
+                    {{-- Dirección --}}
+                    <div>
+
+                        <label for="direccion"
+                            class="mb-2 block text-sm font-semibold text-gray-700">
+                            Dirección
+                        </label>
+
+                        <input type="text"
+                            name="direccion"
+                            id="direccion"
+                            value="{{ old('direccion', $empresa->direccion) }}"
+                            placeholder="Ingrese la dirección"
+                            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
+
+                        @error('direccion')
+                            <p class="mt-1 text-sm text-red-500">
+                                {{ $message }}
+                            </p>
+                        @enderror
+
+                    </div>
+
+                    {{-- Teléfono --}}
+                    <div>
+
+                        <label for="telefono"
+                            class="mb-2 block text-sm font-semibold text-gray-700">
+                            Teléfono
+                        </label>
+
+                        <input type="tel"
+                            name="telefono"
+                            id="telefono"
+                            value="{{ old('telefono', $empresa->telefono) }}"
+                            placeholder="Ingrese el teléfono"
+                            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
+
+                        @error('telefono')
+                            <p class="mt-1 text-sm text-red-500">
+                                {{ $message }}
+                            </p>
+                        @enderror
+
+                    </div>
+
+                    {{-- Estado --}}
+                    <div>
+
+                        <label for="estado"
+                            class="mb-2 block text-sm font-semibold text-gray-700">
+                            Estado
+                        </label>
+
+                        <select name="estado"
+                            id="estado"
+                            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
+
+                            <option value="">
+                                Seleccione un estado
+                            </option>
+
+                            <option value="activo"
+                                {{ strtolower(old('estado', $empresa->estado)) === 'activo' ? 'selected' : '' }}>
+                                Activo
+                            </option>
+
+                            <option value="inactivo"
+                                {{ strtolower(old('estado', $empresa->estado)) === 'inactivo' ? 'selected' : '' }}>
+                                Inactivo
+                            </option>
+
+                        </select>
+
+                        @error('estado')
+                            <p class="mt-1 text-sm text-red-500">
+                                {{ $message }}
+                            </p>
+                        @enderror
+
+                    </div>
+
+                    {{-- Correo electrónico --}}
+                    <div>
+
+                        <label for="email"
+                            class="mb-2 block text-sm font-semibold text-gray-700">
+                            Correo electrónico
+                        </label>
+
+                        <input type="email"
+                            name="email"
+                            id="email"
+                            value="{{ old('email', $empresa->email) }}"
+                            placeholder="ejemplo@correo.com"
+                            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
+
+                        @error('email')
+                            <p class="mt-1 text-sm text-red-500">
+                                {{ $message }}
+                            </p>
+                        @enderror
+
+                    </div>
+
+                    {{-- Contraseña --}}
+                    <div>
+
+                        <label for="password"
+                            class="mb-2 block text-sm font-semibold text-gray-700">
+                            Contraseña
+                        </label>
+
+                        <input type="password"
+                            name="password"
+                            id="password"
+                            autocomplete="new-password"
+                            placeholder="Deje vacío si no desea cambiar la contraseña"
+                            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
+
+                        @error('password')
+                            <p class="mt-1 text-sm text-red-500">
+                                {{ $message }}
+                            </p>
+                        @enderror
+
+                    </div>
+
+                </div>
 
             </div>
 
-        </div>
+            {{-- Botones --}}
+            <div class="mt-8 flex justify-end gap-3">
 
+                <a href="{{ route('empresas.index') }}"
+                    class="rounded-lg bg-gray-500 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#333333]">
 
-        {{-- Botón cambiar foto --}}
-        <label for="fotoPerfil"
-            class="mt-4 cursor-pointer rounded-lg bg-[#4DB6E8] px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-[#333333]">
+                    Cancelar
 
-            Cambiar foto
+                </a>
 
-        </label>
+                <button type="submit"
+                    class="rounded-lg bg-[#4DB6E8] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#333333]">
 
+                    Actualizar
 
-        {{-- Nombre del archivo --}}
-        <p id="nombreFoto"
-            class="mt-2 max-w-[220px] truncate text-center text-sm text-gray-600">
+                </button>
 
-            @if($empresa->fotoPerfil)
-                {{ basename($empresa->fotoPerfil) }}
-            @endif
+            </div>
 
-        </p>
-
-
-        {{-- Eliminar foto --}}
-        <button type="button"
-            id="btnEliminarFoto"
-            class="{{ $empresa->fotoPerfil ? '' : 'hidden' }} mt-1 text-xs font-semibold text-red-500 transition hover:text-red-700 hover:underline">
-            Eliminar foto
-        </button>
-
-
-        <input type="file"
-            name="fotoPerfil"
-            id="fotoPerfil"
-            accept="image/jpeg,image/png,image/jpg"
-            class="hidden">
-
-
-        <p class="mt-2 text-center text-xs text-gray-500">
-            JPG, JPEG o PNG<br>
-            Máximo 2 MB
-        </p>
-
-
-        @error('fotoPerfil')
-
-            <p class="mt-1 text-center text-sm text-red-500">
-                {{ $message }}
-            </p>
-
-        @enderror
+        </form>
 
     </div>
 
-
-    {{-- DOS COLUMNAS AL LADO DE LA FOTO --}}
-    <div class="md:col-span-2 grid grid-cols-1 gap-5 md:grid-cols-2">
-
-
-        {{-- Nombre de empresa --}}
-        <div>
-
-            <label for="nombreEmpresa"
-                class="mb-2 block text-sm font-semibold text-gray-700">
-
-                Nombre de la empresa
-
-            </label>
-
-            <input type="text"
-                name="nombreEmpresa"
-                id="nombreEmpresa"
-                value="{{ old('nombreEmpresa', $empresa->nombreEmpresa) }}"
-                placeholder="Ingrese el nombre de la empresa"
-                class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
-
-            @error('nombreEmpresa')
-
-                <p class="mt-1 text-sm text-red-500">
-                    {{ $message }}
-                </p>
-
-            @enderror
-
-        </div>
-
-
-        {{-- NIT --}}
-        <div>
-
-            <label for="nit"
-                class="mb-2 block text-sm font-semibold text-gray-700">
-
-                NIT
-
-            </label>
-
-            <input type="text"
-                name="nit"
-                id="nit"
-                value="{{ old('nit', $empresa->nit) }}"
-                placeholder="Ingrese el NIT"
-                class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
-
-            @error('nit')
-
-                <p class="mt-1 text-sm text-red-500">
-                    {{ $message }}
-                </p>
-
-            @enderror
-
-        </div>
-
-
-        {{-- Dirección --}}
-        <div>
-
-            <label for="direccion"
-                class="mb-2 block text-sm font-semibold text-gray-700">
-
-                Dirección
-
-            </label>
-
-            <input type="text"
-                name="direccion"
-                id="direccion"
-                value="{{ old('direccion', $empresa->direccion) }}"
-                placeholder="Ingrese la dirección"
-                class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
-
-            @error('direccion')
-
-                <p class="mt-1 text-sm text-red-500">
-                    {{ $message }}
-                </p>
-
-            @enderror
-
-        </div>
-
-
-        {{-- Estado --}}
-        <div>
-
-            <label for="estado"
-                class="mb-2 block text-sm font-semibold text-gray-700">
-
-                Estado
-
-            </label>
-
-            <select name="estado"
-                id="estado"
-                class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
-
-                <option value="">
-                    Seleccione un estado
-                </option>
-
-                <option value="activo"
-                    {{ strtolower(old('estado', $empresa->estado)) === 'activo' ? 'selected' : '' }}>
-                    Activo
-                </option>
-
-                <option value="inactivo"
-                    {{ strtolower(old('estado', $empresa->estado)) === 'inactivo' ? 'selected' : '' }}>
-                    Inactivo
-                </option>
-
-            </select>
-
-            @error('estado')
-
-                <p class="mt-1 text-sm text-red-500">
-                    {{ $message }}
-                </p>
-
-            @enderror
-
-        </div>
-
-
-        {{-- Correo electrónico --}}
-        <div>
-
-            <label for="email"
-                class="mb-2 block text-sm font-semibold text-gray-700">
-
-                Correo electrónico
-
-            </label>
-
-            <input type="email"
-                name="email"
-                id="email"
-                value="{{ old('email', $empresa->email) }}"
-                placeholder="ejemplo@correo.com"
-                class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
-
-            @error('email')
-
-                <p class="mt-1 text-sm text-red-500">
-                    {{ $message }}
-                </p>
-
-            @enderror
-
-        </div>
-
-
-        {{-- Contraseña --}}
-        <div>
-
-            <label for="password"
-                class="mb-2 block text-sm font-semibold text-gray-700">
-
-                Contraseña
-
-            </label>
-
-            <input type="password"
-                name="password"
-                id="password"
-                autocomplete="new-password"
-                placeholder="Deje vacío si no desea cambiar la contraseña"
-                class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-[#4DB6E8] focus:outline-none focus:ring-1 focus:ring-[#4DB6E8]">
-
-            @error('password')
-
-                <p class="mt-1 text-sm text-red-500">
-                    {{ $message }}
-                </p>
-
-            @enderror
-
-        </div>
-
-    </div>
-
 </div>
-
-
-{{-- Botones --}}
-<div class="mt-8 flex justify-end gap-3">
-
-    <a href="{{ route('empresas.index') }}"
-        class="rounded-lg bg-gray-500 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#333333]">
-
-        Cancelar
-
-    </a>
-
-    <button type="submit"
-        class="rounded-lg bg-[#4DB6E8] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#333333]">
-
-        Actualizar
-
-    </button>
-
-</div>
-
-
-    </form>
-
-</div>
-
-</div>
-
 
 {{-- Vista previa y eliminación de la foto --}}
 <script>
@@ -347,7 +325,7 @@
     const btnEliminar    = document.getElementById('btnEliminarFoto');
     const flagEliminar   = document.getElementById('eliminarFotoPerfil');
 
-    // Foto que la empresa tiene guardada actualmente (null si no tiene)
+    // Foto que la empresa tiene guardada actualmente
     const fotoOriginal   = @json($empresa->fotoPerfil ? asset('storage/empresas/' . $empresa->fotoPerfil) : null);
     const nombreOriginal = @json($empresa->fotoPerfil ? basename($empresa->fotoPerfil) : '');
 
@@ -384,11 +362,11 @@
 
             lector.readAsDataURL(archivo);
 
-            flagEliminar.value = '0'; // la foto nueva reemplaza a la anterior
+            flagEliminar.value = '0';
 
         } else if (fotoOriginal && flagEliminar.value === '0') {
 
-            mostrarFoto(fotoOriginal, nombreOriginal); // canceló la selección: vuelve la actual
+            mostrarFoto(fotoOriginal, nombreOriginal);
 
         } else {
 
@@ -401,8 +379,8 @@
     // Al presionar "Eliminar foto"
     btnEliminar.addEventListener('click', function () {
 
-        inputFoto.value = '';                          // descarta cualquier foto recién elegida
-        flagEliminar.value = fotoOriginal ? '1' : '0'; // si había foto guardada, se borra al guardar
+        inputFoto.value = '';
+        flagEliminar.value = fotoOriginal ? '1' : '0';
         mostrarPlaceholder();
 
     });

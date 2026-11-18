@@ -78,7 +78,8 @@
         <div class="flex flex-col gap-6">
         <aside class="{{ $tarjeta }} text-center">
 
-            <div class="mx-auto flex size-28 items-center justify-center overflow-hidden rounded-full border-2 border-black bg-noche text-3xl font-extrabold text-white">                <img id="foto-preview" data-foto-original="{{ $rutaFoto }}" src="{{ $rutaFoto ?? '' }}" alt="Foto de {{ $nombre }}" class="{{ $rutaFoto ? '' : 'hidden' }} size-full object-cover">
+            <div class="mx-auto flex size-28 items-center justify-center overflow-hidden rounded-full border-2 border-black bg-noche text-3xl font-extrabold text-white">
+                <img id="foto-preview" data-foto-original="{{ $rutaFoto }}" src="{{ $rutaFoto ?? '' }}" alt="Foto de {{ $nombre }}" class="{{ $rutaFoto ? '' : 'hidden' }} size-full object-cover">
                 <span id="foto-inicial" class="{{ $rutaFoto ? 'hidden' : '' }}">{{ $iniciales }}</span>
             </div>
 
@@ -195,16 +196,19 @@
 
                     @if ($esEmpresa)
 
+                        {{-- Nombre de la empresa: ocupa las dos columnas --}}
                         <label class="{{ $label }} sm:col-span-2">Nombre de la empresa
                             <input type="text" name="nombreEmpresa" form="form-perfil" maxlength="100" value="{{ old('nombreEmpresa', $cuenta->nombreEmpresa) }}" required class="{{ $campo }}">
                             @error('nombreEmpresa') <span class="{{ $error }}">{{ $message }}</span> @enderror
                         </label>
 
+                        {{-- NIT: columna izquierda --}}
                         <label class="{{ $label }}">NIT
                             <input type="text" name="nit" form="form-perfil" maxlength="30" value="{{ old('nit', $cuenta->nit) }}" required class="{{ $campo }}">
                             @error('nit') <span class="{{ $error }}">{{ $message }}</span> @enderror
                         </label>
 
+                        {{-- Dirección: columna derecha --}}
                         <label class="{{ $label }}">Dirección
                             <span class="relative block">
                                 <svg class="pointer-events-none absolute left-3.5 top-1/2 size-[18px] -translate-y-1/2 text-slate-500" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"/></svg>
@@ -244,7 +248,8 @@
 
                     @endif
 
-                    <label class="{{ $label }} {{ $esEmpresa ? 'sm:col-span-2' : '' }}">Correo electrónico
+                    {{-- Correo: comparte fila con teléfono para empresa --}}
+                    <label class="{{ $label }}">Correo electrónico
                         <input type="email" name="email" form="form-perfil" maxlength="255" value="{{ old('email', $cuenta->email) }}" class="{{ str_replace(['pl-10', 'pl-11'], '', $conIcono) }}">
                         @error('email') <span class="{{ $error }}">{{ $message }}</span> @enderror
                     </label>
@@ -276,8 +281,7 @@
 
                         <div class="grid gap-4 sm:grid-cols-2">
                             <label class="{{ $label }}">Ubicación
-                                    <input type="text" name="ubicacion" maxlength="255" required placeholder="Ej.: Málaga, Santander" value="{{ old('ubicacion', $hojaDeVida?->ubicacion) }}" class="{{ str_replace(['pl-10', 'pl-11'], '', $conIcono) }}">
-                                </span>
+                                <input type="text" name="ubicacion" maxlength="255" required placeholder="Ej.: Málaga, Santander" value="{{ old('ubicacion', $hojaDeVida?->ubicacion) }}" class="{{ str_replace(['pl-10', 'pl-11'], '', $conIcono) }}">
                                 @error('ubicacion') <span class="{{ $error }}">{{ $message }}</span> @enderror
                             </label>
 
