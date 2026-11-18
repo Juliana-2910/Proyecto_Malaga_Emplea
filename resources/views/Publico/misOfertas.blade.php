@@ -25,7 +25,8 @@
         'activa'           => ['texto' => 'Activa',          'caja' => 'bg-green-100 text-green-800', 'punto' => 'bg-green-600'],
         'con_contratacion' => ['texto' => 'Con contratación', 'caja' => 'bg-blue-100 text-blue-800',   'punto' => 'bg-blue-600'],
         'vencida'          => ['texto' => 'Vencida',         'caja' => 'bg-slate-100 text-slate-800', 'punto' => 'bg-slate-600'],
-        'inactiva' => ['texto' => 'Inactiva', 'caja' => 'bg-red-100 text-red-800', 'punto' => 'bg-red-600'],    ];
+        'inactiva'         => ['texto' => 'Inactiva',         'caja' => 'bg-red-100 text-red-800',     'punto' => 'bg-red-600'],
+    ];
 
     // Pestañas de filtro
     $pestanas = [
@@ -381,8 +382,8 @@
                 {{-- Estado + acciones --}}
                 <div class="flex flex-col items-end gap-4 self-center">
                     <span class="inline-flex items-center gap-2 rounded-full px-3 py-1 text-[13px] font-bold {{ $estado['caja'] }}">
-                        <span class="size-2 rounded-full {{ $oferta->estadoOferta === 'vencida' ? 'bg-gray-500' : $estado['punto'] }}"></span>
-                        {{ $estado['texto'] }}
+                        <span class="size-2 rounded-full {{ $estado['punto'] }}"></span>
+                            {{ $estado['texto'] }}
                     </span>
 
                     <div class="flex items-center gap-3">
