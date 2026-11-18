@@ -1,9 +1,21 @@
 
 {{-- MODAL VER OFERTA QUE YO MISMO CREE (MODULO MIS OFERTAS) --}}
 <style>
+    #mo-header {
+        display: grid !important;
+        grid-template-columns: 56px minmax(0, 1fr) auto 40px;
+        grid-template-areas: "icono informacion vence cerrar";
+        align-items: start;
+        column-gap: 16px;
+    }
+
+    #mo-icono { grid-area: icono; }
+    #mo-informacion { grid-area: informacion; min-width: 0 !important; }
+    #mo-caja-vence { grid-area: vence; }
+    #mo-cerrar { grid-area: cerrar; }
+
     @media (max-width: 639px) {
         #mo-header {
-            display: grid !important;
             grid-template-columns: 56px minmax(112px, 1fr) 40px;
             grid-template-areas: "icono vence cerrar" "informacion informacion informacion";
             align-items: start;
@@ -12,16 +24,13 @@
             padding: 20px 16px 18px !important;
         }
 
-        #mo-icono { grid-area: icono; }
-        #mo-informacion { grid-area: informacion; min-width: 0 !important; }
         #mo-caja-vence {
-            grid-area: vence;
             width: 100%;
             min-width: 0 !important;
             margin: 0 !important;
             padding: 10px 8px !important;
         }
-        #mo-cerrar { grid-area: cerrar; margin: 0 !important; }
+        #mo-cerrar { margin: 0 !important; }
     }
 </style>
 <div id="modal-mi-oferta" hidden
@@ -31,7 +40,7 @@
         style="width:100%;max-width:650px;max-height:100%;display:flex;flex-direction:column;overflow:hidden;border-radius:20px;background:#FFFFFF;box-shadow:0 24px 64px rgba(18,48,63,0.35);font-family:inherit">
 
         {{-- Encabezado --}}
-        <div id="mo-header" style="display:flex;flex:0 0 auto;flex-wrap:wrap;align-items:flex-start;gap:16px;padding:28px clamp(16px, 5vw, 28px) 20px;border-bottom:1px solid #E3E8EF">
+        <div id="mo-header" style="flex:0 0 auto;padding:28px clamp(16px, 5vw, 28px) 20px;border-bottom:1px solid #E3E8EF">
 
             <span id="mo-icono" style="width:56px;height:56px;border-radius:14px;background:#EAF6FD;color:#1A75A8;display:flex;align-items:center;justify-content:center;flex:0 0 auto">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
