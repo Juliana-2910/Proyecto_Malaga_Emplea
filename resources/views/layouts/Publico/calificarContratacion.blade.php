@@ -50,7 +50,7 @@
                 </div>
 
                 {{-- Calificación + aviso --}}
-                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;align-items:stretch">
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:16px;align-items:stretch">
 
                     <div style="display:flex;flex-direction:column;gap:10px;">
                         <span style="display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:500;color:#52606D">Tu calificación</span>

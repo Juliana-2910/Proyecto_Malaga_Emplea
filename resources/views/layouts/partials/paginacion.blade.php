@@ -20,7 +20,7 @@
             ->sort()
             ->values();
 
-        $botonBase = 'inline-flex h-10 min-w-[40px] items-center justify-center gap-1.5 rounded-xl border px-3.5 text-sm font-semibold transition duration-200';
+        $botonBase = 'inline-flex h-10 min-w-[40px] items-center justify-center gap-1.5 whitespace-nowrap rounded-xl border px-3.5 text-sm font-semibold transition duration-200';
         $botonLink = $botonBase . ' border-gray-200 bg-white text-gray-600 hover:border-[#333333] hover:bg-[#333333] hover:text-white';
         $botonOff  = $botonBase . ' cursor-not-allowed border-gray-200 bg-white text-gray-400 opacity-50';
         $botonOn   = $botonBase . ' border-[#4DB6E8] bg-[#4DB6E8] text-white';
@@ -52,7 +52,7 @@
 
             @if ($paginador->hasPages())
 
-                <nav aria-label="Paginación" class="flex flex-nowrap items-center justify-center gap-1.5 whitespace-nowrap">
+                <nav aria-label="Paginación" class="flex flex-wrap items-center justify-center gap-1.5 sm:flex-nowrap">
 
                     {{-- Anterior --}}
                     @if ($paginador->onFirstPage())
