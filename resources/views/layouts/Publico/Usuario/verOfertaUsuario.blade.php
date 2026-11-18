@@ -5,7 +5,7 @@
         style="width:100%;max-width:700px;max-height:100%;display:flex;flex-direction:column;overflow:hidden;border-radius:20px;background:#FFFFFF;box-shadow:0 24px 64px rgba(18,48,63,0.35);font-family:inherit">
 
         {{-- Encabezado --}}
-        <div style="display:flex;align-items:flex-start;gap:16px;padding:28px 28px 20px;border-bottom:1px solid #E3E8EF">
+        <div style="display:flex;flex:0 0 auto;flex-wrap:wrap;align-items:flex-start;gap:16px;padding:28px clamp(16px, 5vw, 28px) 20px;border-bottom:1px solid #E3E8EF">
             <div style="width:64px;height:64px;flex:0 0 auto;border-radius:999px;overflow:hidden;background:#EAF6FD;border:2px solid #000000;display:flex;align-items:center;justify-content:center;color:#1A75A8">
                 <img id="modal-foto" hidden alt="Foto de perfil de quien publica" style="width:100%;height:100%;object-fit:cover">
                 <svg id="modal-foto-vacia" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -31,7 +31,7 @@
                 </div>
             </div>
 
-            <div id="modal-tarjeta-vence" style="background:#DCFCE7;border-radius:14px;padding:10px 30px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:4px">
+            <div id="modal-tarjeta-vence" style="background:#DCFCE7;border-radius:14px;padding:10px 30px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:4px;margin-left:auto">
                 <span id="modal-titulo-vence" style="font-size:15px;font-weight:800;color:#166534;letter-spacing:0.04em">FINALIZA</span>
                 <span id="modal-dias-restantes" style="font-size:15px;font-weight:700;color:#166534"></span>
                 <span id="modal-vence" style="font-size:15px;font-weight:400;color:#166534"></span>
@@ -44,9 +44,9 @@
         </div>
 
         {{-- Cuerpo --}}
-        <div style="padding:24px 28px;display:flex;flex-direction:column;gap:24px;overflow:auto">
+        <div style="min-height:0;flex:1 1 auto;padding:24px clamp(16px, 5vw, 28px);display:flex;flex-direction:column;gap:24px;overflow:auto">
 
-            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px">
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,140px),1fr));gap:12px">
                 <div style="background:#F5F7FA;border-radius:14px;padding:10px 10px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:4px">
                     <span style="font-size:15px;font-weight:800;color:#52606D;letter-spacing:0.04em">Salario</span>
                     <span id="modal-salario" style="font-size:15px;font-weight:400;color:#12303F"></span>

@@ -36,7 +36,7 @@
                 <div
                     x-show="open" x-cloak
                     x-transition
-                    class="absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-lg border border-slate-100 overflow-hidden"
+                    class="absolute right-0 mt-2 max-h-[calc(100dvh-6rem)] w-80 max-w-[calc(100vw-2rem)] bg-white rounded-xl shadow-lg border border-slate-100 overflow-y-auto"
                 >
                     <div class="px-4 py-3 border-b border-slate-100 font-semibold text-sm text-slate-700">
                         Notificaciones

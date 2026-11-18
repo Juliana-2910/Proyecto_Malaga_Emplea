@@ -309,7 +309,7 @@
 
                     </div>
 
-                    <div class="flex min-w-[240px] flex-1 flex-col gap-2">
+                    <div class="flex min-w-0 flex-1 flex-col gap-2 sm:min-w-[240px]">
                         <h3 class="text-[19px] font-bold">
                             {{ $oferta->titulo }}
                         </h3>
@@ -398,12 +398,12 @@
 
                     @if ($oferta->postulado)
                         <button type="button" data-ver-postulacion="{{ json_encode($datosModal) }}"
-                            class="{{ $btnSecundario }} cursor-pointer">
+                            class="{{ $btnSecundario }} basis-full cursor-pointer sm:basis-auto">
                             Ver mi postulación
                         </button>
                     @else
                         <button type="button" data-ver-oferta="{{ json_encode($datosModal) }}"
-                            class="{{ $btnPrimario }} cursor-pointer">
+                            class="{{ $btnPrimario }} basis-full cursor-pointer sm:basis-auto">
                             Ver oferta
                         </button>
                     @endif

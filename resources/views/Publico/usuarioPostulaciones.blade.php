@@ -163,7 +163,7 @@
                 </div>
 
                 {{-- Datos --}}
-                <div class="flex min-w-[240px] flex-1 flex-col gap-2">
+                <div class="flex min-w-0 flex-1 flex-col gap-2 sm:min-w-[240px]">
                     <h3 class="text-[19px] font-bold">{{ $oferta->titulo }}</h3>
 
                     <p class="text-sm text-slate-500">{{ $oferta->publicador }}</p>
@@ -188,7 +188,7 @@
                 </div>
 
                 {{-- Acciones --}}
-                <div class="flex flex-col items-end gap-3">
+                <div class="flex basis-full flex-col items-start gap-3 sm:basis-auto sm:items-end">
 
                     <div class="flex flex-wrap items-center justify-end gap-2.5">
 
