@@ -5,15 +5,15 @@
         style="width:100%;max-width:700px;max-height:100%;display:flex;flex-direction:column;overflow:hidden;border-radius:20px;background:#FFFFFF;box-shadow:0 24px 64px rgba(18,48,63,0.35);font-family:inherit">
 
         {{-- Encabezado --}}
-        <div style="display:flex;flex:0 0 auto;flex-wrap:wrap;align-items:flex-start;gap:16px;padding:28px clamp(16px, 5vw, 28px) 20px;border-bottom:1px solid #E3E8EF">
-            <div style="width:64px;height:64px;flex:0 0 auto;border-radius:999px;overflow:hidden;background:#EAF6FD;border:2px solid #000000;display:flex;align-items:center;justify-content:center;color:#1A75A8">
+        <div id="mu-header" style="display:flex;flex:0 0 auto;flex-wrap:wrap;align-items:flex-start;gap:16px;padding:28px clamp(16px, 5vw, 28px) 20px;border-bottom:1px solid #E3E8EF">
+            <div id="mu-foto" style="width:64px;height:64px;flex:0 0 auto;border-radius:999px;overflow:hidden;background:#EAF6FD;border:2px solid #000000;display:flex;align-items:center;justify-content:center;color:#1A75A8">
                 <img id="modal-foto" hidden alt="Foto de perfil de quien publica" style="width:100%;height:100%;object-fit:cover">
                 <svg id="modal-foto-vacia" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <path d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.5 20.1a7.5 7.5 0 0115 0" />
                 </svg>
             </div>
 
-            <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:6px">
+            <div id="mu-info" style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:6px">
                 <h2 id="modal-titulo" style="margin:0;font-size:24px;font-weight:700;color:#12303F;line-height:1.25"></h2>
 
                 {{-- Nombre y teléfono de quien publica --}}
@@ -37,7 +37,7 @@
                 <span id="modal-vence" style="font-size:15px;font-weight:400;color:#166534"></span>
             </div>
 
-            <button type="button" data-cerrar-modal aria-label="Cerrar"
+            <button id="mu-cerrar" type="button" data-cerrar-modal aria-label="Cerrar"
                 style="width:44px;height:44px;flex:0 0 auto;border-radius:12px;border:none;background:#F5F7FA;color:#1F2933;display:flex;align-items:center;justify-content:center;cursor:pointer">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 18L18 6M6 6l12 12" /></svg>
             </button>
@@ -92,7 +92,7 @@
         {{-- La cuenta personal puede postular; Empresa solo consulta el detalle. --}}
         @unless ($esEmpresa)
             <form id="modal-form-postular" method="POST" action="#" data-base="{{ url('/empleos') }}"
-                style="margin:0;display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:12px;padding:18px 28px;border-top:1px solid #E3E8EF;background:#FFFFFF">
+                style="margin:0;display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:12px;padding:18px clamp(16px, 5vw, 28px);border-top:1px solid #E3E8EF;background:#FFFFFF">
                 @csrf
 
                 <button type="button" data-cerrar-modal class="{{ $btnSecundario }} cursor-pointer">Cerrar</button>
@@ -109,7 +109,7 @@
         <div role="alertdialog" aria-modal="true" aria-labelledby="aviso-estafas-titulo" aria-describedby="aviso-estafas-texto"
             style="width:100%;max-width:480px;max-height:100%;overflow:auto;border-radius:20px;background:#FFFFFF;box-shadow:0 24px 64px rgba(18,48,63,0.35);font-family:inherit">
 
-            <div style="padding:40px 32px 30px;text-align:center">
+            <div id="aviso-cuerpo" style="padding:40px 32px 30px;text-align:center">
                 <span style="width:84px;height:84px;margin:0 auto 22px;border-radius:50%;background:#FEF3C7;color:#B45309;display:flex;align-items:center;justify-content:center">
                     <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                         <path d="M12 3l7.5 3v5.5c0 4.4-3 8.1-7.5 9.5-4.5-1.4-7.5-5.1-7.5-9.5V6L12 3z" />
@@ -124,7 +124,7 @@
                 </p>
             </div>
 
-            <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:12px;padding:18px 24px;border-top:1px solid #E3E8EF;background:#FFFFFF">
+            <div id="aviso-pie" style="display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:12px;padding:18px 24px;border-top:1px solid #E3E8EF;background:#FFFFFF">
                 <button type="button" data-cerrar-aviso class="{{ $btnSecundario }} cursor-pointer">Cancelar</button>
                 <button type="button" data-continuar-postulacion class="{{ $btnPrimario }} cursor-pointer">Continuar</button>
             </div>
@@ -310,3 +310,54 @@
         })();
     </script>
 @endpush
+
+<style>
+    /* Solo celular: en pantallas de 640px o mas no cambia nada */
+    @media (max-width: 639px) {
+        #mu-header {
+            display: grid !important;
+            grid-template-columns: 64px minmax(0, 1fr) 44px;
+            grid-template-areas: "foto vence cerrar" "info info info";
+            align-items: start;
+            column-gap: 12px;
+            row-gap: 16px;
+            padding: 20px 16px 18px !important;
+        }
+
+        #mu-foto { grid-area: foto; }
+        #mu-info { grid-area: info; }
+        #mu-cerrar { grid-area: cerrar; margin: 0 !important; }
+        #modal-tarjeta-vence {
+            grid-area: vence;
+            width: 100%;
+            margin: 0 !important;
+            padding: 10px 8px !important;
+            box-sizing: border-box;
+        }
+
+        #modal-titulo { font-size: 20px !important; }
+
+        /* Botones: en la misma línea, repartiendo el ancho */
+        #modal-form-postular,
+        #aviso-pie {
+            flex-direction: row !important;
+            flex-wrap: nowrap !important;
+            align-items: stretch !important;
+            justify-content: stretch !important;
+            gap: 8px !important;
+        }
+        #modal-form-postular > button,
+        #aviso-pie > button {
+            flex: 1 1 0 !important;
+            min-width: 0 !important;
+            width: auto !important;
+            padding-left: 8px !important;
+            padding-right: 8px !important;
+            text-align: center;
+        }
+
+        #aviso-cuerpo { padding: 28px 20px 22px !important; }
+        #aviso-cuerpo h2 { font-size: 22px !important; }
+        #aviso-cuerpo p { font-size: 15px !important; }
+    }
+</style>

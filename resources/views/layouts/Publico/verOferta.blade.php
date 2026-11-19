@@ -1,38 +1,4 @@
-
 {{-- MODAL VER OFERTA QUE YO MISMO CREE (MODULO MIS OFERTAS) --}}
-<style>
-    #mo-header {
-        display: grid !important;
-        grid-template-columns: 56px minmax(0, 1fr) auto 40px;
-        grid-template-areas: "icono informacion vence cerrar";
-        align-items: start;
-        column-gap: 16px;
-    }
-
-    #mo-icono { grid-area: icono; }
-    #mo-informacion { grid-area: informacion; min-width: 0 !important; }
-    #mo-caja-vence { grid-area: vence; }
-    #mo-cerrar { grid-area: cerrar; }
-
-    @media (max-width: 639px) {
-        #mo-header {
-            grid-template-columns: 56px minmax(112px, 1fr) 40px;
-            grid-template-areas: "icono vence cerrar" "informacion informacion informacion";
-            align-items: start;
-            column-gap: 12px;
-            row-gap: 16px;
-            padding: 20px 16px 18px !important;
-        }
-
-        #mo-caja-vence {
-            width: 100%;
-            min-width: 0 !important;
-            margin: 0 !important;
-            padding: 10px 8px !important;
-        }
-        #mo-cerrar { margin: 0 !important; }
-    }
-</style>
 <div id="modal-mi-oferta" hidden
     style="display:none;position:fixed;top:0;right:0;bottom:0;left:0;z-index:50;align-items:center;justify-content:center;padding:16px;box-sizing:border-box;background:rgba(18,48,63,0.6)">
 
@@ -97,7 +63,7 @@
         <div style="min-height:0;flex:1 1 auto;padding:24px clamp(16px, 5vw, 28px);display:flex;flex-direction:column;gap:24px;overflow:auto">
 
             {{-- Datos principales --}}
-            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,140px),1fr));gap:12px">
+            <div id="mo-datos" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,140px),1fr));gap:12px">
 
                 <div style="background:#F5F7FA;border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px">
                     <span style="font-size:15px;font-weight:800;color:#52606D;letter-spacing:0.04em">Salario</span>
@@ -128,7 +94,7 @@
             </div>
 
             {{-- Postulantes --}}
-            <div style="background:#EAF6FD;border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:12px;font-size:14px;line-height:1.5;color:#12303F">
+            <div id="mo-postulantes" style="background:#EAF6FD;border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:12px;font-size:14px;line-height:1.5;color:#12303F">
 
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1A75A8" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:0 0 auto">
                     <path d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 01-4.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"/>
@@ -419,3 +385,47 @@
     })();
 </script>
 @endpush
+
+<style>
+    #mo-header {
+        display: grid !important;
+        grid-template-columns: 56px minmax(0, 1fr) auto 40px;
+        grid-template-areas: "icono informacion vence cerrar";
+        align-items: start;
+        column-gap: 16px;
+    }
+
+    #mo-icono { grid-area: icono; }
+    #mo-informacion { grid-area: informacion; min-width: 0 !important; }
+    #mo-caja-vence { grid-area: vence; }
+    #mo-cerrar { grid-area: cerrar; }
+
+    @media (max-width: 639px) {
+        #mo-header {
+            grid-template-columns: 56px minmax(112px, 1fr) 40px;
+            grid-template-areas: "icono vence cerrar" "informacion informacion informacion";
+            align-items: start;
+            column-gap: 12px;
+            row-gap: 16px;
+            padding: 20px 16px 18px !important;
+        }
+
+        #mo-caja-vence {
+            width: 100%;
+            min-width: 0 !important;
+            margin: 0 !important;
+            padding: 10px 8px !important;
+        }
+        #mo-cerrar { margin: 0 !important; }
+
+        #mo-titulo { font-size: 20px !important; }
+
+        /* Salario, Ubicación y Publicada: uno debajo del otro */
+        #mo-datos { grid-template-columns: 1fr !important; }
+
+        /* Caja de postulantes: el enlace baja a su propia linea */
+        #mo-postulantes { flex-wrap: wrap !important; padding: 12px 14px !important; }
+        #mo-postulantes-texto { flex: 1 1 calc(100% - 40px) !important; }
+        #mo-ver-postulantes { margin-left: 34px; }
+    }
+</style>

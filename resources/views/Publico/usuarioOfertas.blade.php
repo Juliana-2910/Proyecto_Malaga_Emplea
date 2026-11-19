@@ -22,21 +22,21 @@
 @endphp
 
 {{-- ENCABEZADO + TARJETAS --}}
-<section class="bg-[#EAF6FD] px-6 pb-12 pt-10">
-    <div class="mx-auto flex max-w-6xl flex-col gap-7">
+<section class="bg-[#EAF6FD] px-4 pb-8 pt-7 sm:px-6 sm:pb-12 sm:pt-10">
+    <div class="mx-auto flex max-w-6xl flex-col gap-6 sm:gap-7">
 
         @include('layouts.Publico.avisosPaginas')
 
-        <div class="flex flex-col gap-2">
-            <span class="text-base font-bold text-marca-texto">
+        <div class="flex flex-col gap-1.5 sm:gap-2">
+            <span class="text-[15px] font-bold text-marca-texto sm:text-base">
                 Hola, {{ $nombre }}
             </span>
 
-            <h1 class="text-3xl font-extrabold text-noche md:text-4xl">
+            <h1 class="text-3xl font-extrabold leading-tight text-noche md:text-4xl">
                 Ofertas de empleo
             </h1>
 
-            <p class="text-base text-slate-600">
+            <p class="text-[15px] text-slate-600 sm:text-base">
                 {{ $totalOfertas }} ofertas activas en Málaga, Santander
             </p>
         </div>
@@ -45,8 +45,8 @@
 
             {{-- TUS POSTULACIONES --}}
             @unless ($esEmpresa)
-                <div class="flex flex-col gap-5 rounded-[20px] bg-white p-6 shadow-lg shadow-noche/10">
-                    <div class="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+                <div class="flex flex-col gap-5 rounded-[20px] bg-white p-5 shadow-lg shadow-noche/10 sm:p-6">
+                    <div class="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 sm:gap-y-2">
                         <h2 class="text-[19px] font-extrabold text-noche">
                             Tus postulaciones
                         </h2>
@@ -57,7 +57,7 @@
                         </a>
                     </div>
 
-                    <div class="grid grid-cols-3 gap-4">
+                    <div class="grid grid-cols-1 gap-5 sm:grid-cols-3 sm:gap-4">
                         <div class="flex flex-col items-center gap-2.5">
                             <span class="inline-flex items-center gap-2 rounded-full bg-amber-100 px-3 py-1 text-[13px] font-bold text-amber-900">
                                 <span class="size-2 rounded-full bg-amber-500"></span>
@@ -96,7 +96,7 @@
 
             @unless ($esEmpresa)
                 {{-- PUBLICAR OFERTA: disponible en la interfaz de Usuario. --}}
-                <div class="flex flex-col gap-4 rounded-[20px] bg-noche p-6 shadow-lg shadow-noche/10">
+                <div class="flex flex-col gap-4 rounded-[20px] bg-noche p-5 shadow-lg shadow-noche/10 sm:p-6">
                     <h2 class="text-[19px] font-extrabold text-white">
                         ¿Necesitas contratar a alguien?
                     </h2>
@@ -105,14 +105,14 @@
                         Publica una oferta, recibe postulaciones y elige a la persona que mejor se ajuste.
                     </p>
 
-                    <div class="flex flex-wrap items-center gap-3">
-                        <button type="button" data-abrir-crear-oferta class="{{ $btnPrimario }} cursor-pointer">
+                    <div class="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+                        <button type="button" data-abrir-crear-oferta class="{{ $btnPrimario }} w-full cursor-pointer sm:w-auto">
                             <svg class="size-[18px]" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
                             Publicar una oferta
                         </button>
 
                         <a href="{{ url('/mis-ofertas') }}"
-                            class="inline-flex items-center justify-center rounded-full border-2 border-white px-4 py-3 text-[15px] font-bold text-white transition hover:border-carbon hover:bg-carbon">
+                            class="inline-flex w-full items-center justify-center rounded-full border-2 border-white px-4 py-3 text-center text-[15px] font-bold text-white transition hover:border-carbon hover:bg-carbon sm:w-auto">
                             Ver mis ofertas y postulantes
                         </a>
                     </div>
@@ -129,13 +129,13 @@
 
         {{-- AVISO HOJA DE VIDA --}}
             @if (! $esEmpresa && $hojaDeVidaProgreso < 100)
-                <section class="px-6 pt-6">
-                    <div class="mx-auto flex max-w-6xl flex-wrap items-center gap-x-7 gap-y-4 rounded-2xl border border-slate-200 bg-white px-6 py-4">
+                <section class="px-4 pt-5 sm:px-6 sm:pt-6">
+                    <div class="mx-auto flex max-w-6xl flex-wrap items-center gap-x-4 gap-y-4 rounded-2xl border border-slate-200 bg-white p-4 sm:gap-x-7 sm:px-6 sm:py-4">
                         <span class="flex size-11 shrink-0 items-center justify-center rounded-xl bg-[#EAF6FD] text-marca-texto">
                             <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.6" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>
                         </span>
 
-                        <div class="min-w-[240px] flex-1">
+                        <div class="min-w-0 flex-1 sm:min-w-[240px]">
                             <p class="text-[17px] font-extrabold text-noche">
                                 Completa tu hoja de vida
                             </p>
@@ -145,7 +145,7 @@
                             </p>
                         </div>
 
-                        <div class="min-w-[200px] flex-1">
+                        <div class="w-full sm:w-auto sm:min-w-[200px] sm:flex-1">
                             <p class="mb-1.5 text-[13px] font-bold text-slate-500">
                                 {{ $hojaDeVidaProgreso }}% completado
                             </p>
@@ -156,7 +156,7 @@
                             </div>
                         </div>
 
-                        <button type="button" data-abrir-hoja-de-vida class="{{ $btnSecundario }} cursor-pointer">
+                        <button type="button" data-abrir-hoja-de-vida class="{{ $btnSecundario }} w-full cursor-pointer sm:w-auto">
                             Completar
                         </button>
                     </div>
@@ -166,12 +166,12 @@
     @include('layouts.Publico.usuario.crearHojaDeVida')
 
 {{-- FILTROS + LISTADO --}}
-<section class="px-6 pb-16 pt-8">
-    <div class="mx-auto flex max-w-6xl flex-wrap items-start gap-8">
+<section class="px-4 pb-12 pt-6 sm:px-6 sm:pb-16 sm:pt-8">
+    <div class="mx-auto flex max-w-6xl flex-wrap items-start gap-5 lg:gap-8">
 
         {{-- FILTROS --}}
         <form id="filtros-ofertas" method="GET" action="{{ url('/empleos') }}"
-            class="flex w-full flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-6 lg:w-72 lg:shrink-0">
+            class="flex w-full flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-4 sm:p-6 lg:w-72 lg:shrink-0">
 
             <h2 class="text-lg font-bold text-noche">
                 Filtrar ofertas
@@ -242,18 +242,18 @@
         </form>
 
         {{-- LISTADO --}}
-        <div class="flex min-w-0 flex-1 basis-[520px] flex-col gap-4">
+        <div class="flex min-w-0 flex-1 basis-full flex-col gap-4 lg:basis-[520px]">
 
-            <div class="flex flex-wrap items-center justify-between gap-3">
+            <div class="flex flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-3">
                 <span class="text-[15px] text-slate-500">
                     Mostrando {{ $ofertas->firstItem() ?? 0 }}–{{ $ofertas->lastItem() ?? 0 }}
                     de {{ $ofertas->total() }}
                 </span>
 
-                <label class="flex items-center gap-2.5 text-sm font-semibold text-slate-500">
+                <label class="flex w-full flex-col gap-1.5 text-sm font-semibold text-slate-500 sm:w-auto sm:flex-row sm:items-center sm:gap-2.5">
                     Ordenar por
 
-                    <select name="orden" form="filtros-ofertas" class="{{ $campo }} min-h-11 py-2.5" onchange="this.form.submit()">
+                    <select name="orden" form="filtros-ofertas" class="{{ $campo }} min-h-11 w-full py-2.5 sm:w-auto" onchange="this.form.submit()">
                         <option value="recientes" @selected(request('orden', 'recientes') === 'recientes')>Más recientes</option>
                         <option value="antiguas" @selected(request('orden') === 'antiguas')>Más antiguas</option>
                         <option value="vencen" @selected(request('orden') === 'vencen')>Vencen primero</option>
@@ -262,7 +262,7 @@
             </div>
 
             @forelse ($ofertas as $oferta)
-                <article class="flex flex-wrap items-center gap-5 rounded-2xl border border-slate-200 bg-white p-6 transition hover:shadow-lg hover:shadow-noche/10">
+                <article class="flex flex-wrap items-center gap-4 rounded-2xl border border-slate-200 bg-white p-4 transition hover:shadow-lg hover:shadow-noche/10 sm:gap-5 sm:p-6">
 
                     @php
                         $publicador = $oferta->usuario ?? $oferta->empresa;
@@ -310,12 +310,12 @@
                     </div>
 
                     <div class="flex min-w-0 flex-1 flex-col gap-2 sm:min-w-[240px]">
-                        <h3 class="text-[19px] font-bold">
+                        <h3 class="text-[18px] font-bold leading-snug sm:text-[19px]">
                             {{ $oferta->titulo }}
                         </h3>
 
                         {{-- NOMBRE Y CALIFICACIÓN EN LA MISMA LÍNEA --}}
-                        <div class="flex flex-wrap items-center gap-3">
+                        <div class="flex flex-wrap items-center gap-x-3 gap-y-1.5">
 
                             <p class="text-sm text-slate-500">
                                 {{ $oferta->publicador }}
@@ -371,9 +371,9 @@
 
                         </div>
 
-                        <div class="flex flex-wrap gap-x-5 gap-y-1.5 text-sm text-slate-500">
+                        <div class="flex flex-col gap-1.5 text-sm text-slate-500 sm:flex-row sm:flex-wrap sm:gap-x-5">
                             <span class="flex items-center gap-1.5">
-                                <svg class="size-[18px]" fill="none" viewBox="0 0 24 24"
+                                <svg class="size-[18px] shrink-0" fill="none" viewBox="0 0 24 24"
                                     stroke-width="1.6" stroke="currentColor" aria-hidden="true">
                                     <path stroke-linecap="round" stroke-linejoin="round"
                                         d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -385,10 +385,7 @@
                             </span>
 
                             <span class="flex items-center gap-1.5">
-                                <svg class="size-[18px]" fill="none" viewBox="0 0 24 24"
-                                    stroke-width="1.6" stroke="currentColor" aria-hidden="true">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                <svg class="size-[18px] shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.6" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
 
                                 Vence: {{ \Carbon\Carbon::parse($oferta->fechaLimite)->format('d/m/Y') }}
@@ -422,8 +419,8 @@
     </div>
 </section>
 
-@include('layouts.Publico.usuario.verOfertaUsuario')
+@include('layouts.Publico.Usuario.verOfertaUsuario')
 
-@include('layouts.Publico.usuario.verPostulacionUsuario')
+@include('layouts.Publico.Usuario.verPostulacionUsuario')
 
 @endsection

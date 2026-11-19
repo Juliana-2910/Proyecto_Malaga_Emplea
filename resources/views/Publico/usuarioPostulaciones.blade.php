@@ -38,7 +38,7 @@
 @endphp
 
 {{-- ENCABEZADO --}}
-<section class="bg-[#EAF6FD] px-6 pb-11 pt-10">
+<section class="bg-[#EAF6FD] px-4 pb-8 pt-7 sm:px-6 sm:pb-11 sm:pt-10">
     <div class="mx-auto flex max-w-6xl flex-col gap-7">
 
         @include('layouts.Publico.avisosPaginas')
@@ -60,7 +60,7 @@
 </section>
 
 {{-- FILTROS + LISTADO --}}
-<section class="px-6 pb-16 pt-8">
+<section class="px-4 pb-12 pt-6 sm:px-6 sm:pb-16 sm:pt-8">
     <div class="mx-auto flex max-w-6xl flex-col gap-6">
 
         <div class="flex flex-wrap items-center justify-between gap-4">
@@ -88,15 +88,15 @@
             </div>
 
             {{-- Orden --}}
-            <form method="GET" action="{{ url('/mis-postulaciones') }}">
+            <form method="GET" action="{{ url('/mis-postulaciones') }}" class="w-full sm:w-auto">
                 @if ($estadoActual !== '')
                     <input type="hidden" name="estado" value="{{ $estadoActual }}">
                 @endif
 
-                <label class="flex items-center gap-2.5 text-sm font-semibold text-slate-500">
+                <label class="flex w-full flex-col gap-1.5 text-sm font-semibold text-slate-500 sm:w-auto sm:flex-row sm:items-center sm:gap-2.5">
                     Ordenar por
 
-                    <select name="orden" class="{{ $campo }} min-h-11 py-2.5" onchange="this.form.submit()">
+                    <select name="orden" class="{{ $campo }} min-h-11 w-full py-2.5 sm:w-auto" onchange="this.form.submit()">
                         <option value="recientes" @selected(request('orden', 'recientes') === 'recientes')>Más recientes</option>
                         <option value="antiguas" @selected(request('orden') === 'antiguas')>Más antiguas</option>
                     </select>
@@ -149,7 +149,7 @@
 
             @endphp
 
-            <article id="postulacion-{{ $postulacion->id }}" class="scroll-mt-24 flex flex-wrap items-center gap-5 rounded-2xl border border-slate-200 bg-white p-6 transition hover:shadow-lg hover:shadow-noche/10 target:border-marca target:ring-2 target:ring-marca/30">
+            <article id="postulacion-{{ $postulacion->id }}" class="scroll-mt-24 flex flex-wrap items-start gap-4 rounded-2xl border border-slate-200 bg-white p-4 transition sm:items-center sm:gap-5 sm:p-6 hover:shadow-lg hover:shadow-noche/10 target:border-marca target:ring-2 target:ring-marca/30">
 
                 {{-- Foto de quien publica --}}
                 <div class="size-14 shrink-0 overflow-hidden rounded-full border-2 border-black bg-[#EAF6FD]">
@@ -188,9 +188,9 @@
                 </div>
 
                 {{-- Acciones --}}
-                <div class="flex basis-full flex-col items-start gap-3 sm:basis-auto sm:items-end">
+                <div class="flex basis-full flex-col items-stretch gap-3 sm:basis-auto sm:items-end">
 
-                    <div class="flex flex-wrap items-center justify-end gap-2.5">
+                    <div class="flex flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:items-center sm:justify-end">
 
                         {{-- Calificación ya enviada: chip con estrellas --}}
                         @if ($postulacion->estado === 'Contratado' && $postulacion->calificacion)
@@ -230,7 +230,7 @@
             </article>
 
         @empty
-            <div class="rounded-2xl border border-slate-200 bg-white p-10 text-center text-slate-500">
+            <div class="rounded-2xl border border-slate-200 bg-white p-6 text-center text-slate-500 sm:p-10">
                 @if ($estadoActual !== '')
                     No tienes postulaciones con ese estado.
                 @else

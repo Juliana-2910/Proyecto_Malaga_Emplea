@@ -9,7 +9,7 @@
     $bloqueado  = 'w-full cursor-not-allowed rounded-xl border-[1.5px] border-slate-200 bg-slate-50 py-3 pl-11 pr-3.5 text-[15px] font-medium text-slate-500';
     $label      = 'flex flex-col gap-1.5 text-[13px] font-semibold text-slate-600';
     $error      = 'text-[13px] font-semibold text-red-700';
-    $tarjeta    = 'rounded-2xl border border-slate-200 bg-white p-6 shadow-[0_8px_30px_rgba(18,48,63,0.07)]';
+    $tarjeta    = 'rounded-2xl border border-slate-200 bg-white p-4 shadow-[0_8px_30px_rgba(18,48,63,0.07)] sm:p-6';
     $btnPrimario   = 'inline-flex min-h-[46px] items-center justify-center rounded-full border-2 border-marca bg-marca px-7 text-[15px] font-bold text-noche transition hover:border-carbon hover:bg-carbon hover:text-white';
     $btnSecundario = 'inline-flex min-h-[46px] items-center justify-center rounded-full border-2 border-slate-800 bg-white px-7 text-[15px] font-bold text-slate-800 transition hover:bg-slate-800 hover:text-white';
 
@@ -39,7 +39,7 @@
 
 @section('content')
 
-<section class="bg-[#EAF6FD] px-6 pb-16 pt-9">
+<section class="bg-[#EAF6FD] px-4 pb-12 pt-7 sm:px-6 sm:pb-16 sm:pt-9">
 <div class="mx-auto max-w-6xl">
 
     {{-- ENCABEZADO --}}
@@ -47,7 +47,7 @@
         <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5"/></svg>
         Volver a ofertas
     </a>
-    <h1 class="mt-3 text-4xl font-extrabold tracking-tight text-noche">Editar perfil</h1>
+    <h1 class="mt-3 text-3xl font-extrabold tracking-tight text-noche sm:text-4xl">Editar perfil</h1>
     <p class="mt-1 text-base text-slate-600">
         {{ $esEmpresa ? 'Mantén los datos de tu empresa al día.' : 'Mantén tus datos al día para que quienes publican ofertas te conozcan mejor.' }}
     </p>
@@ -345,7 +345,7 @@
                                 @endif
 
                                 {{-- Cambiar archivo --}}
-                                <div class="flex items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                                <div class="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4">
                                     <div class="min-w-0">
                                         <p class="whitespace-nowrap font-bold text-noche">Cambiar archivo</p>
                                         <p id="cv-nombre" class="truncate text-xs text-slate-500">Ningún archivo seleccionado</p>
@@ -378,8 +378,8 @@
 
                     </div>
 
-                    <div class="mt-6 flex justify-end">
-                        <button type="submit" class="{{ $btnPrimario }} cursor-pointer">Actualizar hoja de vida</button>
+                    <div class="mt-6 flex sm:justify-end">
+                        <button type="submit" class="{{ $btnPrimario }} w-full cursor-pointer sm:w-auto">Actualizar hoja de vida</button>
                     </div>
                 </form>
             @endif

@@ -96,7 +96,7 @@
 @endphp
 
 {{-- ENCABEZADO --}}
-<section class="bg-[#EAF6FD] px-6 pb-10 pt-8">
+<section class="bg-[#EAF6FD] px-4 pb-8 pt-6 sm:px-6 sm:pb-10 sm:pt-8">
     <div class="mx-auto flex max-w-6xl flex-col gap-3.5">
 
         @include('layouts.Publico.avisosPaginas')
@@ -130,11 +130,11 @@
 </section>
 
 {{-- FILTROS + LISTADO --}}
-<section class="px-6 pb-16 pt-8">
+<section class="px-4 pb-12 pt-6 sm:px-6 sm:pb-16 sm:pt-8">
     <div class="mx-auto flex max-w-6xl flex-col gap-6">
 
         {{-- AVISO DE REGLAS --}}
-        <div class="flex items-center gap-3 rounded-xl border border-l-4 border-slate-200 border-l-marca bg-white px-4 py-3.5 text-sm text-slate-600">
+        <div class="flex items-start gap-3 rounded-xl border border-l-4 border-slate-200 border-l-marca bg-white px-4 py-3.5 text-sm text-slate-600 sm:items-center">
             <svg class="size-5 shrink-0 text-marca-texto" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" /></svg>
             <span>Solo puedes contratar a <strong>una persona</strong> por oferta. Si rechazas a alguien, la decisión no se puede cambiar; si lo aceptas, el siguiente paso es contratarlo.</span>
         </div>
@@ -164,13 +164,13 @@
                 @endforeach
             </nav>
 
-            <form method="GET" action="{{ route('Publico.misOfertas.postulantes', $oferta->id) }}">
+            <form method="GET" action="{{ route('Publico.misOfertas.postulantes', $oferta->id) }}" class="w-full sm:w-auto">
                 <input type="hidden" name="estado" value="{{ $pestanaActual }}">
 
-                <label class="flex items-center gap-2.5 text-sm font-semibold text-slate-500">
+                <label class="flex w-full flex-col gap-1.5 text-sm font-semibold text-slate-500 sm:w-auto sm:flex-row sm:items-center sm:gap-2.5">
                     Ordenar por
 
-                    <select name="orden" class="{{ $campo }} min-h-11 py-2.5" onchange="this.form.submit()">
+                    <select name="orden" class="{{ $campo }} min-h-11 w-full py-2.5 sm:w-auto" onchange="this.form.submit()">
                         <option value="recientes" @selected(request('orden', 'recientes') === 'recientes')>Más recientes</option>
                         <option value="antiguas" @selected(request('orden') === 'antiguas')>Más antiguas</option>
                     </select>
@@ -245,10 +245,10 @@
                 ];
             @endphp
 
-            <article id="postulacion-{{ $p->id }}" class="scroll-mt-24 flex flex-wrap items-center gap-5 rounded-2xl border border-slate-200 bg-white p-6 transition hover:shadow-lg hover:shadow-noche/10 target:border-marca target:ring-2 target:ring-marca/30">
+            <article id="postulacion-{{ $p->id }}" class="scroll-mt-24 flex flex-wrap items-start gap-4 rounded-2xl border border-slate-200 bg-white p-4 transition sm:items-center sm:gap-5 sm:p-6 hover:shadow-lg hover:shadow-noche/10 target:border-marca target:ring-2 target:ring-marca/30">
 
                 {{-- Foto o icono --}}
-                <div class="flex size-14 shrink-0 items-center justify-center self-center overflow-hidden rounded-full border-2 border-black bg-[#EAF6FD] text-marca-texto">
+                <div class="flex size-14 shrink-0 items-center justify-center self-start overflow-hidden sm:self-center rounded-full border-2 border-black bg-[#EAF6FD] text-marca-texto">
                     @if ($foto)
                         <img src="{{ $foto }}" alt="Foto de {{ $nombrePersona }}" class="size-full object-cover">
                     @else
@@ -310,7 +310,7 @@
 
                     </div>
 
-                    <span class="text-sm text-slate-500">
+                    <span class="break-words text-sm text-slate-500">
                         {{ $contacto }}
                     </span>
 
@@ -373,7 +373,7 @@
 
             </article>
         @empty
-            <div class="rounded-2xl border border-slate-200 bg-white p-10 text-center text-slate-500">
+            <div class="rounded-2xl border border-slate-200 bg-white p-6 text-center text-slate-500 sm:p-10">
                 Todavía no hay postulantes en este estado.
             </div>
         @endforelse

@@ -5,8 +5,8 @@
         style="width:100%;max-width:700px;max-height:100%;display:flex;flex-direction:column;overflow:hidden;border-radius:20px;background:#FFFFFF;box-shadow:0 24px 64px rgba(18,48,63,0.35);font-family:inherit">
 
         {{-- Encabezado --}}
-        <div style="padding:28px 28px 20px;display:flex;align-items:flex-start;gap:16px;border-bottom:1px solid #E3E8EF">
-            <div style="width:64px;height:64px;flex:0 0 auto;border-radius:999px;background:#EAF6FD;border:2px solid #EAF6FD;display:flex;align-items:center;justify-content:center;color:#1A75A8;overflow:hidden">
+        <div id="hp-header" style="padding:28px 28px 20px;display:flex;align-items:flex-start;gap:16px;border-bottom:1px solid #E3E8EF">
+            <div id="hp-foto-caja" style="width:64px;height:64px;flex:0 0 auto;border-radius:999px;background:#EAF6FD;border:2px solid #EAF6FD;display:flex;align-items:center;justify-content:center;color:#1A75A8;overflow:hidden">
                 <img id="hp-foto" hidden alt="Foto de perfil" style="width:100%;height:100%;object-fit:cover">
                 <svg id="hp-foto-vacia" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.5 20.1a7.5 7.5 0 0115 0"/></svg>
             </div>
@@ -30,10 +30,10 @@
         </div>
 
         {{-- Cuerpo --}}
-        <div style="padding:24px 28px;display:flex;flex-direction:column;gap:20px;overflow:auto">
+        <div id="hp-cuerpo" style="padding:24px 28px;display:flex;flex-direction:column;gap:20px;overflow:auto">
 
             {{-- Contacto: cajitas como en "Ver oferta" --}}
-            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,140px),1fr));gap:12px">
+            <div id="hp-contacto" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,140px),1fr));gap:12px">
 
                 {{-- Correo --}}
                 <div style="background:#F5F7FA;border-radius:14px;padding:10px 10px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:4px;min-width:0">
@@ -81,7 +81,7 @@
 
                 <div id="hp-cv" style="display:none;flex-wrap:wrap;align-items:center;gap:14px;border:1px solid #E3E8EF;border-radius:14px;padding:14px 16px">
                     <span style="width:44px;height:44px;border-radius:12px;background:#FEE2E2;color:#B42318;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800">PDF</span>
-                    <div style="flex:1 1 200px;min-width:0;display:flex;flex-direction:column;gap:2px">
+                    <div id="hp-cv-info" style="flex:1 1 200px;min-width:0;display:flex;flex-direction:column;gap:2px">
                         <span id="hp-cv-nombre" style="font-size:15px;font-weight:700;color:#12303F;word-break:break-all"></span>
                         <span style="font-size:12px;color:#52606D">Actualizado el <span id="hp-cv-fecha"></span></span>
                     </div>
@@ -183,3 +183,32 @@
     })();
 </script>
 @endpush
+
+<style>
+    /* Solo celular: en pantallas de 640px o mas no cambia nada */
+    @media (max-width: 639px) {
+        #hp-header { gap: 12px !important; padding: 20px 16px 16px !important; }
+        #hp-foto-caja { width: 52px !important; height: 52px !important; }
+        #hp-nombre { font-size: 20px !important; overflow-wrap: anywhere; }
+        #hp-cuerpo { padding: 20px 16px !important; gap: 16px !important; }
+
+        /* Contacto: una columna para que el correo largo no se corte */
+        #hp-contacto { grid-template-columns: 1fr !important; }
+
+        /* Archivo CV: todo centrado, el ojito queda a la mitad */
+        #hp-cv {
+            flex-direction: column !important;
+            flex-wrap: nowrap !important;
+            align-items: center !important;
+            text-align: center;
+            padding: 14px 12px !important;
+            gap: 10px !important;
+        }
+        #hp-cv-info {
+            flex: 0 0 auto !important;
+            width: 100%;
+            align-items: center !important;
+        }
+        #hp-cv-ver { margin: 0 auto; }
+    }
+</style>

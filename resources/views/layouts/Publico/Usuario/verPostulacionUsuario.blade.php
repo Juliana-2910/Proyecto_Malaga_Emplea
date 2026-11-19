@@ -5,7 +5,7 @@
         style="width:100%;max-width:660px;max-height:100%;display:flex;flex-direction:column;overflow:hidden;border-radius:20px;background:#FFFFFF;box-shadow:0 24px 64px rgba(18,48,63,0.35);font-family:inherit">
 
         {{-- Encabezado --}}
-        <div style="display:flex;align-items:flex-start;gap:16px;padding:28px 28px 20px;border-bottom:1px solid #E3E8EF">
+        <div id="mp-header" style="display:flex;align-items:flex-start;gap:16px;padding:28px 28px 20px;border-bottom:1px solid #E3E8EF">
             <div style="width:64px;height:64px;flex:0 0 auto;border-radius:999px;overflow:hidden;background:#EAF6FD;border:2px solid #000000;display:flex;align-items:center;justify-content:center;color:#1A75A8">
                 <img id="mp-foto" hidden alt="Foto de perfil de quien publica" style="width:100%;height:100%;object-fit:cover">
                 <svg id="mp-foto-vacia" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -38,7 +38,7 @@
         </div>
 
         {{-- Cuerpo --}}
-        <div style="padding:24px 28px;display:flex;flex-direction:column;gap:24px;overflow:auto">
+        <div id="mp-cuerpo" style="padding:24px 28px;display:flex;flex-direction:column;gap:24px;overflow:auto">
 
             {{-- Estado de la postulación --}}
             <div id="mp-estado-caja" style="border-radius:14px;padding:10px 18px;display:flex;align-items:center;gap:16px">
@@ -48,7 +48,7 @@
                 </span>
 
                 {{-- Mensaje del estado --}}
-                <div style="width:fit-content;max-width:90%;background:#FFFFFF;border-radius:999px;padding:5px 18px">
+                <div id="mp-burbuja" style="width:fit-content;max-width:90%;background:#FFFFFF;border-radius:999px;padding:5px 18px">
                     <span id="mp-estado-mensaje" style="display:block;font-size:15px;line-height:1.5;font-weight:700"></span>
                 </div>
             </div>
@@ -93,7 +93,7 @@
         </div>
 
         {{-- Botones --}}
-        <div style="margin:0;display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:12px;padding:18px 28px;border-top:1px solid #E3E8EF;background:#FFFFFF">
+        <div id="mp-pie" style="margin:0;display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:12px;padding:18px 28px;border-top:1px solid #E3E8EF;background:#FFFFFF">
             <button type="button" data-cerrar-postulacion class="{{ $btnSecundario }} cursor-pointer">Cerrar</button>
 
             <button type="button" id="mp-btn-cancelar" data-abrir-confirmacion
@@ -328,3 +328,37 @@
     })();
 </script>
 @endpush
+
+<style>
+    /* Solo celular: en pantallas de 640px o mas no cambia nada */
+    @media (max-width: 639px) {
+        #mp-header { gap: 12px !important; padding: 20px 16px 16px !important; }
+        #mp-titulo { font-size: 20px !important; }
+        #mp-cuerpo { padding: 20px 16px !important; gap: 20px !important; }
+
+        #mp-estado-caja { gap: 12px !important; padding: 10px 12px !important; }
+        #mp-burbuja { max-width: none !important; border-radius: 16px !important; padding: 8px 14px !important; }
+
+        /* Botones: se mantienen en la misma linea y se reparten el ancho */
+        #mp-pie,
+        #mp-form-cancelar {
+            flex-direction: row !important;
+            flex-wrap: nowrap !important;
+            align-items: stretch !important;
+            justify-content: stretch !important;
+            gap: 8px !important;
+            padding: 16px !important;
+        }
+        #mp-pie > button,
+        #mp-form-cancelar > button {
+            flex: 1 1 0 !important;
+            min-width: 0 !important;
+            width: auto !important;
+            padding: 10px 8px !important;
+            font-size: 14px !important;
+            line-height: 1.2 !important;
+            text-align: center;
+            justify-content: center;
+        }
+    }
+</style>

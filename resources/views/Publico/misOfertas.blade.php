@@ -51,7 +51,7 @@
 @endphp
 
 {{-- ENCABEZADO + TARJETAS --}}
-<section class="bg-[#EAF6FD] px-6 pb-12 pt-10">
+<section class="bg-[#EAF6FD] px-4 pb-8 pt-7 sm:px-6 sm:pb-12 sm:pt-10">
     <div class="mx-auto flex max-w-6xl flex-col gap-7">
 
         @include('layouts.Publico.avisosPaginas')
@@ -73,7 +73,7 @@
         <div class="grid gap-5 md:grid-cols-2">
             @if ($puedeCrearOfertas)
                 {{-- PUBLICAR OFERTA: disponible en Mis ofertas para cuentas autorizadas. --}}
-                <div class="flex flex-col gap-4 rounded-[20px] bg-noche p-6 shadow-lg shadow-noche/10">
+                <div class="flex flex-col gap-4 rounded-[20px] bg-noche p-5 shadow-lg shadow-noche/10 sm:p-6">
                     <h2 class="text-[19px] font-extrabold text-white">
                         ¿Necesitas contratar a alguien?
                     </h2>
@@ -82,7 +82,7 @@
                         Publica una oferta, recibe postulaciones y elige a la persona que mejor se ajuste.
                     </p>
 
-                    <div class="flex flex-wrap items-center gap-3">
+                    <div class="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
                         <button type="button" data-abrir-crear-oferta class="{{ $btnPrimario }} cursor-pointer">
                             <svg class="size-[18px]" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
                             Publicar una oferta
@@ -97,7 +97,7 @@
             @endif
 
             {{-- TU RESUMEN --}}
-            <div class="flex flex-col gap-5 rounded-[20px] bg-white p-6 shadow-lg shadow-noche/10">
+            <div class="flex flex-col gap-5 rounded-[20px] bg-white p-5 shadow-lg shadow-noche/10 sm:p-6">
                 <div class="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
                     <h2 class="text-[19px] font-extrabold text-noche">
                     Tu resumen
@@ -105,7 +105,7 @@
 
                 </div>
 
-                <div class="grid grid-cols-3 gap-4">
+                <div class="grid grid-cols-1 gap-5 sm:grid-cols-3 sm:gap-4">
 
                     <div class="flex flex-col items-center gap-2.5">
                         <span class="inline-flex items-center gap-1.5 rounded-full bg-sky-100 px-3 py-1 text-[13px] font-bold text-sky-900">
@@ -176,7 +176,7 @@
 @endif
 
 {{-- FILTROS + LISTADO --}}
-<section class="px-6 pb-16 pt-8">
+<section class="px-4 pb-12 pt-6 sm:px-6 sm:pb-16 sm:pt-8">
     <div class="mx-auto flex max-w-6xl flex-col gap-5">
 
                 {{-- PESTAÑAS + ORDENAR --}}
@@ -207,13 +207,13 @@
             </nav>
 
             {{-- ORDENAR --}}
-            <form method="GET" action="{{ url('/mis-ofertas') }}">
+            <form method="GET" action="{{ url('/mis-ofertas') }}" class="w-full sm:w-auto">
                 <input type="hidden" name="estado" value="{{ $pestanaActual }}">
 
-                <label class="flex items-center gap-2.5 text-sm font-semibold text-slate-500">
+                <label class="flex w-full flex-col gap-1.5 text-sm font-semibold text-slate-500 sm:w-auto sm:flex-row sm:items-center sm:gap-2.5">
                     Ordenar por
 
-                    <select name="orden" class="{{ $campo }} min-h-11 py-2.5"
+                    <select name="orden" class="{{ $campo }} min-h-11 w-full py-2.5 sm:w-auto"
                         onchange="this.form.submit()">
                         <option value="recientes" @selected(request('orden', 'recientes') === 'recientes')>
                             Más recientes
@@ -300,10 +300,10 @@
 
             @endphp
 
-            <article class="flex flex-wrap items-center gap-5 rounded-2xl border border-slate-200 bg-white p-6 transition hover:shadow-lg hover:shadow-noche/10">
+            <article class="flex flex-wrap items-start gap-4 rounded-2xl border border-slate-200 bg-white p-4 transition sm:items-center sm:gap-5 sm:p-6 hover:shadow-lg hover:shadow-noche/10">
 
                 {{-- Icono de la oferta --}}
-                <span class="flex size-14 shrink-0 items-center justify-center self-center rounded-2xl bg-[#EAF6FD] text-marca-texto">
+                <span class="hidden size-14 shrink-0 items-center justify-center self-center rounded-2xl sm:flex bg-[#EAF6FD] text-marca-texto">
                     <svg class="size-7" fill="none" viewBox="0 0 24 24" stroke-width="1.6" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 0 0 .75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 0 0-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0 1 12 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 0 1-.673-.38m0 0A2.18 2.18 0 0 1 3 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 0 1 3.413-.387m7.5 0V5.25A2.25 2.25 0 0 0 13.5 3h-3a2.25 2.25 0 0 0-2.25 2.25v.894m7.5 0a48.667 48.667 0 0 0-7.5 0M12 12.75h.008v.008H12v-.008Z" /></svg>
                 </span>
 
@@ -434,7 +434,7 @@
 
             </article>
         @empty
-            <div class="rounded-2xl border border-slate-200 bg-white p-10 text-center text-slate-500">
+            <div class="rounded-2xl border border-slate-200 bg-white p-6 text-center text-slate-500 sm:p-10">
                 No tienes ofertas en este estado todavía.
             </div>
         @endforelse
